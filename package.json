@@ -1,5 +1,5 @@
 {
-  "name": "leme-writing-studio",
+	"name": "leme-writing-studio",
 	"displayName": "LeME Writing Studio",
 	"description": "This is an extension that supports writing your ebook.",
 	"version": "0.0.1",
@@ -10,14 +10,23 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:leme-writing-studio.helloWorld"
+		"onCommand:leme-writing-studio.preview"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"menus": {
+			"editor/context": [
+				{
+					"when": "editorTextFocus && resourceExtname == .txt",
+					"command": "leme-writing-studio.preview",
+					"group": "leme-writing-studio@0"
+				}
+			]
+		},
 		"commands": [
 			{
-				"command": "leme-writing-studio.helloWorld",
-				"title": "Hello World"
+				"command": "leme-writing-studio.preview",
+				"title": "LeME Preview"
 			}
 		]
 	},
