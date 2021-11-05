@@ -2,6 +2,12 @@
 
 /* LeMEで追加するスタイル */
 
+.vrtl body,
+.hltr body {
+  padding: 1em;
+  font-family: serif-ja, serif;
+}
+
 
 svg {
   margin:    0;

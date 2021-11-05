@@ -96,7 +96,7 @@ export class LemePreviewer {
             <div class="main" id="preview_main_content">
             ${body}
             </div>
-            <script nonce="${nonce}" src="${scriptUri}"></script>
+            <script nonce="${nonce}" src="${scriptUri}" charset="UTF-8"></script>
         </body>
         </html>`;
 
