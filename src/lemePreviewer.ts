@@ -60,6 +60,10 @@ export class LemePreviewer {
             console.log('Not found preview panel.');
             return;
         }
+        const newTitle = 'LeME Preview : ' + path.basename(editor.document.fileName);
+        if(this._panel.title !== newTitle){
+            this._panel.title = newTitle;
+        }
 
         const editorText = editor.document.getText();
         this._parse(editorText, path.dirname(editor.document.uri.fsPath)).then((result) => {
