@@ -8,6 +8,9 @@
   font-family: serif-ja, serif;
 }
 
+p.active_p {
+  background-color: var(--vscode-editor-wordHighlightBackground);
+}
 
 svg {
   margin:    0;

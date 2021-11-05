@@ -66,12 +66,15 @@ export class LemePreviewer {
         }
 
         const editorText = editor.document.getText();
-        this._parse(editorText, path.dirname(editor.document.uri.fsPath)).then((result) => {
+        this._parse(editorText, editor.selection.active.line, path.dirname(editor.document.uri.fsPath)).then((result) => {
             if (this._panel) {
                 if (initialize) {
                     this._panel.webview.html = this._getWebviewContent(this._panel.webview, result);
                 } else {
-                    this._panel.webview.postMessage({ body: result });
+                    this._panel.webview.postMessage({
+                        command: 'update',
+                        body: result
+                    });
                 }
             }
         });
@@ -102,23 +105,27 @@ export class LemePreviewer {
 
     }
 
-    private async _parse(text: string, parentPath: string): Promise<string> {
+    private async _parse(text: string, cursorLine: number, parentPath: string): Promise<string> {
         let lines: string[] = text.split('\n');
-        let updatedLines = lines.map(line => {
+        let updatedLines = lines.map((line, index) => {
             let m = line.match(/[!！][\[［][^\[\]［］\(（]*[\]］][（\(][^）\)]*[）\)]/);
+            let classStr = '';
+            if(index === cursorLine){
+                classStr = ' class="active_p"';
+            }
             if (!m) {
-                return '<p>' + line + '</p>';
+                return `<p${classStr}>${line}</p>`;
             } else if (m.length !== 1) {
-                return '<p>' + line + '</p>';
+                return `<p${classStr}>${line}</p>`;
             } else {
                 let items: string[] = m[0].split('](');
                 if (items.length !== 2) {
-                    return '<p>' + line + '</p>';
+                    return `<p${classStr}>${line}</p>`;
                 } else {
                     const relPath = items[1].slice(0, -1);
                     const absPath = vscode.Uri.file(path.join(parentPath, relPath));
                     const srcPath = this._panel?.webview.asWebviewUri(absPath);
-                    return '<img alt="" src="' + srcPath + '"/>';
+                    return `<p${classStr}><img alt="" src="${srcPath}"/></p>`;
                 }
             }
         });
