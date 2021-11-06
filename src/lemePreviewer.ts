@@ -61,7 +61,7 @@ export class LemePreviewer {
             return;
         }
         const newTitle = 'LeME Preview : ' + path.basename(editor.document.fileName);
-        if(this._panel.title !== newTitle){
+        if (this._panel.title !== newTitle) {
             this._panel.title = newTitle;
         }
 
@@ -86,8 +86,10 @@ export class LemePreviewer {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
             this._extensionUri, 'ebook_resource', 'book-script.js'));
         const nonce = getNonce();
+        const direction = 'vrtl'; //vrtl hltr
+
         return `<!DOCTYPE html>
-        <html lang="en" class="vrtl">
+        <html lang="en" class="${direction}">
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
@@ -110,8 +112,8 @@ export class LemePreviewer {
         let updatedLines = lines.map((line, index) => {
             let m = line.match(/[!！][\[［][^\[\]［］\(（]*[\]］][（\(][^）\)]*[）\)]/);
             let classStr = '';
-            if(index === cursorLine){
-                classStr = ' class="active_p"';
+            if (index === cursorLine) {
+                classStr = ' class="active_p" id="scroll_mark"';
             }
             if (!m) {
                 return `<p${classStr}>${line}</p>`;
