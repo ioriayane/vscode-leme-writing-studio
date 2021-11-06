@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(e => {
 		lemePreviewer.update(vscode.window.activeTextEditor);
 	}));
-	
+
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(e => {
 		lemePreviewer.update(vscode.window.activeTextEditor);
 	}));
@@ -20,7 +20,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(e => {
 		lemePreviewer.update(vscode.window.activeTextEditor);
 	}));
-
 }
 
-export function deactivate() {}
+export function deactivate() { }
