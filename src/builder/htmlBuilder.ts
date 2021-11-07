@@ -16,13 +16,23 @@ export class HtmlBuilder {
                 switch (item.type) {
                     case parser.ParagraphItemType.Text:
                         return this._buildText(item as parser.ParagraphItemText);
+                    case parser.ParagraphItemType.PageBreak:
+                        // If you want to convert to a epub, this function will be changed to a generator.
+                        // yield 'html for one file';
+                        return '';
                     case parser.ParagraphItemType.Image:
                         return this._buildImage(item as parser.ParagraphItemImage);
+                    case parser.ParagraphItemType.Multimedia:
+                        return '';
+                    case parser.ParagraphItemType.HyperLink:
+                        return '';
+                    case parser.ParagraphItemType.HorizontalRule:
+                        return '<hr/>';
                     default:
                         return '';
                 }
             });
-            
+
             // for Preview
             let classStr: string = '';
             if (index === cursorLine) {
@@ -31,7 +41,7 @@ export class HtmlBuilder {
 
             // if paragraph is empty
             let line = lineItems.join('');
-            if(line.length === 0){
+            if (line.length === 0) {
                 line = '<br/>';
             }
 
@@ -43,9 +53,9 @@ export class HtmlBuilder {
 
     private _buildText(item: parser.ParagraphItemText): string {
         let text: string;
-        if(item.ruby.length > 0){
+        if (item.ruby.length > 0) {
             text = `<ruby>${item.text}<rt>${item.ruby}</rt></ruby>`;
-        }else{
+        } else {
             text = item.text;
         }
         return text;
@@ -53,12 +63,12 @@ export class HtmlBuilder {
 
     private _buildImage(item: parser.ParagraphItemImage): string {
 
-        if(this._webview && this._parentPath){
+        if (this._webview && this._parentPath) {
             const srcPath = this._webview.asWebviewUri(
                 vscode.Uri.file(path.join(this._parentPath, item.path))
-                );
+            );
             return `<img alt="" src="${srcPath}"/>`;
-        }else{
+        } else {
             return `<img alt="" src="${item.path}"/>`;
         }
     }

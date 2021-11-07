@@ -68,4 +68,21 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, '複数のパターン');
         assert.strictEqual((actualItems[4] as parser.ParagraphItemText).ruby, '');
     });
+
+
+    test('Parse ruby test', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parserRuby([
+            new parser.ParagraphItemText('これは|漢字(かんじ)です', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '漢字');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).ruby, 'かんじ');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
+    });
 });
