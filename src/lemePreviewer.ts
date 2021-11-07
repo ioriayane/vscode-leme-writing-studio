@@ -16,11 +16,8 @@ export class LemePreviewer {
 
 
     public create(context: vscode.ExtensionContext, editor: vscode.TextEditor | undefined) {
-        console.log('context:' + context.extensionPath);
-        console.log('this : ' + this._extensionUri);
-
         if (!editor) {
-            console.log('Not found active text editor.');
+            // console.log('Not found active text editor.');
             return;
         }
 
@@ -41,7 +38,7 @@ export class LemePreviewer {
             );
 
             this._panel.onDidDispose(() => {
-                console.log('close LeME preview');
+                // console.log('close LeME preview');
                 this._panel = undefined;
             },
                 null,
@@ -54,11 +51,11 @@ export class LemePreviewer {
 
     public update(editor: vscode.TextEditor | undefined, initialize: boolean = false) {
         if (!editor) {
-            console.log('Not found active text editor.');
+            // console.log('Not found active text editor.');
             return;
         }
         if (!this._panel) {
-            console.log('Not found preview panel.');
+            // console.log('Not found preview panel.');
             return;
         }
         const newTitle = 'LeME Preview : ' + path.basename(editor.document.fileName);
