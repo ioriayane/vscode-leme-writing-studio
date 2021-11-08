@@ -2,10 +2,9 @@ import * as parser from './index';
 
 export class TextParser {
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
-    private readonly REG_HIRAGANA = '[\u3041-\u309f\u30fc\u30a0]';
     //カタカナ:http://www.unicode.org/charts/PDF/U30A0.pdf
     //      http://www.unicode.org/charts/PDF/U31F0.pdf
-    private readonly REG_KATAKANA = '[\u30a0-\u30ff\u31f0-\u31ff\u3099-\u309c\uff65-\uff9f]';
+    private readonly REG_KANA = '[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\u3099-\u309c\uff65-\uff9f]';
     // CJK統合漢字:http://www.unicode.org/charts/PDF/U4E00.pdf
     // CJK互換漢字:http://www.unicode.org/charts/PDF/UF900.pdf
     // CJK統合漢字拡張A:http://www.unicode.org/charts/PDF/U3400.pdf
@@ -34,6 +33,7 @@ export class TextParser {
             items.push(new parser.ParagraphItemText(line, ''));
 
             items = this._parseImage(items);
+            items = this._parserRuby(items);
 
 
             para.items = items;
@@ -82,15 +82,6 @@ export class TextParser {
     }
 
     private _parserRuby(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
-        let retItems: parser.ParagraphItem[] = [];
-
-        //|任意《任意》
-        //|任意(任意)
-        //漢字《任意》 説明的には←なのだけど、実際の挙動は、漢字《ひらがなorカタカナ》
-        //漢字(ひらがなorカタカナ)
-        //アルファベット《ひらがなorカタカナ》
-        //アルファベット(ひらがなorカタカナ)
-        //
         //|と()は、半角全角両方
         const s1 = this.RUBY_BEGIN_SYMBOL_1;
         const s2 = this.RUBY_END_SIMBOL_1;
@@ -99,58 +90,39 @@ export class TextParser {
         const s5 = this.RUBY_SYMBOL;
         const s6 = this.REG_ANY_CHARS;
         const s7 = this.REG_KANJI;
-        const s8 = this.REG_HIRAGANA;
-        const s9 = this.REG_KATAKANA;
-        const s10 = this.REG_ALPHABET;
-        let matchPattern: string = `(${s5}${s6}*${s1}${s6}+${s2})|(${s5}${s6}*${s3}${s6}+${s4})|(${s7}+${s1}(${s8}|${s9})+${s2})|(${s7}+${s3}(${s8}|${s9})+${s4})|(${s10}+${s1}(${s8}|${s9})+${s2})|(${s10}+${s3}(${s8}|${s9})+${s4})`;
-        let splitPattern: string = `${s1}|${s3}`;
+        const s8 = this.REG_KANA;
+        const s9 = this.REG_ALPHABET;
 
-        const reg = new RegExp(matchPattern, 'gu');
-        const reg2 = new RegExp(splitPattern, 'gu');
+        const regRuby = [
+            `${s5}${s6}*${s1}${s6}+${s2}`,      //|任意《任意》
+            `${s5}${s6}*${s3}${s6}+${s4}`,      //|任意(任意)
+            `${s7}+${s1}${s8}+${s2}`,           //漢字《任意》 説明的には←なのだけど、実際の挙動は、漢字《ひらがなorカタカナ》
+            `${s7}+${s3}${s8}+${s4}`,           //漢字(ひらがなorカタカナ)
+            `${s9}+${s1}${s8}+${s2}`,          //アルファベット《ひらがなorカタカナ》
+            `${s9}+${s3}${s8}+${s4}`           //アルファベット(ひらがなorカタカナ)
+        ];
 
-        items.map((item, index) => {
-            if (item.type !== parser.ParagraphItemType.Text) {
-                retItems.push(item);
-                return;
-            }
+        const reg2 = new RegExp(`${s1}|${s3}`, 'gu');
 
-            const m = (item as parser.ParagraphItemText).text.match(reg);
-            if (!m) {
-                retItems.push(item);
-                return;
-            }
-
-            // 'abcdefg'.split(/b|h/)
-            // (2) ['a', 'cdefg']
-            // 本当は↑のような結果を得たいがbやhに当たる部分が複雑なので↓のような状態になる
-            // 'abcdefg'.split(/(b)|(h)/)
-            // (4) ['a', 'b', undefined, 'cdefg']
-            const splitItems = (item as parser.ParagraphItemText).text.split(reg);
-            let ii = 0;
-            for (let i = 0; i < splitItems.length; i++) {
-                if (splitItems[i] === undefined || m.some(value => value === splitItems[i])) {
-                    continue;
-                }
-                retItems.push(new parser.ParagraphItemText(splitItems[i], ''));
-                if (ii < m.length) {
-                    let captured = m[ii];
+        regRuby.map((reg, index) => {
+            items = this._parseContent(items, new RegExp(reg, 'gu'),
+                (m, retItems) => {
+                    let captured = m;
                     if (captured.startsWith('|') || captured.startsWith('｜')) {
                         captured = captured.substring(1, captured.length);
                     }
                     let m2 = captured.split(reg2);
                     if (!m2) {
-                        retItems.push(new parser.ParagraphItemText(m[ii], ''));
+                        retItems.push(new parser.ParagraphItemText(m, ''));
                     } else if (m2[0].length === 0) {
                         // |(かんじ)のルビ取り消し状態は頭の|はいらない
                         retItems.push(new parser.ParagraphItemText(captured, ''));
                     } else {
                         retItems.push(new parser.ParagraphItemText(m2[0], m2[1].slice(0, -1)));
                     }
-                }
-                ii++;
-            }
+                });
         });
 
-        return retItems;
+        return items;
     }
 }
