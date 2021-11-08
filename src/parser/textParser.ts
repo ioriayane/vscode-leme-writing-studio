@@ -43,16 +43,19 @@ export class TextParser {
         return document;
     }
 
-    private _parseImage(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+    private _parseContent(items: parser.ParagraphItem[], reg: RegExp,
+        callback: (m: string, retItems: parser.ParagraphItem[]) => any) {
+
         let retItems: parser.ParagraphItem[] = [];
 
         items.map((item, index) => {
             if (item.type !== parser.ParagraphItemType.Text) {
                 retItems.push(item);
                 return;
+            } else if ((item as parser.ParagraphItemText).ruby.length > 0) {
+                retItems.push(item);
+                return;
             }
-
-            const reg = /[!！][\[［][^\[\]［］\(（]*[\]］][（\(][^）\)]*[）\)]/g;
 
             let m = (item as parser.ParagraphItemText).text.match(reg);
             if (!m) {
@@ -63,13 +66,19 @@ export class TextParser {
             for (let i = 0; i < splitItems.length; i++) {
                 retItems.push(new parser.ParagraphItemText(splitItems[i], ''));
                 if (i < m.length) {
-                    const splitImageSyntax = m[i].split(/[\]］][（\(]/);
-                    retItems.push(new parser.ParagraphItemImage(splitImageSyntax[1].slice(0, -1), ''));
+                    callback(m[i], retItems);
                 }
             }
         });
-
         return retItems;
+    };
+
+    private _parseImage(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+        return this._parseContent(items, /[!！][\[［][^\[\]［］\(（]*[\]］][（\(][^）\)]*[）\)]/g,
+            (m, retItems) => {
+                const splitImageSyntax = m.split(/[\]］][（\(]/);
+                retItems.push(new parser.ParagraphItemImage(splitImageSyntax[1].slice(0, -1), ''));
+            });
     }
 
     private _parserRuby(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
