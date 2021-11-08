@@ -33,19 +33,40 @@ export class HtmlBuilder {
                 }
             });
 
+            let pTag = 'p';
+            let idList: string[] = [];
+            let classList: string[] = [];
+            let idStr = '';
+            let classStr = '';
+
             // for Preview
-            let classStr: string = '';
             if (index === cursorLine) {
-                classStr = ' class="active_p" id="scroll_mark"';
+                idList.push('scroll_mark');
+                classList.push('active_p');
             }
 
-            // if paragraph is empty
+            // build line
             let line = lineItems.join('');
+
+            // if paragraph is empty
             if (line.length === 0) {
                 line = '<br/>';
             }
 
-            return `<p${classStr}>${line}</p>`;
+            // headline
+            if (paragraph.outlineLv > 0) {
+                pTag = `h${paragraph.outlineLv}`;
+                classList.push('gfont');
+            }
+
+            // build
+            if(idList.length > 0){
+                idStr = ` id="${idList.join(' ')}"`;
+            }
+            if(classList.length > 0){
+                classStr = ` class="${classList.join(' ')}"`;
+            }
+            return `<${pTag}${idStr}${classStr}>${line}</${pTag}>`;
         });
 
         return lines.join('\n');

@@ -29,6 +29,18 @@ export class TextParser {
             let para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
 
+
+            line = this._parseOutline(line, para);
+            if(para.outlineLv > 0){
+            }else{
+                //見出しは無かった
+                if(index === 0 && line.length > 0){
+                    //最初の行で、空行じゃないので見出しにする
+                    para.outlineLv = 1;
+                }
+            }
+
+
             // initial state
             items.push(new parser.ParagraphItemText(line, ''));
 
@@ -41,6 +53,16 @@ export class TextParser {
         });
 
         return document;
+    }
+
+    private _parseOutline(line: string, para: parser.Paragraph): string {
+        const m = line.match(/^[#＃]{1,9}[ 　]/);
+        if(!m){
+            // body
+            return line;
+        }
+        para.outlineLv = m[0].trim().length;
+        return line.replace(m[0], '');
     }
 
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,

@@ -24,7 +24,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4')
         ),
-            `<p>line1</p>
+            `<h1 class="gfont">line1</h1>
 <p>line2</p>
 <p>This is a <img alt="" src="${expectImage1}"/>.</p>
 <p>line4</p>`
@@ -33,8 +33,8 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4'), 1
         ),
-            `<p>line1</p>
-<p class="active_p" id="scroll_mark">line2</p>
+            `<h1 class="gfont">line1</h1>
+<p id="scroll_mark" class="active_p">line2</p>
 <p>This is a <img alt="" src="${expectImage1}"/>.</p>
 <p>line4</p>`
         );
@@ -51,7 +51,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4')
         ),
-            `<p>line1</p>
+            `<h1 class="gfont">line1</h1>
 <p>line2</p>
 <p>This is a <img alt="" src="./media/image1.png"/>.</p>
 <p>line4</p>`
@@ -60,8 +60,8 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4'), 1
         ),
-            `<p>line1</p>
-<p class="active_p" id="scroll_mark">line2</p>
+            `<h1 class="gfont">line1</h1>
+<p id="scroll_mark" class="active_p">line2</p>
 <p>This is a <img alt="" src="./media/image1.png"/>.</p>
 <p>line4</p>`
         );

@@ -12,15 +12,22 @@ suite('TextParser Test Suite', () => {
 
     test('Simple text test', () => {
         let document = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
-            'これは|漢字(かんじ)です');
+            'これは|漢字(かんじ)です\n' +
+            '## 見出しLv2');
 
-        assert.strictEqual(document.length, 5);
+        assert.strictEqual(document.length, 6);
+        //
+        assert.strictEqual(document[0].outlineLv, 1);
         assert.strictEqual(document[0].items.length, 1);
         assert.strictEqual((document[0].items[0] as parser.ParagraphItemText).text, 'line1');
         assert.strictEqual((document[0].items[0] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[1].outlineLv, 0);
         assert.strictEqual(document[1].items.length, 1);
         assert.strictEqual((document[1].items[0] as parser.ParagraphItemText).text, 'line2');
         assert.strictEqual((document[1].items[0] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[2].outlineLv, 0);
         assert.strictEqual(document[2].items.length, 3);
         assert.strictEqual((document[2].items[0] as parser.ParagraphItemText).text, 'This is a ');
         assert.strictEqual((document[2].items[0] as parser.ParagraphItemText).ruby, '');
@@ -28,9 +35,13 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((document[2].items[1] as parser.ParagraphItemImage).alt, '');
         assert.strictEqual((document[2].items[2] as parser.ParagraphItemText).text, '.');
         assert.strictEqual((document[2].items[2] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[3].outlineLv, 0);
         assert.strictEqual(document[3].items.length, 1);
         assert.strictEqual((document[3].items[0] as parser.ParagraphItemText).text, 'line4');
         assert.strictEqual((document[3].items[0] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[4].outlineLv, 0);
         assert.strictEqual(document[4].items.length, 3);
         assert.strictEqual((document[4].items[0] as parser.ParagraphItemText).text, 'これは');
         assert.strictEqual((document[4].items[0] as parser.ParagraphItemText).ruby, '');
@@ -38,10 +49,92 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((document[4].items[1] as parser.ParagraphItemText).ruby, 'かんじ');
         assert.strictEqual((document[4].items[2] as parser.ParagraphItemText).text, 'です');
         assert.strictEqual((document[4].items[2] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[5].outlineLv, 2);
+        assert.strictEqual(document[5].items.length, 1);
+        assert.strictEqual((document[5].items[0] as parser.ParagraphItemText).text, '見出しLv2');
+        assert.strictEqual((document[5].items[0] as parser.ParagraphItemText).ruby, '');
 
     });
 
-    test('Parse image test', () => {
+    test('_parseOutline test', () => {
+        // Lv1~9
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('# hoge ', para), 'hoge ');
+            assert.strictEqual(para.outlineLv, 1);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('## hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 2);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 3);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('#### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 4);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('##### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 5);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('###### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 6);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('####### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 7);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('######## hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 8);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('######### hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 9);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('＃ hoge ', para), 'hoge ');
+            assert.strictEqual(para.outlineLv, 1);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('＃＃ hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 2);
+        }
+
+        //unmatch
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('hoge', para), 'hoge');
+            assert.strictEqual(para.outlineLv, 0);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('#hoge ', para), '#hoge ');
+            assert.strictEqual(para.outlineLv, 0);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('########## hoge', para), '########## hoge');
+            assert.strictEqual(para.outlineLv, 0);
+        }
+
+    });
+
+    test('_parseImage test', () => {
         let actualItems: parser.ParagraphItem[];
 
         actualItems = (textParser as any)._parseImage([
@@ -79,7 +172,7 @@ suite('TextParser Test Suite', () => {
     });
 
 
-    test('Parse ruby test', () => {
+    test('_parserRuby test', () => {
         let actualItems: parser.ParagraphItem[];
 
         actualItems = (textParser as any)._parserRuby([

@@ -35,6 +35,8 @@ export class ParagraphItemImage extends ParagraphItem {
 export class Paragraph {
     public items: ParagraphItem[] = [];
 
+    public outlineLv = 0;   //0:body, 1:h1, 2:h2, ... , 9:h9
+
     public pushText(text: string = '', ruby: string = ''): ParagraphItemText {
         let item = new ParagraphItemText(text, ruby);
         this.items.push(item);
