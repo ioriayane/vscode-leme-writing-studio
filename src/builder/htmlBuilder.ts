@@ -59,7 +59,7 @@ export class HtmlBuilder {
                 classList.push('gfont');
             }
 
-            // build
+            // build paragraph
             if(idList.length > 0){
                 idStr = ` id="${idList.join(' ')}"`;
             }

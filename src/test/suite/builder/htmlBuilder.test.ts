@@ -7,19 +7,38 @@ import * as path from 'path';
 import * as parser from '../../../parser/index';
 import * as builder from '../../../builder/index';
 
+
+class DummyWebview implements vscode.Webview {
+    constructor() {
+        this.html = '';
+        this.cspSource = '';
+    }
+    options!: vscode.WebviewOptions;
+    html: string;
+    onDidReceiveMessage!: vscode.Event<any>;
+    postMessage(message: any): Thenable<boolean> {
+        throw new Error('Method not implemented.');
+    }
+    asWebviewUri(localResource: vscode.Uri): vscode.Uri {
+        let json = localResource.toJSON();
+        json['scheme'] = 'https';
+        return vscode.Uri.from(json);
+    }
+    cspSource: string;
+}
+
+
 suite('HtmlBuilder Test Suite', () => {
     vscode.window.showInformationMessage('Start HtmlBuilder tests.');
 
     test('Simple text test', () => {
-        const panel = vscode.window.createWebviewPanel(
-            'leme-writing-studio-preview_test', 'LeME Preview Test',
-            vscode.ViewColumn.Beside, {});
-        let htmlBuilder = new builder.HtmlBuilder(panel.webview, '/LeME');
+        const dummyWebview = new DummyWebview();
+        let htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME');
         let textParser = new parser.TextParser();
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
-        const expectImage1 = panel.webview.asWebviewUri(vscode.Uri.file(path.join('/LeME/', 'media/image1.png')));
+        const expectImage1 = dummyWebview.asWebviewUri(vscode.Uri.file(path.join('/LeME/', 'media/image1.png')));
 
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4')
@@ -38,8 +57,6 @@ suite('HtmlBuilder Test Suite', () => {
 <p>This is a <img alt="" src="${expectImage1}"/>.</p>
 <p>line4</p>`
         );
-
-        panel.dispose();
     });
 
     test('Simple text test2', () => {
