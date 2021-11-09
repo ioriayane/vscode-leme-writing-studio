@@ -33,7 +33,7 @@ export class HtmlBuilder {
                 }
             });
 
-            let pTag = 'p';
+            let tag = 'p';
             let idList: string[] = [];
             let classList: string[] = [];
             let idStr = '';
@@ -56,9 +56,9 @@ export class HtmlBuilder {
             // headline
             if (paragraph.outlineLv > 0) {
                 if (paragraph.outlineLv <= 6) {
-                    pTag = `h${paragraph.outlineLv}`;
+                    tag = `h${paragraph.outlineLv}`;
                 } else {
-                    pTag = 'h6';
+                    tag = 'h6';
                 }
             }
 
@@ -72,7 +72,7 @@ export class HtmlBuilder {
             if (classList.length > 0) {
                 classStr = ` class="${classList.join(' ')}"`;
             }
-            return `<${pTag}${idStr}${classStr}>${line}</${pTag}>`;
+            return `<${tag}${idStr}${classStr}>${line}</${tag}>`;
         });
 
         return lines.join('\n');
