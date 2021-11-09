@@ -26,4 +26,31 @@ suite('Paragraph Test Suite', () => {
         assert.strictEqual((para.items[1] as parser.ParagraphItemImage).alt, 'alt1');
 
     });
+
+    test('Initial value test', () => {
+        {
+            const para = new parser.Paragraph();
+
+            assert.strictEqual(para.outlineLv, 0);
+            assert.strictEqual(para.font.bold, false);
+            assert.strictEqual(para.font.em, parser.EmphasisMarkType.None);
+            assert.strictEqual(para.font.emLine, false);
+            assert.strictEqual(para.font.gothic, false);
+            assert.strictEqual(para.font.italic, false);
+            assert.strictEqual(para.font.sizeRatio, 100);
+            assert.strictEqual(para.font.strike, false);
+        }
+
+        {
+            const item = new parser.ParagraphItemText('', '');
+
+            assert.strictEqual(item.font.bold, false);
+            assert.strictEqual(item.font.em, parser.EmphasisMarkType.None);
+            assert.strictEqual(item.font.emLine, false);
+            assert.strictEqual(item.font.gothic, false);
+            assert.strictEqual(item.font.italic, false);
+            assert.strictEqual(item.font.sizeRatio, 100);
+            assert.strictEqual(item.font.strike, false);
+        }
+    });
 });

@@ -55,15 +55,21 @@ export class HtmlBuilder {
 
             // headline
             if (paragraph.outlineLv > 0) {
-                pTag = `h${paragraph.outlineLv}`;
-                classList.push('gfont');
+                if (paragraph.outlineLv <= 6) {
+                    pTag = `h${paragraph.outlineLv}`;
+                } else {
+                    pTag = 'h6';
+                }
             }
 
+            // class
+            classList = classList.concat(this._buildParagraphClassString(paragraph));
+
             // build paragraph
-            if(idList.length > 0){
+            if (idList.length > 0) {
                 idStr = ` id="${idList.join(' ')}"`;
             }
-            if(classList.length > 0){
+            if (classList.length > 0) {
                 classStr = ` class="${classList.join(' ')}"`;
             }
             return `<${pTag}${idStr}${classStr}>${line}</${pTag}>`;
@@ -92,5 +98,29 @@ export class HtmlBuilder {
         } else {
             return `<img alt="" src="${item.path}"/>`;
         }
+    }
+
+    private _buildParagraphClassString(property: parser.ParagraphProperty): string[] {
+        let str: string[] = [];
+
+        const midashi: string[] = ['', 'oo-midashi', 'naka-midashi', 'ko-midashi', 'ko-midashi', 'ko-midashi', 'ko-midashi'];
+        if (property.outlineLv > 0 && property.outlineLv < midashi.length) {
+            str.push(midashi[property.outlineLv]);
+        } else if (property.outlineLv >= midashi.length) {
+            str.push('ko-midashi');
+        }
+
+        return str.concat(this._buildFontClassString(property.font));
+    }
+
+    private _buildFontClassString(font: parser.FontProperty): string[] {
+        let str: string[] = [];
+        if (font.sizeRatio !== 100) {
+            str.push(`font-${font.sizeRatio}per`);
+        }
+        if (font.gothic) {
+            str.push('gfont');
+        }
+        return str;
     }
 }

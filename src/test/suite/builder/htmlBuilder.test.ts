@@ -43,7 +43,16 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4')
         ),
-            `<h1 class="gfont">line1</h1>
+            `<h1 class="oo-midashi font-140per gfont">line1</h1>
+<p>line2</p>
+<p>This is a <img alt="" src="${expectImage1}"/>.</p>
+<p>line4</p>`
+        );
+
+        assert.strictEqual(htmlBuilder.build(
+            textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4'), 0
+        ),
+            `<h1 id="scroll_mark" class="active_p oo-midashi font-140per gfont">line1</h1>
 <p>line2</p>
 <p>This is a <img alt="" src="${expectImage1}"/>.</p>
 <p>line4</p>`
@@ -52,7 +61,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4'), 1
         ),
-            `<h1 class="gfont">line1</h1>
+            `<h1 class="oo-midashi font-140per gfont">line1</h1>
 <p id="scroll_mark" class="active_p">line2</p>
 <p>This is a <img alt="" src="${expectImage1}"/>.</p>
 <p>line4</p>`
@@ -68,7 +77,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4')
         ),
-            `<h1 class="gfont">line1</h1>
+            `<h1 class="oo-midashi font-140per gfont">line1</h1>
 <p>line2</p>
 <p>This is a <img alt="" src="./media/image1.png"/>.</p>
 <p>line4</p>`
@@ -77,7 +86,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build(
             textParser.parse('line1\nline2\nThis is a ![image](./media/image1.png).\nline4'), 1
         ),
-            `<h1 class="gfont">line1</h1>
+            `<h1 class="oo-midashi font-140per gfont">line1</h1>
 <p id="scroll_mark" class="active_p">line2</p>
 <p>This is a <img alt="" src="./media/image1.png"/>.</p>
 <p>line4</p>`
@@ -90,5 +99,146 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('', '')), '');
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge', '')), 'hoge');
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge', 'fuga')), '<ruby>hoge<rt>fuga</rt></ruby>');
+    });
+
+
+    test('_buildParagraphClassString test', () => {
+        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 0,
+            font: {
+                sizeRatio: 100,
+                gothic: false,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), []);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 1,
+            font: {
+                sizeRatio: 140,
+                gothic: true,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['oo-midashi', 'font-140per', 'gfont']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 2,
+            font: {
+                sizeRatio: 120,
+                gothic: true,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['naka-midashi', 'font-120per', 'gfont']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 3,
+            font: {
+                sizeRatio: 110,
+                gothic: true,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['ko-midashi', 'font-110per', 'gfont']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 4,
+            font: {
+                sizeRatio: 100,
+                gothic: false,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['ko-midashi']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 6,
+            font: {
+                sizeRatio: 100,
+                gothic: false,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['ko-midashi']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+            outlineLv: 7,
+            font: {
+                sizeRatio: 100,
+                gothic: false,
+                bold: false,
+                emLine: false,
+                italic: false,
+                strike: false,
+                em: parser.EmphasisMarkType.None
+            }
+        }), ['ko-midashi']);
+    });
+
+
+    test('_buildFontClassString test', () => {
+        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+            sizeRatio: 100,
+            gothic: false,
+            bold: false,
+            emLine: false,
+            italic: false,
+            strike: false,
+            em: parser.EmphasisMarkType.None
+        }), []);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+            sizeRatio: 140,
+            gothic: false,
+            bold: false,
+            emLine: false,
+            italic: false,
+            strike: false,
+            em: parser.EmphasisMarkType.None
+        }), ['font-140per']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+            sizeRatio: 100,
+            gothic: true,
+            bold: false,
+            emLine: false,
+            italic: false,
+            strike: false,
+            em: parser.EmphasisMarkType.None
+        }), ['gfont']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+            sizeRatio: 140,
+            gothic: true,
+            bold: false,
+            emLine: false,
+            italic: false,
+            strike: false,
+            em: parser.EmphasisMarkType.None
+        }), ['font-140per', 'gfont']);
     });
 });

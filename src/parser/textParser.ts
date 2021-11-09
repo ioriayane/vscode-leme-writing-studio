@@ -31,12 +31,14 @@ export class TextParser {
 
 
             line = this._parseOutline(line, para);
-            if(para.outlineLv > 0){
-            }else{
+            if (para.outlineLv > 0) {
+            } else {
                 //見出しは無かった
-                if(index === 0 && line.length > 0){
+                if (index === 0 && line.length > 0) {
                     //最初の行で、空行じゃないので見出しにする
                     para.outlineLv = 1;
+                    para.font.gothic = true;
+                    para.font.sizeRatio = 140;
                 }
             }
 
@@ -57,11 +59,26 @@ export class TextParser {
 
     private _parseOutline(line: string, para: parser.Paragraph): string {
         const m = line.match(/^[#＃]{1,9}[ 　]/);
-        if(!m){
+        if (!m) {
             // body
             return line;
         }
         para.outlineLv = m[0].trim().length;
+        para.font.gothic = true;
+        switch (para.outlineLv) {
+            case 1:
+                para.font.sizeRatio = 140;
+                break;
+            case 2:
+                para.font.sizeRatio = 120;
+                break;
+            case 3:
+                para.font.sizeRatio = 110;
+                break;
+            default:
+                para.font.sizeRatio = 100;
+                break;
+        }
         return line.replace(m[0], '');
     }
 

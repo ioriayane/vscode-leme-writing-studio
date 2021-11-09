@@ -8,7 +8,7 @@
   font-family: serif-ja, serif;
 }
 
-p.active_p {
+.active_p {
   background-color: var(--vscode-editor-wordHighlightBackground);
 }
 
