@@ -41,7 +41,7 @@ suite('HtmlBuilder Test Suite', () => {
         const expectImage1 = dummyWebview.asWebviewUri(vscode.Uri.file(path.join('/LeME/', 'media/image1.png')));
 
         const text = 'line1\nline2\nThis is a ![image](./media/image1.png).\n!PB\nline4\n!HR\nline6\n' +
-            '!R right\n!L left\n!C center';
+            '!R !C right\n!L left\n!C center';
 
         assert.strictEqual(htmlBuilder.build(
             textParser.parse(text)
@@ -53,7 +53,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
-<p class="align-right">right</p>
+<p class="align-right">!C right</p>
 <p class="align-left">left</p>
 <p class="align-center">center</p>`
         );
@@ -68,7 +68,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
-<p class="align-right">right</p>
+<p class="align-right">!C right</p>
 <p class="align-left">left</p>
 <p class="align-center">center</p>`
         );
@@ -83,7 +83,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
-<p class="align-right">right</p>
+<p class="align-right">!C right</p>
 <p class="align-left">left</p>
 <p class="align-center">center</p>`
         );
@@ -96,7 +96,7 @@ suite('HtmlBuilder Test Suite', () => {
         assert.strictEqual(htmlBuilder.build([]), '');
 
         const text = 'line1\nline2\nThis is a ![image](./media/image1.png).\n!PB\nline4\n!HR\nline6\n' +
-            '!R right\n!L left\n!C center';
+            '!R !C right\n!L left\n!C center';
 
         assert.strictEqual(htmlBuilder.build(
             textParser.parse(text)
@@ -108,7 +108,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
-<p class="align-right">right</p>
+<p class="align-right">!C right</p>
 <p class="align-left">left</p>
 <p class="align-center">center</p>`
         );
@@ -123,7 +123,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
-<p class="align-right">right</p>
+<p class="align-right">!C right</p>
 <p class="align-left">left</p>
 <p class="align-center">center</p>`
         );

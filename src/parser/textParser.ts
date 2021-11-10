@@ -43,8 +43,12 @@ export class TextParser {
             line = this._parseOutline(line, para, index);
 
             line = this._parseAlignment(line, para, parser.AlignmentType.Right);
-            line = this._parseAlignment(line, para, parser.AlignmentType.Left);
-            line = this._parseAlignment(line, para, parser.AlignmentType.Center);
+            if (para.alignment === parser.AlignmentType.None) {
+                line = this._parseAlignment(line, para, parser.AlignmentType.Left);
+                if (para.alignment === parser.AlignmentType.None) {
+                    line = this._parseAlignment(line, para, parser.AlignmentType.Center);
+                }
+            }
 
             // initial state
             items.push(new parser.ParagraphItemText(line, ''));
