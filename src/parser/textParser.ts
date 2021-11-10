@@ -46,32 +46,32 @@ export class TextParser {
         return document;
     }
 
-    private _parseOutline(line: string, para: parser.Paragraph, index: number): string {
+    private _parseOutline(line: string, property: parser.ParagraphProperty, index: number): string {
         const m = line.match(/^[#＃]{1,9}[ 　]/);
         if (!m) {
             // body
             if (index === 0 && line.length > 0) {
                 //最初の行で、空行じゃないので見出しにする
-                para.outlineLv = 1;
-                para.font.gothic = true;
-                para.font.sizeRatio = 140;
+                property.outlineLv = 1;
+                property.font.gothic = true;
+                property.font.sizeRatio = 140;
             }
             return line;
         }
-        para.outlineLv = m[0].trim().length;
-        para.font.gothic = true;
-        switch (para.outlineLv) {
+        property.outlineLv = m[0].trim().length;
+        property.font.gothic = true;
+        switch (property.outlineLv) {
             case 1:
-                para.font.sizeRatio = 140;
+                property.font.sizeRatio = 140;
                 break;
             case 2:
-                para.font.sizeRatio = 120;
+                property.font.sizeRatio = 120;
                 break;
             case 3:
-                para.font.sizeRatio = 110;
+                property.font.sizeRatio = 110;
                 break;
             default:
-                para.font.sizeRatio = 100;
+                property.font.sizeRatio = 100;
                 break;
         }
         return line.replace(m[0], '');
