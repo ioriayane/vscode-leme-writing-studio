@@ -34,6 +34,9 @@ export class TextParser {
             if (this._parsePageBreak(line)) {
                 para.pageBreak = true;
                 return para;
+            }else if(this._parseHorizontalRule(line)){
+                para.horizontalRule = true;
+                return para;
             }
 
 
@@ -86,6 +89,15 @@ export class TextParser {
 
     private _parsePageBreak(line: string): boolean {
         const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
+        if (!m) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private _parseHorizontalRule(line: string): boolean {
+        const m = line.trim().match(/^[\\!\uff01][H\uff28][R\uff32]$/u);
         if (!m) {
             return false;
         } else {

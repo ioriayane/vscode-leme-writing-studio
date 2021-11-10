@@ -72,6 +72,21 @@ suite('TextParser Test Suite', () => {
 
     });
 
+    test('_parseHorizontalRule test', () => {
+        let para = new parser.Paragraph();
+
+        assert.strictEqual((textParser as any)._parseHorizontalRule('hoge'), false);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('!HR'), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule(' !HR'), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('!HR '), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule(' !HR '), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('！HR'), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('!ＨR'), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('!HＲ'), true);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('！ＨＲ'), true);
+
+    });
+
     test('_parseOutline test', () => {
         // Lv1~9
         {
