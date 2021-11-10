@@ -1,5 +1,5 @@
 export {
-    ParagraphItemType, EmphasisMarkType
+    ParagraphItemType, EmphasisMarkType, AlignmentType
     , FontProperty as FontProperty, ParagraphProperty
     , ParagraphItem, ParagraphItemText, ParagraphItemImage
     , Paragraph

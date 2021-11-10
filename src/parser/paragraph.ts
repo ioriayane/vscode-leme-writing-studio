@@ -14,6 +14,14 @@ export enum EmphasisMarkType {
     // UnderDot,
 }
 
+export enum AlignmentType {
+    None,
+    Left,
+    Center,
+    Right,
+    // Distribute, //均等
+}
+
 export interface FontProperty {
     sizeRatio: number       //基本サイズに対する倍率(%)
     gothic: boolean         //ゴシック?
@@ -28,6 +36,7 @@ export interface ParagraphProperty {
     outlineLv: number   //0:body, 1:h1, 2:h2, ... , 9:h9
     pageBreak: boolean
     horizontalRule: boolean
+    alignment: AlignmentType
     font: FontProperty
 }
 
@@ -71,6 +80,7 @@ export class Paragraph implements ParagraphProperty {
     public outlineLv = 0;       //0:body, 1:h1, 2:h2, ... , 9:h9
     public pageBreak = false;
     public horizontalRule = false;
+    public alignment = AlignmentType.None;
     public font: FontProperty = {
         sizeRatio: 100,
         gothic: false,

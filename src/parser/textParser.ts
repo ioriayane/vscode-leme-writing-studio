@@ -34,13 +34,17 @@ export class TextParser {
             if (this._parsePageBreak(line)) {
                 para.pageBreak = true;
                 return para;
-            }else if(this._parseHorizontalRule(line)){
+            } else if (this._parseHorizontalRule(line)) {
                 para.horizontalRule = true;
                 return para;
             }
 
 
             line = this._parseOutline(line, para, index);
+
+            line = this._parseAlignment(line, para, parser.AlignmentType.Right);
+            line = this._parseAlignment(line, para, parser.AlignmentType.Left);
+            line = this._parseAlignment(line, para, parser.AlignmentType.Center);
 
             // initial state
             items.push(new parser.ParagraphItemText(line, ''));
@@ -54,6 +58,24 @@ export class TextParser {
         });
 
         return document;
+    }
+
+    private _parsePageBreak(line: string): boolean {
+        const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
+        if (!m) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private _parseHorizontalRule(line: string): boolean {
+        const m = line.trim().match(/^[\\!\uff01][H\uff28][R\uff32]$/u);
+        if (!m) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private _parseOutline(line: string, property: parser.ParagraphProperty, index: number): string {
@@ -87,22 +109,27 @@ export class TextParser {
         return line.replace(m[0], '');
     }
 
-    private _parsePageBreak(line: string): boolean {
-        const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
-        if (!m) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    private _parseAlignment(line: string, property: parser.ParagraphProperty, align: parser.AlignmentType): string {
+        let reg: RegExp;
 
-    private _parseHorizontalRule(line: string): boolean {
-        const m = line.trim().match(/^[\\!\uff01][H\uff28][R\uff32]$/u);
-        if (!m) {
-            return false;
+        if (align === parser.AlignmentType.Right) {
+            reg = /^[ \u3000]*[\\!\uff01][R\uff32B\uff22][ \u3000]/u;
+        } else if (align === parser.AlignmentType.Left) {
+            reg = /^[ \u3000]*[\\!\uff01][L\uff2cT\uff34][ \u3000]/u;
+        } else if (align === parser.AlignmentType.Center) {
+            reg = /^[ \u3000]*[\\!\uff01][C\uff23][ \u3000]/u;
         } else {
-            return true;
+            return line;
         }
+
+        const m = line.match(reg);
+        if (!m) {
+            return line;
+        }
+
+        property.alignment = align;
+
+        return line.replace(m[0], '');
     }
 
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,

@@ -123,6 +123,20 @@ export class HtmlBuilder {
             str.push('ko-midashi');
         }
 
+        switch (property.alignment) {
+            case parser.AlignmentType.Right:
+                str.push('align-right');
+                break;
+            case parser.AlignmentType.Left:
+                str.push('align-left');
+                break;
+            case parser.AlignmentType.Center:
+                str.push('align-center');
+                break;
+            default:
+                break;
+        }
+
         return str.concat(this._buildFontClassString(property.font));
     }
 
