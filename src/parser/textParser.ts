@@ -1,4 +1,5 @@
 import * as parser from './index';
+import { ParagraphItem } from './paragraph';
 
 export class TextParser {
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
@@ -28,6 +29,12 @@ export class TextParser {
         let document: parser.Paragraph[] = lines.map((line, index) => {
             let para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
+
+
+            if (this._parsePageBreak(line)) {
+                para.pageBreak = true;
+                return para;
+            }
 
 
             line = this._parseOutline(line, para, index);
@@ -75,6 +82,15 @@ export class TextParser {
                 break;
         }
         return line.replace(m[0], '');
+    }
+
+    private _parsePageBreak(line: string): boolean {
+        const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
+        if (!m) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,

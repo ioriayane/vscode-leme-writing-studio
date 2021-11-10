@@ -16,18 +16,10 @@ export class HtmlBuilder {
                 switch (item.type) {
                     case parser.ParagraphItemType.Text:
                         return this._buildText(item as parser.ParagraphItemText);
-                    case parser.ParagraphItemType.PageBreak:
-                        // If you want to convert to a epub, this function will be changed to a generator.
-                        // yield 'html for one file';
-                        return '';
                     case parser.ParagraphItemType.Image:
                         return this._buildImage(item as parser.ParagraphItemImage);
                     case parser.ParagraphItemType.Multimedia:
                         return '';
-                    case parser.ParagraphItemType.HyperLink:
-                        return '';
-                    case parser.ParagraphItemType.HorizontalRule:
-                        return '<hr/>';
                     default:
                         return '';
                 }
@@ -48,17 +40,29 @@ export class HtmlBuilder {
             // build line
             let line = lineItems.join('');
 
-            // if paragraph is empty
-            if (line.length === 0) {
-                line = '<br/>';
-            }
 
-            // headline
-            if (paragraph.outlineLv > 0) {
-                if (paragraph.outlineLv <= 6) {
-                    tag = `h${paragraph.outlineLv}`;
-                } else {
-                    tag = 'h6';
+            if (paragraph.pageBreak) {
+                // If you want to convert to a epub, this function will be changed to a generator.
+                // yield 'html for one file';
+                line = this._buildPageBreak();
+
+            } else if (paragraph.horizontalRule) {
+                line = '<hr/>';
+
+            } else {
+
+                // if paragraph is empty
+                if (line.length === 0) {
+                    line = '<br/>';
+                }
+
+                // headline
+                if (paragraph.outlineLv > 0) {
+                    if (paragraph.outlineLv <= 6) {
+                        tag = `h${paragraph.outlineLv}`;
+                    } else {
+                        tag = 'h6';
+                    }
                 }
             }
 
@@ -88,6 +92,10 @@ export class HtmlBuilder {
         return text;
     }
 
+    private _buildPageBreak(): string {
+        return '<br/>   ----  Page break ----   <br/><br/>';
+    }
+
     private _buildImage(item: parser.ParagraphItemImage): string {
 
         if (this._webview && this._parentPath) {
@@ -103,6 +111,10 @@ export class HtmlBuilder {
 
     private _buildParagraphClassString(property: parser.ParagraphProperty): string[] {
         let str: string[] = [];
+
+        if (property.pageBreak) {
+            return ['align-center'];
+        }
 
         const midashi: string[] = ['', 'oo-midashi', 'naka-midashi', 'ko-midashi', 'ko-midashi', 'ko-midashi', 'ko-midashi'];
         if (property.outlineLv > 0 && property.outlineLv < midashi.length) {

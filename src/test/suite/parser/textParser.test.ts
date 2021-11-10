@@ -57,6 +57,21 @@ suite('TextParser Test Suite', () => {
 
     });
 
+    test('_parsePageBreak test', () => {
+        let para = new parser.Paragraph();
+
+        assert.strictEqual((textParser as any)._parsePageBreak('hoge'), false);
+        assert.strictEqual((textParser as any)._parsePageBreak('!PB'), true);
+        assert.strictEqual((textParser as any)._parsePageBreak(' !PB'), true);
+        assert.strictEqual((textParser as any)._parsePageBreak('!PB '), true);
+        assert.strictEqual((textParser as any)._parsePageBreak(' !PB '), true);
+        assert.strictEqual((textParser as any)._parsePageBreak('！PB'), true);
+        assert.strictEqual((textParser as any)._parsePageBreak('!ＰB'), true);
+        assert.strictEqual((textParser as any)._parsePageBreak('!PＢ'), true);
+        assert.strictEqual((textParser as any)._parsePageBreak('！ＰＢ'), true);
+
+    });
+
     test('_parseOutline test', () => {
         // Lv1~9
         {

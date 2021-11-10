@@ -1,11 +1,9 @@
 
 export enum ParagraphItemType {
     Text,
-    PageBreak,
     Image,
     Multimedia,
     HyperLink,
-    HorizontalRule,
 }
 
 export enum EmphasisMarkType {
@@ -28,6 +26,8 @@ export interface FontProperty {
 
 export interface ParagraphProperty {
     outlineLv: number   //0:body, 1:h1, 2:h2, ... , 9:h9
+    pageBreak: boolean
+    horizontalRule: boolean
     font: FontProperty
 }
 
@@ -68,7 +68,9 @@ export class ParagraphItemImage extends ParagraphItem {
 export class Paragraph implements ParagraphProperty {
     public items: ParagraphItem[] = [];
 
-    public outlineLv = 0;   //0:body, 1:h1, 2:h2, ... , 9:h9
+    public outlineLv = 0;       //0:body, 1:h1, 2:h2, ... , 9:h9
+    public pageBreak = false;
+    public horizontalRule = false;
     public font: FontProperty = {
         sizeRatio: 100,
         gothic: false,
