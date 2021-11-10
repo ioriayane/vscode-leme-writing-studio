@@ -61,100 +61,107 @@ suite('TextParser Test Suite', () => {
         // Lv1~9
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('# hoge ', para), 'hoge ');
+            assert.strictEqual((textParser as any)._parseOutline('# hoge ', para, 1), 'hoge ');
             assert.strictEqual(para.outlineLv, 1);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 140);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('## hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('## hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 2);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 120);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 3);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 110);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('#### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('#### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 4);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('##### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('##### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 5);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('###### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('###### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 6);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('####### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('####### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 7);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('######## hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('######## hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 8);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('######### hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('######### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 9);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('＃ hoge ', para), 'hoge ');
+            assert.strictEqual((textParser as any)._parseOutline('＃ hoge ', para, 1), 'hoge ');
             assert.strictEqual(para.outlineLv, 1);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 140);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('＃＃ hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('＃＃ hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 2);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 120);
+        }
+        {
+            let para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseOutline('hoge', para, 0), 'hoge');
+            assert.strictEqual(para.outlineLv, 1);
+            assert.strictEqual(para.font.gothic, true);
+            assert.strictEqual(para.font.sizeRatio, 140);
         }
 
         //unmatch
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('hoge', para), 'hoge');
+            assert.strictEqual((textParser as any)._parseOutline('hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('#hoge ', para), '#hoge ');
+            assert.strictEqual((textParser as any)._parseOutline('#hoge ', para, 1), '#hoge ');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
             let para = new parser.Paragraph();
-            assert.strictEqual((textParser as any)._parseOutline('########## hoge', para), '########## hoge');
+            assert.strictEqual((textParser as any)._parseOutline('########## hoge', para, 1), '########## hoge');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.sizeRatio, 100);

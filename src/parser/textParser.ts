@@ -30,18 +30,7 @@ export class TextParser {
             let items: parser.ParagraphItem[] = [];
 
 
-            line = this._parseOutline(line, para);
-            if (para.outlineLv > 0) {
-            } else {
-                //見出しは無かった
-                if (index === 0 && line.length > 0) {
-                    //最初の行で、空行じゃないので見出しにする
-                    para.outlineLv = 1;
-                    para.font.gothic = true;
-                    para.font.sizeRatio = 140;
-                }
-            }
-
+            line = this._parseOutline(line, para, index);
 
             // initial state
             items.push(new parser.ParagraphItemText(line, ''));
@@ -57,10 +46,16 @@ export class TextParser {
         return document;
     }
 
-    private _parseOutline(line: string, para: parser.Paragraph): string {
+    private _parseOutline(line: string, para: parser.Paragraph, index: number): string {
         const m = line.match(/^[#＃]{1,9}[ 　]/);
         if (!m) {
             // body
+            if (index === 0 && line.length > 0) {
+                //最初の行で、空行じゃないので見出しにする
+                para.outlineLv = 1;
+                para.font.gothic = true;
+                para.font.sizeRatio = 140;
+            }
             return line;
         }
         para.outlineLv = m[0].trim().length;
