@@ -96,6 +96,7 @@ export class HtmlBuilder {
             );
             return `<img alt="" src="${srcPath}"/>`;
         } else {
+            // TODO epubのときもパスは調整が必要
             return `<img alt="" src="${item.path}"/>`;
         }
     }

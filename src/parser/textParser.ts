@@ -87,7 +87,7 @@ export class TextParser {
 
         let retItems: parser.ParagraphItem[] = [];
 
-        items.map((item, index) => {
+        items.forEach((item, index) => {
             if (item.type !== parser.ParagraphItemType.Text) {
                 retItems.push(item);
                 return;
@@ -143,7 +143,7 @@ export class TextParser {
 
         const reg2 = new RegExp(`${s1}|${s3}`, 'gu');
 
-        regRuby.map((reg, index) => {
+        regRuby.forEach((reg, index) => {
             items = this._parseContent(items, new RegExp(reg, 'gu'),
                 (m, retItems) => {
                     let captured = m;
