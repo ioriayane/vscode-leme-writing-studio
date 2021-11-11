@@ -1,6 +1,14 @@
 import * as parser from './index';
 import { ParagraphItem } from './paragraph';
 
+
+export enum BorderState {
+    None,
+    Start,
+    Inner,
+    // End,
+}
+
 export class TextParser {
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
     //カタカナ:http://www.unicode.org/charts/PDF/U30A0.pdf
@@ -22,14 +30,24 @@ export class TextParser {
     private readonly RUBY_SYMBOL = '[\uff5c\\|]';           //縦棒
 
 
+    private _borderState: BorderState = BorderState.None;
+    private _borderCommand: parser.borderProperty = {
+        top: false,
+        left: false,
+        right: false,
+        bottom: false,
+        inner: false
+    };
+
 
     public parse(text: string): parser.Paragraph[] {
 
         let lines = text.split('\n');
-        let document: parser.Paragraph[] = lines.map((line, index) => {
+        let document: parser.Paragraph[] = lines.map((line, index, array) => {
             let para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
 
+            //// Block format
 
             if (this._parsePageBreak(line)) {
                 para.pageBreak = true;
@@ -50,6 +68,9 @@ export class TextParser {
                 }
             }
 
+
+            //// Span format
+
             // initial state
             items.push(new parser.ParagraphItemText(line, ''));
 
@@ -63,6 +84,97 @@ export class TextParser {
 
         return document;
     }
+
+    private _parseBorder(line: string, property: parser.ParagraphProperty, index: number, lines: string[]): boolean {
+        const reg = /^[\\!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
+        const m = line.trim().match(reg);
+        if (!m) {
+            if (this._borderState === BorderState.None) {
+                // out of border area
+            } else {
+                let nextIsEnd: boolean = false;
+                if (index + 1 < lines.length) {
+                    if (lines[index + 1].trim().match(reg)) {
+                        // next is end command
+                        nextIsEnd = true;
+                    }
+                } else {
+                    nextIsEnd = true;
+                }
+                switch (this._borderState) {
+                    case BorderState.Start:
+                        if (nextIsEnd) {
+                            // only one paragraph
+                            property.border.top = this._borderCommand.top;
+                            property.border.bottom = this._borderCommand.bottom;
+                        } else {
+                            // first paragraph
+                            property.border.top = this._borderCommand.top;
+                            property.border.bottom = this._borderCommand.inner;
+                            this._borderState = BorderState.Inner;
+                        }
+                        break;
+                    case BorderState.Inner:
+                        // 2nd, 3rd, ... paragraph
+                        if (nextIsEnd) {
+                            // final paragraph
+                            property.border.top = this._borderCommand.inner;
+                            property.border.bottom = this._borderCommand.bottom;
+                        } else {
+                            // inner paragraph
+                            property.border.top = this._borderCommand.inner;
+                            property.border.bottom = this._borderCommand.inner;
+                        }
+                        break;
+                }
+                //left and right is always use command
+                property.border.left = this._borderCommand.left;
+                property.border.right = this._borderCommand.right;
+            }
+            return false;
+
+        } else if (this._borderState === BorderState.None) {
+            // look up start command
+            let commandItems = m[0].split(/[,\uff0c]/u);
+            if (commandItems.length !== 2) {
+                // end
+                return false;
+            }
+            this._borderCommand.top = false;
+            this._borderCommand.bottom = false;
+            this._borderCommand.left = false;
+            this._borderCommand.right = false;
+            this._borderCommand.inner = false;
+
+            this._borderState = BorderState.Start;
+            if (commandItems[1].match(/[T\uff34]/u)) {
+                this._borderCommand.top = true;
+            }
+            if (commandItems[1].match(/[B\uff22]/u)) {
+                this._borderCommand.bottom = true;
+            }
+            if (commandItems[1].match(/[L\uff2c]/u)) {
+                this._borderCommand.left = true;
+            }
+            if (commandItems[1].match(/[R\uff32]/u)) {
+                this._borderCommand.right = true;
+            }
+            if (commandItems[1].match(/[H\uff28]/u)) {
+                this._borderCommand.inner = true;
+            }
+            return true;
+
+        } else {
+            // end command
+            this._borderCommand.top = false;
+            this._borderCommand.bottom = false;
+            this._borderCommand.left = false;
+            this._borderCommand.right = false;
+            this._borderCommand.inner = false;
+            this._borderState = BorderState.None;
+            return true;
+        }
+    };
 
     private _parsePageBreak(line: string): boolean {
         const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
