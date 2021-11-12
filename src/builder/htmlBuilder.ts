@@ -84,7 +84,7 @@ export class HtmlBuilder {
 
     private _buildText(item: parser.ParagraphItemText): string {
         let text: string;
-        if (item.ruby.length > 0) {
+        if (item.plainRuby.length > 0) {
             text = `<ruby>${item.text}<rt>${item.ruby}</rt></ruby>`;
         } else {
             text = item.text;
@@ -100,7 +100,7 @@ export class HtmlBuilder {
 
         if (this._webview && this._parentPath) {
             const srcPath = this._webview.asWebviewUri(
-                vscode.Uri.file(path.join(this._parentPath, item.path))
+                vscode.Uri.file(path.join(this._parentPath, item.plainPath))
             );
             return `<img alt="" src="${srcPath}"/>`;
         } else {

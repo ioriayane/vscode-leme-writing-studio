@@ -257,17 +257,17 @@ export class TextParser {
             if (item.type !== parser.ParagraphItemType.Text) {
                 retItems.push(item);
                 return;
-            } else if ((item as parser.ParagraphItemText).ruby.length > 0) {
+            } else if ((item as parser.ParagraphItemText).plainRuby.length > 0) {
                 retItems.push(item);
                 return;
             }
 
-            let m = (item as parser.ParagraphItemText).text.match(reg);
+            let m = (item as parser.ParagraphItemText).plainText.match(reg);
             if (!m) {
                 retItems.push(item);
                 return;
             }
-            const splitItems = (item as parser.ParagraphItemText).text.split(reg);
+            const splitItems = (item as parser.ParagraphItemText).plainText.split(reg);
             for (let i = 0; i < splitItems.length; i++) {
                 retItems.push(new parser.ParagraphItemText(splitItems[i], ''));
                 if (i < m.length) {

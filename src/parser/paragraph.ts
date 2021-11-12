@@ -67,19 +67,64 @@ export class ParagraphItemText extends ParagraphItem {
     };
 
     constructor(
-        public text: string,
-        public ruby: string
+        private _text: string,
+        private _ruby: string
     ) {
         super(ParagraphItemType.Text);
+    }
+
+    get plainText(): string {
+        return this._text;
+    }
+
+    get plainRuby(): string {
+        return this._ruby;
+    }
+
+    private _encode(t: string): string {
+        return t.replace('&', '&amp;').replace('<', '&lt;').replace(String.fromCodePoint(0xd), '&#xd').replace(String.fromCodePoint(0x0), '');
+    }
+
+    get text(): string {
+        return this._encode(this._text);
+    }
+
+    get ruby(): string {
+        return this._encode(this._ruby);
     }
 }
 
 export class ParagraphItemImage extends ParagraphItem {
     constructor(
-        public path: string,
-        public alt: string
+        private _path: string,
+        private _alt: string
     ) {
         super(ParagraphItemType.Image);
+    }
+
+    get plainPath(): string {
+        return this._path;
+    }
+
+    get plainAlt(): string {
+        return this._alt;
+    }
+
+    private _encode(t: string): string {
+        return t.replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace(String.fromCodePoint(0x9), '&#x9')
+            .replace(String.fromCodePoint(0xa), '&#xa')
+            .replace(String.fromCodePoint(0xd), '&#xd')
+            .replace(String.fromCodePoint(0x0), '');
+    }
+
+    get path(): string {
+        return encodeURI(this._path);
+    }
+
+    get alt(): string {
+        return this._encode(this._alt);
     }
 }
 

@@ -38,10 +38,12 @@ suite('HtmlBuilder Test Suite', () => {
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
-        const expectImage1 = dummyWebview.asWebviewUri(vscode.Uri.file(path.join('/LeME/', 'media/image1.png')));
+        const expectImage1 = dummyWebview.asWebviewUri(vscode.Uri.file(path.join('/LeME/', 'media/image1<.png')));
 
-        const text = 'line1\nline2\nThis is a ![image](./media/image1.png).\n!PB\nline4\n!HR\nline6\n' +
-            '!R !C right\n!L left\n!C center';
+        const text = 'line1\nline2\nThis is a ![image](./media/image1<.png).\n!PB\nline4\n!HR\nline6\n' +
+            '!R !C right\n!L left\n!C center\n' +
+            '<hr/>\n' +
+            '|今は昔《<span>むかし</span>》';
 
         assert.strictEqual(htmlBuilder.build(
             textParser.parse(text)
@@ -55,7 +57,9 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line6</p>
 <p class="align-right">!C right</p>
 <p class="align-left">left</p>
-<p class="align-center">center</p>`
+<p class="align-center">center</p>
+<p>&lt;hr/></p>
+<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -70,7 +74,9 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line6</p>
 <p class="align-right">!C right</p>
 <p class="align-left">left</p>
-<p class="align-center">center</p>`
+<p class="align-center">center</p>
+<p>&lt;hr/></p>
+<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -85,9 +91,12 @@ suite('HtmlBuilder Test Suite', () => {
 <p>line6</p>
 <p class="align-right">!C right</p>
 <p class="align-left">left</p>
-<p class="align-center">center</p>`
+<p class="align-center">center</p>
+<p>&lt;hr/></p>
+<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
         );
     });
+
 
     test('Build text test(web)', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
@@ -95,22 +104,26 @@ suite('HtmlBuilder Test Suite', () => {
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
-        const text = 'line1\nline2\nThis is a ![image](./media/image1.png).\n!PB\nline4\n!HR\nline6\n' +
-            '!R !C right\n!L left\n!C center';
+        const text = 'line1\nline2\nThis is a ![image](./media/image1<.png).\n!PB\nline4\n!HR\nline6\n' +
+            '!R !C right\n!L left\n!C center\n' +
+            '<hr/>\n' +
+            '|今は昔《<span>むかし</span>》';
 
         assert.strictEqual(htmlBuilder.build(
             textParser.parse(text)
         ),
             `<h1 class="oo-midashi font-140per gfont">line1</h1>
 <p>line2</p>
-<p>This is a <img alt="" src="./media/image1.png"/>.</p>
+<p>This is a <img alt="" src="./media/image1%3C.png"/>.</p>
 <p class="align-center"><br/>   ----  Page break ----   <br/><br/></p>
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
 <p class="align-right">!C right</p>
 <p class="align-left">left</p>
-<p class="align-center">center</p>`
+<p class="align-center">center</p>
+<p>&lt;hr/></p>
+<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -118,14 +131,16 @@ suite('HtmlBuilder Test Suite', () => {
         ),
             `<h1 class="oo-midashi font-140per gfont">line1</h1>
 <p id="scroll_mark" class="active_p">line2</p>
-<p>This is a <img alt="" src="./media/image1.png"/>.</p>
+<p>This is a <img alt="" src="./media/image1%3C.png"/>.</p>
 <p class="align-center"><br/>   ----  Page break ----   <br/><br/></p>
 <p>line4</p>
 <p><hr/></p>
 <p>line6</p>
 <p class="align-right">!C right</p>
 <p class="align-left">left</p>
-<p class="align-center">center</p>`
+<p class="align-center">center</p>
+<p>&lt;hr/></p>
+<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
         );
     });
 
