@@ -308,98 +308,45 @@ suite('HtmlBuilder Test Suite', () => {
                 left: 1,
                 right: 0
             }
-        }), ['.start-1em']);
+        }), ['start-1em']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
                 left: 10,
                 right: 0
             }
-        }), ['.start-10em']);
+        }), ['start-10em']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
                 left: 10,
                 right: 0
             }
-        }), ['.start-10em']);
+        }), ['start-10em']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
                 left: 0,
                 right: 1
             }
-        }), ['.end-1em']);
+        }), ['end-1em']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
                 left: 0,
                 right: 11
             }
-        }), ['.end-10em']);
+        }), ['end-10em']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
                 left: 1,
                 right: 10
             }
-        }), ['.start-1em', '.end-10em']);
+        }), ['start-1em', 'end-10em']);
     });
 
-    test('_buildParagraphStyle test(vertical)', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
-
-        htmlBuilder.textFlowDirection = builder.TextFlowDirection.Vertical;
-
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
-            border: {
-                top: false,    // right when vertical
-                right: false,  // bottom when vertical
-                bottom: false, // left when vertical
-                left: false,   // top when vertical
-                inner: false
-            }
-        }), []);
-
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
-            border: {
-                top: true,    // right when vertical
-                right: false,  // bottom when vertical
-                bottom: false, // left when vertical
-                left: false,   // top when vertical
-                inner: false
-            }
-        }), ['border-0100']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
-            border: {
-                top: false,    // right when vertical
-                right: true,  // bottom when vertical
-                bottom: false, // left when vertical
-                left: false,   // top when vertical
-                inner: false
-            }
-        }), ['border-0010']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
-            border: {
-                top: false,    // right when vertical
-                right: false,  // bottom when vertical
-                bottom: true, // left when vertical
-                left: false,   // top when vertical
-                inner: false
-            }
-        }), ['border-0001']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
-            border: {
-                top: false,    // right when vertical
-                right: false,  // bottom when vertical
-                bottom: false, // left when vertical
-                left: true,   // top when vertical
-                inner: false
-            }
-        }), ['border-1000']);
-    });
-
-    test('_buildParagraphStyle test(horizontal)', () => {
+    test('_buildParagraphStyle test', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         htmlBuilder.textFlowDirection = builder.TextFlowDirection.Horizontal;

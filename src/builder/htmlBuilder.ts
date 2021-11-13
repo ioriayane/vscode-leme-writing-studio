@@ -78,7 +78,7 @@ export class HtmlBuilder implements builder.BuildProperty {
             classList = classList.concat(this._buildParagraphClass(paragraph));
             classList = classList.concat(this._buildParagraphClassIndent(paragraph));
             classList = classList.concat(this._buildParagraphStyle(paragraph));
-            
+
             // build paragraph
             if (idList.length > 0) {
                 idStr = ` id="${idList.join(' ')}"`;
@@ -165,16 +165,16 @@ export class HtmlBuilder implements builder.BuildProperty {
         let str: string[] = [];
 
         if (property.indent.left > 0) {
-            if (property.indent.left <= 10){
+            if (property.indent.left <= 10) {
                 str.push(`start-${property.indent.left}em`);
-            }else{
+            } else {
                 str.push('start-10em');
             }
         }
         if (property.indent.right > 0) {
-            if (property.indent.right <= 10){
+            if (property.indent.right <= 10) {
                 str.push(`end-${property.indent.right}em`);
-            }else{
+            } else {
                 str.push('end-10em');
             }
         }
@@ -186,48 +186,25 @@ export class HtmlBuilder implements builder.BuildProperty {
 
         if (property.border.top || property.border.right || property.border.bottom || property.border.left) {
             let bit: string[] = [];
-            if (this.textFlowDirection === builder.TextFlowDirection.Vertical) {
-                if (property.border.left) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.top) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.right) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.bottom) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
+            if (property.border.top) {
+                bit.push('1');
             } else {
-                if (property.border.top) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.right) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.bottom) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
-                if (property.border.left) {
-                    bit.push('1');
-                } else {
-                    bit.push('0');
-                }
+                bit.push('0');
+            }
+            if (property.border.right) {
+                bit.push('1');
+            } else {
+                bit.push('0');
+            }
+            if (property.border.bottom) {
+                bit.push('1');
+            } else {
+                bit.push('0');
+            }
+            if (property.border.left) {
+                bit.push('1');
+            } else {
+                bit.push('0');
             }
             str.push(`border-${bit.join('')}`);
         }
