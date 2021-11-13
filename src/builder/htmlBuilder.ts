@@ -4,7 +4,7 @@ import * as parser from '../parser/index';
 
 export class HtmlBuilder {
 
-    public textFlowDirection: string = 'vertical'; // 'horizontal'
+    public textFlowDirection: string = 'vertical'; // 'horizontal', 'vertical'
 
     constructor(
         private readonly _webview: vscode.Webview | undefined,
@@ -209,7 +209,7 @@ export class HtmlBuilder {
                     bit.push('0');
                 }
             }
-            str.push(`border_${bit.join('')}`);
+            str.push(`border-${bit.join('')}`);
         }
 
         return str;

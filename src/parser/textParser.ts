@@ -121,11 +121,11 @@ export class TextParser {
                         // 2nd, 3rd, ... paragraph
                         if (nextIsEnd) {
                             // final paragraph
-                            property.border.top = this._borderCommand.inner;
+                            // property.border.top = this._borderCommand.inner;
                             property.border.bottom = this._borderCommand.bottom;
                         } else {
                             // inner paragraph
-                            property.border.top = this._borderCommand.inner;
+                            // property.border.top = this._borderCommand.inner;
                             property.border.bottom = this._borderCommand.inner;
                         }
                         break;

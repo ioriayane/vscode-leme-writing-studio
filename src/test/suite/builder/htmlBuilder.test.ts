@@ -153,10 +153,10 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
 
-    test('_buildParagraphClassString test', () => {
+    test('_buildParagraphClass test', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 0,
             font: {
                 sizeRatio: 100,
@@ -169,7 +169,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), []);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 1,
             font: {
                 sizeRatio: 140,
@@ -182,7 +182,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), ['oo-midashi', 'font-140per', 'gfont']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 2,
             font: {
                 sizeRatio: 120,
@@ -195,7 +195,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), ['naka-midashi', 'font-120per', 'gfont']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 3,
             font: {
                 sizeRatio: 110,
@@ -208,7 +208,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), ['ko-midashi', 'font-110per', 'gfont']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 4,
             font: {
                 sizeRatio: 100,
@@ -221,7 +221,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), ['ko-midashi']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 6,
             font: {
                 sizeRatio: 100,
@@ -234,7 +234,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), ['ko-midashi']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 7,
             font: {
                 sizeRatio: 100,
@@ -249,10 +249,10 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
 
-    test('_buildFontClassString test', () => {
+    test('_buildFontClass test', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 100,
             gothic: false,
             bold: false,
@@ -262,7 +262,7 @@ suite('HtmlBuilder Test Suite', () => {
             em: parser.EmphasisMarkType.None
         }), []);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 140,
             gothic: false,
             bold: false,
@@ -272,7 +272,7 @@ suite('HtmlBuilder Test Suite', () => {
             em: parser.EmphasisMarkType.None
         }), ['font-140per']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 100,
             gothic: true,
             bold: false,
@@ -282,7 +282,7 @@ suite('HtmlBuilder Test Suite', () => {
             em: parser.EmphasisMarkType.None
         }), ['gfont']);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildFontClassString({
+        assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 140,
             gothic: true,
             bold: false,
@@ -291,5 +291,112 @@ suite('HtmlBuilder Test Suite', () => {
             strike: false,
             em: parser.EmphasisMarkType.None
         }), ['font-140per', 'gfont']);
+    });
+
+
+    test('_buildParagraphStyle test(vertical)', () => {
+        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+
+        htmlBuilder.textFlowDirection = 'vertical';
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), []);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: true,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-0100']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: true,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-0010']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: true, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-0001']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: true,   // top when vertical
+                inner: false
+            }
+        }), ['border-1000']);
+    });
+
+    test('_buildParagraphStyle test(horizontal)', () => {
+        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+
+        htmlBuilder.textFlowDirection = 'horizontal';
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), []);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: true,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-1000']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: true,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-0100']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: true,  // left when vertical
+                left: false,   // top when vertical
+                inner: false
+            }
+        }), ['border-0010']);
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+            border: {
+                top: false,    // right when vertical
+                right: false,  // bottom when vertical
+                bottom: false, // left when vertical
+                left: true,   // top when vertical
+                inner: false
+            }
+        }), ['border-0001']);
     });
 });
