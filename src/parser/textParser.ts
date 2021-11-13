@@ -30,6 +30,11 @@ export class TextParser {
     private readonly RUBY_SYMBOL = '[\uff5c\\|]';           //縦棒
 
 
+    private _indentState: boolean = false;
+    private _indentCommand: parser.IndentProperty = {
+        left: 0,
+        right: 0
+    };
     private _borderState: BorderState = BorderState.None;
     private _borderCommand: parser.BorderProperty = {
         top: false,
@@ -41,6 +46,8 @@ export class TextParser {
 
 
     public parse(text: string): parser.Paragraph[] {
+        this._indentState = false;
+        this._borderState = BorderState.None;
 
         let lines = text.split('\n');
         let document: parser.Paragraph[] = lines.map((line, index, array) => {
@@ -88,12 +95,55 @@ export class TextParser {
         return document;
     }
 
+    private _parseIndent(line: string, property: parser.ParagraphProperty): boolean {
+        const reg = /^[\\!\uff01][I\uff29]([0-9\uff10-\uff19]+[,\uff0c][0-9\uff10-\uff19]+)?$/u;
+        const m = line.trim().match(reg);
+        if (!m) {
+            if (!this._indentState) {
+                // out of indent area
+                this._indentCommand.left = 0;
+                this._indentCommand.right = 0;
+            } else {
+                property.indent.left = this._indentCommand.left;
+                property.indent.right = this._indentCommand.right;
+            }
+            return false;
+        } else if (m[0].length === 2) {
+            // end command
+            this._indentState = false;
+            this._indentCommand.left = 0;
+            this._indentCommand.right = 0;
+            return true;
+        } else {
+            // start command
+            let commandItems = m[0].substring(2, m[0].length).split(/[,\uff0c]/u);
+
+            if (commandItems.length !== 2) {
+                return false;
+            } else {
+                this._indentCommand.left = parseInt(commandItems[0]);
+                this._indentCommand.right = parseInt(commandItems[1]);
+                if (this._indentCommand.left === this._indentCommand.right && this._indentCommand.left === 0) {
+                    this._indentState = false;
+                } else {
+                    this._indentState = true;
+                }
+                return true;
+            }
+        }
+    }
+
     private _parseBorder(line: string, property: parser.ParagraphProperty, index: number, lines: string[]): boolean {
         const reg = /^[\\!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
             if (this._borderState === BorderState.None) {
                 // out of border area
+                this._borderCommand.top = false;
+                this._borderCommand.bottom = false;
+                this._borderCommand.left = false;
+                this._borderCommand.right = false;
+                this._borderCommand.inner = false;
             } else {
                 let nextIsEnd: boolean = false;
                 if (index + 1 < lines.length) {
@@ -139,15 +189,16 @@ export class TextParser {
         } else if (this._borderState === BorderState.None) {
             // look up start command
             let commandItems = m[0].split(/[,\uff0c]/u);
-            if (commandItems.length !== 2) {
-                // end
-                return false;
-            }
+
             this._borderCommand.top = false;
             this._borderCommand.bottom = false;
             this._borderCommand.left = false;
             this._borderCommand.right = false;
             this._borderCommand.inner = false;
+            if (commandItems.length !== 2) {
+                // end
+                return false;
+            }
 
             this._borderState = BorderState.Start;
             if (commandItems[1].match(/[T\uff34]/u)) {

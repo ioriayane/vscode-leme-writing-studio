@@ -1,6 +1,6 @@
 export {
     ParagraphItemType, EmphasisMarkType, AlignmentType
-    , FontProperty, BorderProperty, ParagraphProperty
+    , FontProperty, IndentProperty, BorderProperty, ParagraphProperty
     , ParagraphItem, ParagraphItemText, ParagraphItemImage
     , Paragraph
 } from './paragraph';

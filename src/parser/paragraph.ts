@@ -32,6 +32,11 @@ export interface FontProperty {
     em: EmphasisMarkType    //圏点（文字の強調の点）
 };
 
+export interface IndentProperty {
+    left: number
+    right: number
+};
+
 export interface BorderProperty {
     top: boolean    // right when vertical
     left: boolean   // top when vertical
@@ -45,6 +50,7 @@ export interface ParagraphProperty {
     pageBreak: boolean
     horizontalRule: boolean
     alignment: AlignmentType
+    indent: IndentProperty
     border: BorderProperty
     font: FontProperty
 }
@@ -136,6 +142,10 @@ export class Paragraph implements ParagraphProperty {
     public pageBreak = false;
     public horizontalRule = false;
     public alignment = AlignmentType.None;
+    public indent: IndentProperty = {
+        left: 0,
+        right: 0
+    };
     public border: BorderProperty = {
         top: false,
         left: false,

@@ -89,6 +89,85 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).ruby, '');
     });
 
+    test('_parseIndent test', () => {
+        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
+        let para = new parser.Paragraph();
+        (textParser as any)._indentState = false;
+        assert.strictEqual((textParser as any)._parseIndent('!I 1', para), false);
+        assert.strictEqual((textParser as any)._indentState, false);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 });
+        (textParser as any)._indentState = false;
+        assert.strictEqual((textParser as any)._parseIndent('!I2,0', para), true);
+        assert.strictEqual((textParser as any)._indentState, true);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 2, right: 0 });
+        (textParser as any)._indentState = false;
+        assert.strictEqual((textParser as any)._parseIndent('!I4,3', para), true);
+        assert.strictEqual((textParser as any)._indentState, true);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 });
+    });
+
+    test('_parseIndent test(sequence)', () => {
+        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
+        let para = new parser.Paragraph();
+        let i = 0;
+        (textParser as any)._indentState = false;
+        // (textParser as any)._indentCommand = {left: 0, right:0};
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, false, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 }, '_indentCommand:' + i);
+        i = 1;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), true, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 2;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 3;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), true, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 5, right: 6 }, '_indentCommand:' + i);
+        i = 4;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 5, right: 6 }, '_indentCommand:' + i);
+        i = 5;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), true, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, false, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 }, '_indentCommand:' + i);
+    });
+
+    test('_parseIndent test(contain invalid format)', () => {
+        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I,6', 'line4', '!I0,0'];
+        let para = new parser.Paragraph();
+        let i = 0;
+        (textParser as any)._indentState = false;
+        // (textParser as any)._indentCommand = {left: 0, right:0};
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, false, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 }, '_indentCommand:' + i);
+        i = 1;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), true, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 2;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 3;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 4;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), false, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, true, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 4, right: 3 }, '_indentCommand:' + i);
+        i = 5;
+        assert.strictEqual((textParser as any)._parseIndent(lines[i], para), true, 'result:' + i);
+        assert.strictEqual((textParser as any)._indentState, false, '_indentState:' + i);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 }, '_indentCommand:' + i);
+    });
+
     test('_parseBorder test', () => {
         let i: number = 0;
         let lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
