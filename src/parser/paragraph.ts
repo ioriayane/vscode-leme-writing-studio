@@ -32,7 +32,7 @@ export interface FontProperty {
     em: EmphasisMarkType    //圏点（文字の強調の点）
 };
 
-export interface borderProperty {
+export interface BorderProperty {
     top: boolean    // right when vertical
     left: boolean   // top when vertical
     right: boolean  // bottom when vertical
@@ -45,7 +45,7 @@ export interface ParagraphProperty {
     pageBreak: boolean
     horizontalRule: boolean
     alignment: AlignmentType
-    border: borderProperty
+    border: BorderProperty
     font: FontProperty
 }
 
@@ -129,13 +129,14 @@ export class ParagraphItemImage extends ParagraphItem {
 }
 
 export class Paragraph implements ParagraphProperty {
+    public empty: boolean = false;
     public items: ParagraphItem[] = [];
 
     public outlineLv = 0;       //0:body, 1:h1, 2:h2, ... , 9:h9
     public pageBreak = false;
     public horizontalRule = false;
     public alignment = AlignmentType.None;
-    public border: borderProperty = {
+    public border: BorderProperty = {
         top: false,
         left: false,
         right: false,

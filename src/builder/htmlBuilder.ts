@@ -3,6 +3,9 @@ import * as path from 'path';
 import * as parser from '../parser/index';
 
 export class HtmlBuilder {
+
+    public textFlowDirection: string = 'vertical'; // 'horizontal'
+
     constructor(
         private readonly _webview: vscode.Webview | undefined,
         private readonly _parentPath: string | undefined
@@ -12,6 +15,10 @@ export class HtmlBuilder {
     public build(document: parser.Paragraph[], cursorLine: number = -1): string {
 
         let lines = document.map((paragraph, index) => {
+            if (paragraph.empty) {
+                return '';
+            }
+
             let lineItems: string[] = paragraph.items.map(item => {
                 switch (item.type) {
                     case parser.ParagraphItemType.Text:
@@ -67,7 +74,10 @@ export class HtmlBuilder {
             }
 
             // class
-            classList = classList.concat(this._buildParagraphClassString(paragraph));
+            classList = classList.concat(this._buildParagraphClass(paragraph));
+            // style
+            // styleList = styleList.concat(this._buildParagraphStyle(paragraph));
+            classList = classList.concat(this._buildParagraphStyle(paragraph));
 
             // build paragraph
             if (idList.length > 0) {
@@ -79,7 +89,7 @@ export class HtmlBuilder {
             return `<${tag}${idStr}${classStr}>${line}</${tag}>`;
         });
 
-        return lines.join('\n');
+        return lines.filter(line => line.length > 0).join('\n');
     }
 
     private _buildText(item: parser.ParagraphItemText): string {
@@ -109,7 +119,7 @@ export class HtmlBuilder {
         }
     }
 
-    private _buildParagraphClassString(property: parser.ParagraphProperty): string[] {
+    private _buildParagraphClass(property: parser.ParagraphProperty): string[] {
         let str: string[] = [];
 
         if (property.pageBreak) {
@@ -137,10 +147,10 @@ export class HtmlBuilder {
                 break;
         }
 
-        return str.concat(this._buildFontClassString(property.font));
+        return str.concat(this._buildFontClass(property.font));
     }
 
-    private _buildFontClassString(font: parser.FontProperty): string[] {
+    private _buildFontClass(font: parser.FontProperty): string[] {
         let str: string[] = [];
         if (font.sizeRatio !== 100) {
             str.push(`font-${font.sizeRatio}per`);
@@ -148,6 +158,60 @@ export class HtmlBuilder {
         if (font.gothic) {
             str.push('gfont');
         }
+        return str;
+    }
+
+    private _buildParagraphStyle(property: parser.ParagraphProperty): string[] {
+        let str: string[] = [];
+
+        if (property.border.top || property.border.right || property.border.bottom || property.border.left) {
+            let bit: string[] = [];
+            if(this.textFlowDirection === 'vertical'){
+                if (property.border.left) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.top) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.right) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.bottom) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+            }else{
+                if (property.border.top) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.right) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.bottom) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+                if (property.border.left) {
+                    bit.push('1');
+                } else {
+                    bit.push('0');
+                }
+            }
+            str.push(`border_${bit.join('')}`);
+        }
+
         return str;
     }
 }

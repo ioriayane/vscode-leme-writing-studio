@@ -31,7 +31,7 @@ export class TextParser {
 
 
     private _borderState: BorderState = BorderState.None;
-    private _borderCommand: parser.borderProperty = {
+    private _borderCommand: parser.BorderProperty = {
         top: false,
         left: false,
         right: false,
@@ -49,7 +49,10 @@ export class TextParser {
 
             //// Block format
 
-            if (this._parsePageBreak(line)) {
+            if (this._parseBorder(line, para, index, array)) {
+                para.empty = true;
+                return para;
+            } else if (this._parsePageBreak(line)) {
                 para.pageBreak = true;
                 return para;
             } else if (this._parseHorizontalRule(line)) {
