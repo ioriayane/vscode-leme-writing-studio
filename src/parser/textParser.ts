@@ -56,7 +56,10 @@ export class TextParser {
 
             //// Block format
 
-            if (this._parseBorder(line, para, index, array)) {
+            if(this._parseIndent(line, para)){
+                para.empty = true;
+                return para;
+            }else if (this._parseBorder(line, para, index, array)) {
                 para.empty = true;
                 return para;
             } else if (this._parsePageBreak(line)) {

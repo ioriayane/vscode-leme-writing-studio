@@ -293,11 +293,63 @@ suite('HtmlBuilder Test Suite', () => {
         }), ['font-140per', 'gfont']);
     });
 
+    test('_buildParagraphClassIndent test', () => {
+        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 0,
+                right: 0
+            }
+        }), []);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 1,
+                right: 0
+            }
+        }), ['.start-1em']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 10,
+                right: 0
+            }
+        }), ['.start-10em']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 10,
+                right: 0
+            }
+        }), ['.start-10em']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 0,
+                right: 1
+            }
+        }), ['.end-1em']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 0,
+                right: 11
+            }
+        }), ['.end-10em']);
+
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
+            indent: {
+                left: 1,
+                right: 10
+            }
+        }), ['.start-1em', '.end-10em']);
+    });
 
     test('_buildParagraphStyle test(vertical)', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
-        htmlBuilder.textFlowDirection = 'vertical';
+        htmlBuilder.textFlowDirection = builder.TextFlowDirection.Vertical;
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
             border: {
@@ -350,7 +402,7 @@ suite('HtmlBuilder Test Suite', () => {
     test('_buildParagraphStyle test(horizontal)', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
-        htmlBuilder.textFlowDirection = 'horizontal';
+        htmlBuilder.textFlowDirection = builder.TextFlowDirection.Horizontal;
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
             border: {

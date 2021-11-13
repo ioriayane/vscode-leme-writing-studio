@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as parser from '../parser/index';
+import * as builder from './index';
 
-export class HtmlBuilder {
+export class HtmlBuilder implements builder.BuildProperty {
 
-    public textFlowDirection: string = 'vertical'; // 'horizontal', 'vertical'
+    public textFlowDirection = builder.TextFlowDirection.Vertical;
 
     constructor(
         private readonly _webview: vscode.Webview | undefined,
@@ -75,10 +76,9 @@ export class HtmlBuilder {
 
             // class
             classList = classList.concat(this._buildParagraphClass(paragraph));
-            // style
-            // styleList = styleList.concat(this._buildParagraphStyle(paragraph));
+            classList = classList.concat(this._buildParagraphClassIndent(paragraph));
             classList = classList.concat(this._buildParagraphStyle(paragraph));
-
+            
             // build paragraph
             if (idList.length > 0) {
                 idStr = ` id="${idList.join(' ')}"`;
@@ -161,12 +161,32 @@ export class HtmlBuilder {
         return str;
     }
 
+    private _buildParagraphClassIndent(property: parser.ParagraphProperty): string[] {
+        let str: string[] = [];
+
+        if (property.indent.left > 0) {
+            if (property.indent.left <= 10){
+                str.push(`start-${property.indent.left}em`);
+            }else{
+                str.push('start-10em');
+            }
+        }
+        if (property.indent.right > 0) {
+            if (property.indent.right <= 10){
+                str.push(`end-${property.indent.right}em`);
+            }else{
+                str.push('end-10em');
+            }
+        }
+        return str;
+    }
+
     private _buildParagraphStyle(property: parser.ParagraphProperty): string[] {
         let str: string[] = [];
 
         if (property.border.top || property.border.right || property.border.bottom || property.border.left) {
             let bit: string[] = [];
-            if(this.textFlowDirection === 'vertical'){
+            if (this.textFlowDirection === builder.TextFlowDirection.Vertical) {
                 if (property.border.left) {
                     bit.push('1');
                 } else {
@@ -187,7 +207,7 @@ export class HtmlBuilder {
                 } else {
                     bit.push('0');
                 }
-            }else{
+            } else {
                 if (property.border.top) {
                     bit.push('1');
                 } else {
@@ -214,4 +234,5 @@ export class HtmlBuilder {
 
         return str;
     }
+
 }
