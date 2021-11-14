@@ -346,12 +346,12 @@ suite('HtmlBuilder Test Suite', () => {
         }), ['start-1em', 'end-10em']);
     });
 
-    test('_buildParagraphStyle test', () => {
+    test('_buildParagraphClassBorder test', () => {
         let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         htmlBuilder.textFlowDirection = builder.TextFlowDirection.Horizontal;
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: false,    // right when vertical
                 right: false,  // bottom when vertical
@@ -361,7 +361,7 @@ suite('HtmlBuilder Test Suite', () => {
             }
         }), []);
 
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: true,    // right when vertical
                 right: false,  // bottom when vertical
@@ -370,7 +370,7 @@ suite('HtmlBuilder Test Suite', () => {
                 inner: false
             }
         }), ['border-1000']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: false,    // right when vertical
                 right: true,  // bottom when vertical
@@ -379,7 +379,7 @@ suite('HtmlBuilder Test Suite', () => {
                 inner: false
             }
         }), ['border-0100']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: false,    // right when vertical
                 right: false,  // bottom when vertical
@@ -388,7 +388,7 @@ suite('HtmlBuilder Test Suite', () => {
                 inner: false
             }
         }), ['border-0010']);
-        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphStyle({
+        assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: false,    // right when vertical
                 right: false,  // bottom when vertical

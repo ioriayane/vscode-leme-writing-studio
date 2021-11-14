@@ -77,7 +77,7 @@ export class HtmlBuilder implements builder.BuildProperty {
             // class
             classList = classList.concat(this._buildParagraphClass(paragraph));
             classList = classList.concat(this._buildParagraphClassIndent(paragraph));
-            classList = classList.concat(this._buildParagraphStyle(paragraph));
+            classList = classList.concat(this._buildParagraphClassBorder(paragraph));
 
             // build paragraph
             if (idList.length > 0) {
@@ -181,7 +181,7 @@ export class HtmlBuilder implements builder.BuildProperty {
         return str;
     }
 
-    private _buildParagraphStyle(property: parser.ParagraphProperty): string[] {
+    private _buildParagraphClassBorder(property: parser.ParagraphProperty): string[] {
         let str: string[] = [];
 
         if (property.border.top || property.border.right || property.border.bottom || property.border.left) {
