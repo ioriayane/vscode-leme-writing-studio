@@ -56,10 +56,10 @@ export class TextParser {
 
             //// Block format
 
-            if(this._parseIndent(line, para)){
+            if (this._parseIndent(line, para)) {
                 para.empty = true;
                 return para;
-            }else if (this._parseBorder(line, para, index, array)) {
+            } else if (this._parseBorder(line, para, index, array)) {
                 para.empty = true;
                 return para;
             } else if (this._parsePageBreak(line)) {
@@ -68,8 +68,10 @@ export class TextParser {
             } else if (this._parseHorizontalRule(line)) {
                 para.horizontalRule = true;
                 return para;
+            }else if(this._checkEraceConsecutiveBlankLine(line, index, array)){
+                para.empty = true;
+                return para;
             }
-
 
             line = this._parseOutline(line, para, index);
 
@@ -96,6 +98,77 @@ export class TextParser {
         });
 
         return document;
+    }
+
+    private _checkEraceConsecutiveBlankLine(line: string, index: number, lines: string[]) {
+        // No.1 ------------
+        // line                line                line
+        // <blank>  remove     <blank>  remove     <blank>  remove
+        // line                <blank>  stay       <blank>  remove
+        //                     line                <blank>  stay
+        //                                         line
+        // No.2 ------------
+        // line                line                line
+        // <blank>  stay       <blank>  remove     <blank>  remove
+        // Headline            <blank>  stay       <blank>  remove
+        //                     Headline            <blank>  stay
+        //                                         Headline
+        // No.3 ------------
+        // Headline            Headline            Headline
+        // <blank>  stay       <blank>  remove     <blank>  remove
+        // line                <blank>  stay       <blank>  remove
+        //                     line                <blank>  stay
+        //                                         line
+        // No.4 ------------
+        // <BOF>               <BOF>               <BOF>
+        // <blank>  remove     <blank>  remove     <blank>  remove
+        // line                <blank>  stay       <blank>  remove
+        //                     line                <blank>  stay
+        //                                         line
+        // No.5 ------------
+        // <BOF>               <BOF>               <BOF>
+        // <blank>  stay       <blank>  remove     <blank>  remove
+        // Headline            <blank>  stay       <blank>  remove
+        //                     Headline            <blank>  stay
+        //                                         Headline
+
+        // 1. remove when next line is blank.
+        // 2. stay when previus line is blank.
+        // 3. stay when when previus or next line is headline.
+        if (line.length > 0) {
+            return false;
+        }
+
+        let prevLine: string;
+        let nextLine: string;
+        if (index === 0) {
+            prevLine = '<BOF>';
+        } else {
+            prevLine = lines[index - 1];
+        }
+        if ((index + 1) < lines.length) {
+            nextLine = lines[index + 1];
+        } else {
+            nextLine = '';
+        }
+        if (nextLine.length === 0) {
+            return true;
+        } else if (prevLine.length === 0) {
+            return false;
+        } else {
+            let para = new parser.Paragraph();
+            this._parseOutline(prevLine, para, index - 1);
+            if (para.outlineLv > 0) {
+                return false;
+            }
+            para.outlineLv = 0;
+            this._parseOutline(nextLine, para, index + 1);
+            if (para.outlineLv > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 
     private _parseIndent(line: string, property: parser.ParagraphProperty): boolean {

@@ -89,6 +89,171 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).ruby, '');
     });
 
+
+    test('_checkEraceConsecutiveBlankLine test(No.1-1)', () => {
+        let lines: string[] = ['line0', 'line1', '', 'line2'];
+        let expect: boolean[] = [false, false, true, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.1-2)', () => {
+        let lines: string[] = ['line0', 'line1', '', '', 'line2'];
+        let expect: boolean[] = [false, false, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.1-3)', () => {
+        let lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
+        let expect: boolean[] = [false, false, true, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.2-1)', () => {
+        let lines: string[] = ['line0', 'line1', '', '# line2'];
+        let expect: boolean[] = [false, false, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.2-2)', () => {
+        let lines: string[] = ['line0', 'line1', '', '', '# line2'];
+        let expect: boolean[] = [false, false, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.2-3)', () => {
+        let lines: string[] = ['line0', 'line1', '', '', '', '# line2'];
+        let expect: boolean[] = [false, false, true, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.3-1)', () => {
+        let lines: string[] = ['line0', '# line1', '', 'line2'];
+        let expect: boolean[] = [false, false, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.3-2)', () => {
+        let lines: string[] = ['line0', '# line1', '', '', 'line2'];
+        let expect: boolean[] = [false, false, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.3-3)', () => {
+        let lines: string[] = ['line0', '# line1', '', '', '', 'line2'];
+        let expect: boolean[] = [false, false, true, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.4-1)', () => {
+        let lines: string[] = ['', 'line1'];
+        let expect: boolean[] = [true, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.4-2)', () => {
+        let lines: string[] = ['', '', 'line1'];
+        let expect: boolean[] = [true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.4-3)', () => {
+        let lines: string[] = ['', '', '', 'line1'];
+        let expect: boolean[] = [true, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.5-1)', () => {
+        let lines: string[] = ['', '# line1'];
+        let expect: boolean[] = [false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.5-2)', () => {
+        let lines: string[] = ['', '', '# line1'];
+        let expect: boolean[] = [true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.5-3)', () => {
+        let lines: string[] = ['', '', '', '# line1'];
+        let expect: boolean[] = [true, true, false, false];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.6-1)', () => {
+        let lines: string[] = ['line0', 'line1', ''];
+        let expect: boolean[] = [false, false, true];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.6-2)', () => {
+        let lines: string[] = ['line0', 'line1', '', ''];
+        let expect: boolean[] = [false, false, true, true];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+    test('_checkEraceConsecutiveBlankLine test(No.6-3)', () => {
+        let lines: string[] = ['line0', 'line1', '', '', ''];
+        let expect: boolean[] = [false, false, true, true, true];
+        let para = new parser.Paragraph();
+        for(let i=0; i<lines.length; i++){
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+    });
+
+
+
     test('_parseIndent test', () => {
         let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
         let para = new parser.Paragraph();
