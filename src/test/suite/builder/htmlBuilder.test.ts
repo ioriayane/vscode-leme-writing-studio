@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as parser from '../../../parser/index';
 import * as builder from '../../../builder/index';
-
+import * as book from '../../../book';
 
 class DummyWebview implements vscode.Webview {
     constructor() {
@@ -32,10 +32,34 @@ class DummyWebview implements vscode.Webview {
 suite('HtmlBuilder Test Suite', () => {
     vscode.window.showInformationMessage('Start HtmlBuilder tests.');
 
+
+    const bookText: book.TextSetting = {
+        eraceConsecutiveBlankLine: true,
+
+        firstLineHeading: true,
+        headling: true,
+        align: true,
+        indent: true,
+        border: true,
+        pageBreak: true,
+        horizontalRule: true, // hr
+        rubyBracket: true, //二重山括弧
+        rubyParen: true, //丸括弧
+        tcy: true,
+        bold: true,
+        italic: true,
+        emMarkDot: true, //傍点 +文字+
+        emMarkDot2: true, //傍点の記法違い 《《文字》》
+        emMarkComma: true,
+        image: true,
+
+        advanceMode: false //細かい書式をMarkdown方式にする
+    };
+
     test('Build text test', () => {
         const dummyWebview = new DummyWebview();
         const htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME');
-        const textParser = new parser.TextParser();
+        const textParser = new parser.TextParser(bookText);
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
@@ -101,7 +125,7 @@ suite('HtmlBuilder Test Suite', () => {
 
     test('Build text test(web)', () => {
         const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
-        const textParser = new parser.TextParser();
+        const textParser = new parser.TextParser(bookText);
 
         assert.strictEqual(htmlBuilder.build([]), '');
 

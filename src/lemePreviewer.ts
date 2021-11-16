@@ -3,10 +3,38 @@ import * as path from 'path';
 import { getNonce } from './utility';
 import * as parser from './parser/index';
 import * as builder from './builder/index';
+import * as book from './book';
 
 export class LemePreviewer {
 
     public static readonly comandName = 'leme-writing-studio.preview';
+
+    public bookSpec: book.BookSpecification = {
+        textFlowDirection: book.TextFlowDirection.vertical
+    };
+    public bookTextSetting: book.TextSetting = {
+        eraceConsecutiveBlankLine: false,
+
+        firstLineHeading: true,
+        headling: true,
+        align: true,
+        indent: true,
+        border: true,
+        pageBreak: true,
+        horizontalRule: true, // hr
+        rubyBracket: true, //二重山括弧
+        rubyParen: true, //丸括弧
+        tcy: true,
+        bold: true,
+        italic: true,
+        emMarkDot: true, //傍点 +文字+
+        emMarkDot2: true, //傍点の記法違い 《《文字》》
+        emMarkComma: true,
+        image: true,
+
+        advanceMode: false //細かい書式をMarkdown方式にする
+    };
+
 
     constructor(
         private readonly _extensionUri: vscode.Uri
@@ -88,7 +116,13 @@ export class LemePreviewer {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
             this._extensionUri, 'ebook_resource', 'book-script.js'));
         const nonce = getNonce();
-        const direction = 'vrtl'; //vrtl hltr
+
+        let direction: string;
+        if (this.bookSpec.textFlowDirection === book.TextFlowDirection.vertical) {
+            direction = 'vrtl';
+        } else {
+            direction = 'hltr';
+        }
 
         return `<!DOCTYPE html>
         <html lang="en" class="${direction}">
@@ -111,7 +145,7 @@ export class LemePreviewer {
 
     private async _parse(text: string, cursorLine: number, parentPath: string): Promise<string> {
         const htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath);
-        const textParser = new parser.TextParser();
+        const textParser = new parser.TextParser(this.bookTextSetting);
         return htmlBuilder.build(textParser.parse(text), cursorLine);
     }
 

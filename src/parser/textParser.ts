@@ -1,6 +1,5 @@
 import * as parser from './index';
-import { ParagraphItem } from './paragraph';
-
+import * as book from '../book';
 
 export enum BorderState {
     none,
@@ -10,6 +9,10 @@ export enum BorderState {
 }
 
 export class TextParser {
+    constructor(
+        private readonly _textSetting: book.TextSetting
+    ) { }
+
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
     //カタカナ:http://www.unicode.org/charts/PDF/U30A0.pdf
     //      http://www.unicode.org/charts/PDF/U31F0.pdf
@@ -68,7 +71,7 @@ export class TextParser {
             } else if (this._parseHorizontalRule(line)) {
                 para.horizontalRule = true;
                 return para;
-            }else if(this._checkEraceConsecutiveBlankLine(line, index, array)){
+            } else if (this._checkEraceConsecutiveBlankLine(line, index, array)) {
                 para.empty = true;
                 return para;
             }
@@ -131,6 +134,10 @@ export class TextParser {
         // Headline            <blank>  stay       <blank>  remove
         //                     Headline            <blank>  stay
         //                                         Headline
+
+        if(!this._textSetting.eraceConsecutiveBlankLine){
+            return false;
+        }
 
         // 1. remove when next line is blank.
         // 2. stay when previus line is blank.

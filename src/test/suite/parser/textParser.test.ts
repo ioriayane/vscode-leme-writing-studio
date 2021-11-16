@@ -10,7 +10,28 @@ import { BorderState } from '../../../parser/textParser';
 suite('TextParser Test Suite', () => {
     vscode.window.showInformationMessage('Start TextParser tests.');
 
-    const textParser = new parser.TextParser();
+    const textParser = new parser.TextParser({
+        eraceConsecutiveBlankLine: true,
+
+        firstLineHeading: true,
+        headling: true,
+        align: true,
+        indent: true,
+        border: true,
+        pageBreak: true,
+        horizontalRule: true, // hr
+        rubyBracket: true, //二重山括弧
+        rubyParen: true, //丸括弧
+        tcy: true,
+        bold: true,
+        italic: true,
+        emMarkDot: true, //傍点 +文字+
+        emMarkDot2: true, //傍点の記法違い 《《文字》》
+        emMarkComma: true,
+        image: true,
+
+        advanceMode: false //細かい書式をMarkdown方式にする
+    });
 
     test('Simple text test', () => {
         const document = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
@@ -235,6 +256,15 @@ suite('TextParser Test Suite', () => {
         }
     });
 
+    test('_checkEraceConsecutiveBlankLine test(No.1-3) disable', () => {
+        const lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
+        const expect: boolean[] = [false, false, false, false, false, false];
+        (textParser as any)._textSetting.eraceConsecutiveBlankLine = false;
+        for (let i = 0; i < lines.length; i++) {
+            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+        }
+        (textParser as any)._textSetting.eraceConsecutiveBlankLine = true;
+    });
 
 
     test('_parseIndent test', () => {
