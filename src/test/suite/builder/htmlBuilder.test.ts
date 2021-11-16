@@ -350,8 +350,6 @@ suite('HtmlBuilder Test Suite', () => {
     test('_buildParagraphClassBorder test', () => {
         const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
-        htmlBuilder.textFlowDirection = builder.TextFlowDirection.horizontal;
-
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {
                 top: false,    // right when vertical

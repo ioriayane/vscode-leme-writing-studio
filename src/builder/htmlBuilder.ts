@@ -1,11 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as parser from '../parser/index';
-import * as builder from './index';
 
-export class HtmlBuilder implements builder.BuildProperty {
-
-    public textFlowDirection = builder.TextFlowDirection.vertical;
+export class HtmlBuilder {
 
     constructor(
         private readonly _webview: vscode.Webview | undefined,
