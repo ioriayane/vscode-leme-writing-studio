@@ -22,11 +22,11 @@ export class HtmlBuilder implements builder.BuildProperty {
 
             const lineItems: string[] = paragraph.items.map(item => {
                 switch (item.type) {
-                    case parser.ParagraphItemType.Text:
+                    case parser.ParagraphItemType.text:
                         return this._buildText(item as parser.ParagraphItemText);
-                    case parser.ParagraphItemType.Image:
+                    case parser.ParagraphItemType.image:
                         return this._buildImage(item as parser.ParagraphItemImage);
-                    case parser.ParagraphItemType.Multimedia:
+                    case parser.ParagraphItemType.multimedia:
                         return '';
                     default:
                         return '';
@@ -134,13 +134,13 @@ export class HtmlBuilder implements builder.BuildProperty {
         }
 
         switch (property.alignment) {
-            case parser.AlignmentType.Right:
+            case parser.AlignmentType.right:
                 str.push('align-right');
                 break;
-            case parser.AlignmentType.Left:
+            case parser.AlignmentType.left:
                 str.push('align-left');
                 break;
-            case parser.AlignmentType.Center:
+            case parser.AlignmentType.center:
                 str.push('align-center');
                 break;
             default:

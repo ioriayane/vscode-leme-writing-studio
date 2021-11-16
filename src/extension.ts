@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import { LemePreviewer } from './lemePreviewer';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
 
-	let lemePreviewer = new LemePreviewer(context.extensionUri);
+	const lemePreviewer = new LemePreviewer(context.extensionUri);
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemePreviewer.comandName, () => {
 		lemePreviewer.create(context, vscode.window.activeTextEditor);
@@ -22,4 +22,5 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 }
 
-export function deactivate() { }
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export function deactivate(): void { }

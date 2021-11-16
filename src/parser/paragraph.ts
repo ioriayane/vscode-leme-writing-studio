@@ -1,24 +1,24 @@
 
 export enum ParagraphItemType {
-    Text,
-    Image,
-    Multimedia,
-    HyperLink,
+    text,
+    image,
+    multimedia,
+    hyperLink,
 }
 
 export enum EmphasisMarkType {
-    None,
+    none,
     // Circle,
-    Comma,
-    Dot,
+    comma,
+    dot,
     // UnderDot,
 }
 
 export enum AlignmentType {
-    None,
-    Left,
-    Center,
-    Right,
+    none,
+    left,
+    center,
+    right,
     // Distribute, //均等
 }
 
@@ -30,12 +30,12 @@ export interface FontProperty {
     italic: boolean         //斜体
     strike: boolean         //取り消し線
     em: EmphasisMarkType    //圏点（文字の強調の点）
-};
+}
 
 export interface IndentProperty {
     left: number
     right: number
-};
+}
 
 export interface BorderProperty {
     top: boolean    // right when vertical
@@ -43,7 +43,7 @@ export interface BorderProperty {
     right: boolean  // bottom when vertical
     bottom: boolean // left when vertical
     inner: boolean
-};
+}
 
 export interface ParagraphProperty {
     outlineLv: number   //0:body, 1:h1, 2:h2, ... , 9:h9
@@ -69,14 +69,14 @@ export class ParagraphItemText extends ParagraphItem {
         emLine: false,
         italic: false,
         strike: false,
-        em: EmphasisMarkType.None
+        em: EmphasisMarkType.none
     };
 
     constructor(
         private _text: string,
         private _ruby: string
     ) {
-        super(ParagraphItemType.Text);
+        super(ParagraphItemType.text);
     }
 
     get plainText(): string {
@@ -105,7 +105,7 @@ export class ParagraphItemImage extends ParagraphItem {
         private _path: string,
         private _alt: string
     ) {
-        super(ParagraphItemType.Image);
+        super(ParagraphItemType.image);
     }
 
     get plainPath(): string {
@@ -135,13 +135,13 @@ export class ParagraphItemImage extends ParagraphItem {
 }
 
 export class Paragraph implements ParagraphProperty {
-    public empty: boolean = false;
+    public empty = false;
     public items: ParagraphItem[] = [];
 
     public outlineLv = 0;       //0:body, 1:h1, 2:h2, ... , 9:h9
     public pageBreak = false;
     public horizontalRule = false;
-    public alignment = AlignmentType.None;
+    public alignment = AlignmentType.none;
     public indent: IndentProperty = {
         left: 0,
         right: 0
@@ -160,16 +160,16 @@ export class Paragraph implements ParagraphProperty {
         emLine: false,
         italic: false,
         strike: false,
-        em: EmphasisMarkType.None
+        em: EmphasisMarkType.none
     };
 
-    public pushText(text: string = '', ruby: string = ''): ParagraphItemText {
-        let item = new ParagraphItemText(text, ruby);
+    public pushText(text = '', ruby = ''): ParagraphItemText {
+        const item = new ParagraphItemText(text, ruby);
         this.items.push(item);
         return item;
     }
-    public pushImage(path: string = '', alt: string = ''): ParagraphItemImage {
-        let item = new ParagraphItemImage(path, alt);
+    public pushImage(path = '', alt = ''): ParagraphItemImage {
+        const item = new ParagraphItemImage(path, alt);
         this.items.push(item);
         return item;
     }

@@ -15,7 +15,7 @@ export class LemePreviewer {
     private _panel: vscode.WebviewPanel | undefined = undefined;
 
 
-    public create(context: vscode.ExtensionContext, editor: vscode.TextEditor | undefined) {
+    public create(context: vscode.ExtensionContext, editor: vscode.TextEditor | undefined): void {
         if (!editor) {
             // console.log('Not found active text editor.');
             return;
@@ -49,7 +49,7 @@ export class LemePreviewer {
         }
     }
 
-    public update(editor: vscode.TextEditor | undefined, initialize: boolean = false) {
+    public update(editor: vscode.TextEditor | undefined, initialize = false): void {
         if (!editor) {
             // console.log('Not found active text editor.');
             return;
@@ -106,10 +106,10 @@ export class LemePreviewer {
     }
 
     private async _parse(text: string, cursorLine: number, parentPath: string): Promise<string> {
-        let htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath);
-        let textParser = new parser.TextParser();
+        const htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath);
+        const textParser = new parser.TextParser();
         return htmlBuilder.build(textParser.parse(text), cursorLine);
-    };
+    }
 
 }
 

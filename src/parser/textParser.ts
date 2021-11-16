@@ -75,11 +75,11 @@ export class TextParser {
 
             line = this._parseOutline(line, para, index);
 
-            line = this._parseAlignment(line, para, parser.AlignmentType.Right);
-            if (para.alignment === parser.AlignmentType.None) {
-                line = this._parseAlignment(line, para, parser.AlignmentType.Left);
-                if (para.alignment === parser.AlignmentType.None) {
-                    line = this._parseAlignment(line, para, parser.AlignmentType.Center);
+            line = this._parseAlignment(line, para, parser.AlignmentType.right);
+            if (para.alignment === parser.AlignmentType.none) {
+                line = this._parseAlignment(line, para, parser.AlignmentType.left);
+                if (para.alignment === parser.AlignmentType.none) {
+                    line = this._parseAlignment(line, para, parser.AlignmentType.center);
                 }
             }
 
@@ -358,11 +358,11 @@ export class TextParser {
     private _parseAlignment(line: string, property: parser.ParagraphProperty, align: parser.AlignmentType): string {
         let reg: RegExp;
 
-        if (align === parser.AlignmentType.Right) {
+        if (align === parser.AlignmentType.right) {
             reg = /^[ \u3000]*[!\uff01][R\uff32B\uff22][ \u3000]/u;
-        } else if (align === parser.AlignmentType.Left) {
+        } else if (align === parser.AlignmentType.left) {
             reg = /^[ \u3000]*[!\uff01][L\uff2cT\uff34][ \u3000]/u;
-        } else if (align === parser.AlignmentType.Center) {
+        } else if (align === parser.AlignmentType.center) {
             reg = /^[ \u3000]*[!\uff01][C\uff23][ \u3000]/u;
         } else {
             return line;
@@ -379,12 +379,12 @@ export class TextParser {
     }
 
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,
-        callback: (m: string, retItems: parser.ParagraphItem[]) => unknown) {
+        callback: (m: string, retItems: parser.ParagraphItem[]) => void) {
 
         const retItems: parser.ParagraphItem[] = [];
 
         items.forEach((item) => {
-            if (item.type !== parser.ParagraphItemType.Text) {
+            if (item.type !== parser.ParagraphItemType.text) {
                 retItems.push(item);
                 return;
             } else if ((item as parser.ParagraphItemText).plainRuby.length > 0) {

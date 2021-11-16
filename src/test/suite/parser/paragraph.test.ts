@@ -9,13 +9,13 @@ suite('Paragraph Test Suite', () => {
     vscode.window.showInformationMessage('Start Paragraph tests.');
 
     test('Paragraph item test', () => {
-        let para = new parser.Paragraph();
+        const para = new parser.Paragraph();
 
-        let text = para.pushText('text1', 'ruby1');
+        const text = para.pushText('text1', 'ruby1');
         assert.strictEqual(text.text, 'text1');
         assert.strictEqual(text.ruby, 'ruby1');
 
-        let image = para.pushImage('path1', 'alt1');
+        const image = para.pushImage('path1', 'alt1');
         assert.strictEqual(image.path, 'path1');
         assert.strictEqual(image.alt, 'alt1');
 
@@ -33,7 +33,7 @@ suite('Paragraph Test Suite', () => {
 
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.bold, false);
-            assert.strictEqual(para.font.em, parser.EmphasisMarkType.None);
+            assert.strictEqual(para.font.em, parser.EmphasisMarkType.none);
             assert.strictEqual(para.font.emLine, false);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.italic, false);
@@ -45,7 +45,7 @@ suite('Paragraph Test Suite', () => {
             const item = new parser.ParagraphItemText('', '');
 
             assert.strictEqual(item.font.bold, false);
-            assert.strictEqual(item.font.em, parser.EmphasisMarkType.None);
+            assert.strictEqual(item.font.em, parser.EmphasisMarkType.none);
             assert.strictEqual(item.font.emLine, false);
             assert.strictEqual(item.font.gothic, false);
             assert.strictEqual(item.font.italic, false);

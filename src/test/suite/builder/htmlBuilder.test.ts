@@ -166,7 +166,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), []);
 
@@ -179,7 +179,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['oo-midashi', 'font-140per', 'gfont']);
 
@@ -192,7 +192,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['naka-midashi', 'font-120per', 'gfont']);
 
@@ -205,7 +205,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['ko-midashi', 'font-110per', 'gfont']);
 
@@ -218,7 +218,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['ko-midashi']);
 
@@ -231,7 +231,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['ko-midashi']);
 
@@ -244,7 +244,7 @@ suite('HtmlBuilder Test Suite', () => {
                 emLine: false,
                 italic: false,
                 strike: false,
-                em: parser.EmphasisMarkType.None
+                em: parser.EmphasisMarkType.none
             }
         }), ['ko-midashi']);
     });
@@ -260,7 +260,7 @@ suite('HtmlBuilder Test Suite', () => {
             emLine: false,
             italic: false,
             strike: false,
-            em: parser.EmphasisMarkType.None
+            em: parser.EmphasisMarkType.none
         }), []);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
@@ -270,7 +270,7 @@ suite('HtmlBuilder Test Suite', () => {
             emLine: false,
             italic: false,
             strike: false,
-            em: parser.EmphasisMarkType.None
+            em: parser.EmphasisMarkType.none
         }), ['font-140per']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
@@ -280,7 +280,7 @@ suite('HtmlBuilder Test Suite', () => {
             emLine: false,
             italic: false,
             strike: false,
-            em: parser.EmphasisMarkType.None
+            em: parser.EmphasisMarkType.none
         }), ['gfont']);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
@@ -290,7 +290,7 @@ suite('HtmlBuilder Test Suite', () => {
             emLine: false,
             italic: false,
             strike: false,
-            em: parser.EmphasisMarkType.None
+            em: parser.EmphasisMarkType.none
         }), ['font-140per', 'gfont']);
     });
 
