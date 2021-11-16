@@ -379,7 +379,7 @@ export class TextParser {
     }
 
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,
-        callback: (m: string, retItems: parser.ParagraphItem[]) => any) {
+        callback: (m: string, retItems: parser.ParagraphItem[]) => unknown) {
 
         const retItems: parser.ParagraphItem[] = [];
 
