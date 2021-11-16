@@ -9,6 +9,9 @@
                 mainDiv.innerHTML = message.body;
                 scrollUpdate();
                 break;
+            case 'sync':
+                scrollUpdate();
+                break;
         }
     });
 

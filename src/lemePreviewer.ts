@@ -68,6 +68,10 @@ export class LemePreviewer {
             if (this._panel) {
                 if (initialize) {
                     this._panel.webview.html = this._getWebviewContent(this._panel.webview, result);
+                    this._panel.webview.postMessage({
+                        command: 'sync',
+                        body: ''
+                    });
                 } else {
                     this._panel.webview.postMessage({
                         command: 'update',
