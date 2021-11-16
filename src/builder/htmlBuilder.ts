@@ -13,14 +13,14 @@ export class HtmlBuilder implements builder.BuildProperty {
     ) {
     }
 
-    public build(document: parser.Paragraph[], cursorLine: number = -1): string {
+    public build(document: parser.Paragraph[], cursorLine = -1): string {
 
-        let lines = document.map((paragraph, index) => {
+        const lines = document.map((paragraph, index) => {
             if (paragraph.empty) {
                 return '';
             }
 
-            let lineItems: string[] = paragraph.items.map(item => {
+            const lineItems: string[] = paragraph.items.map(item => {
                 switch (item.type) {
                     case parser.ParagraphItemType.Text:
                         return this._buildText(item as parser.ParagraphItemText);
@@ -34,7 +34,7 @@ export class HtmlBuilder implements builder.BuildProperty {
             });
 
             let tag = 'p';
-            let idList: string[] = [];
+            const idList: string[] = [];
             let classList: string[] = [];
             let idStr = '';
             let classStr = '';
@@ -120,7 +120,7 @@ export class HtmlBuilder implements builder.BuildProperty {
     }
 
     private _buildParagraphClass(property: parser.ParagraphProperty): string[] {
-        let str: string[] = [];
+        const str: string[] = [];
 
         if (property.pageBreak) {
             return ['align-center'];
@@ -151,7 +151,7 @@ export class HtmlBuilder implements builder.BuildProperty {
     }
 
     private _buildFontClass(font: parser.FontProperty): string[] {
-        let str: string[] = [];
+        const str: string[] = [];
         if (font.sizeRatio !== 100) {
             str.push(`font-${font.sizeRatio}per`);
         }
@@ -162,7 +162,7 @@ export class HtmlBuilder implements builder.BuildProperty {
     }
 
     private _buildParagraphClassIndent(property: parser.ParagraphProperty): string[] {
-        let str: string[] = [];
+        const str: string[] = [];
 
         if (property.indent.left > 0) {
             if (property.indent.left <= 10) {
@@ -182,10 +182,10 @@ export class HtmlBuilder implements builder.BuildProperty {
     }
 
     private _buildParagraphClassBorder(property: parser.ParagraphProperty): string[] {
-        let str: string[] = [];
+        const str: string[] = [];
 
         if (property.border.top || property.border.right || property.border.bottom || property.border.left) {
-            let bit: string[] = [];
+            const bit: string[] = [];
             if (property.border.top) {
                 bit.push('1');
             } else {

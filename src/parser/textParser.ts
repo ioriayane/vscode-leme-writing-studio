@@ -30,7 +30,7 @@ export class TextParser {
     private readonly RUBY_SYMBOL = '[\uff5c\\|]';           //縦棒
 
 
-    private _indentState: boolean = false;
+    private _indentState = false;
     private _indentCommand: parser.IndentProperty = {
         left: 0,
         right: 0
@@ -49,9 +49,9 @@ export class TextParser {
         this._indentState = false;
         this._borderState = BorderState.None;
 
-        let lines = text.split('\n');
-        let document: parser.Paragraph[] = lines.map((line, index, array) => {
-            let para = new parser.Paragraph();
+        const lines = text.split('\n');
+        const document: parser.Paragraph[] = lines.map((line, index, array) => {
+            const para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
 
             //// Block format
@@ -156,7 +156,7 @@ export class TextParser {
         } else if (prevLine.length === 0) {
             return false;
         } else {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             this._parseOutline(prevLine, para, index - 1);
             if (para.outlineLv > 0) {
                 return false;
@@ -172,7 +172,7 @@ export class TextParser {
     }
 
     private _parseIndent(line: string, property: parser.ParagraphProperty): boolean {
-        const reg = /^[\\!\uff01][I\uff29]([0-9\uff10-\uff19]+[,\uff0c][0-9\uff10-\uff19]+)?$/u;
+        const reg = /^[!\uff01][I\uff29]([0-9\uff10-\uff19]+[,\uff0c][0-9\uff10-\uff19]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
             if (!this._indentState) {
@@ -192,7 +192,7 @@ export class TextParser {
             return true;
         } else {
             // start command
-            let commandItems = m[0].substring(2, m[0].length).split(/[,\uff0c]/u);
+            const commandItems = m[0].substring(2, m[0].length).split(/[,\uff0c]/u);
 
             if (commandItems.length !== 2) {
                 return false;
@@ -210,7 +210,7 @@ export class TextParser {
     }
 
     private _parseBorder(line: string, property: parser.ParagraphProperty, index: number, lines: string[]): boolean {
-        const reg = /^[\\!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
+        const reg = /^[!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
             if (this._borderState === BorderState.None) {
@@ -221,7 +221,7 @@ export class TextParser {
                 this._borderCommand.right = false;
                 this._borderCommand.inner = false;
             } else {
-                let nextIsEnd: boolean = false;
+                let nextIsEnd = false;
                 if (index + 1 < lines.length) {
                     if (lines[index + 1].trim().match(reg)) {
                         // next is end command
@@ -264,7 +264,7 @@ export class TextParser {
 
         } else if (this._borderState === BorderState.None) {
             // look up start command
-            let commandItems = m[0].split(/[,\uff0c]/u);
+            const commandItems = m[0].split(/[,\uff0c]/u);
 
             this._borderCommand.top = false;
             this._borderCommand.bottom = false;
@@ -304,10 +304,10 @@ export class TextParser {
             this._borderState = BorderState.None;
             return true;
         }
-    };
+    }
 
     private _parsePageBreak(line: string): boolean {
-        const m = line.trim().match(/^[\\!\uff01][P\uff30][B\uff22]$/u);
+        const m = line.trim().match(/^[!\uff01][P\uff30][B\uff22]$/u);
         if (!m) {
             return false;
         } else {
@@ -316,7 +316,7 @@ export class TextParser {
     }
 
     private _parseHorizontalRule(line: string): boolean {
-        const m = line.trim().match(/^[\\!\uff01][H\uff28][R\uff32]$/u);
+        const m = line.trim().match(/^[!\uff01][H\uff28][R\uff32]$/u);
         if (!m) {
             return false;
         } else {
@@ -325,7 +325,7 @@ export class TextParser {
     }
 
     private _parseOutline(line: string, property: parser.ParagraphProperty, index: number): string {
-        const m = line.match(/^[#＃]{1,9}[ 　]/);
+        const m = line.match(/^[#\uff03]{1,9}[ \u3000]/u);
         if (!m) {
             // body
             if (index === 0 && line.length > 0) {
@@ -359,11 +359,11 @@ export class TextParser {
         let reg: RegExp;
 
         if (align === parser.AlignmentType.Right) {
-            reg = /^[ \u3000]*[\\!\uff01][R\uff32B\uff22][ \u3000]/u;
+            reg = /^[ \u3000]*[!\uff01][R\uff32B\uff22][ \u3000]/u;
         } else if (align === parser.AlignmentType.Left) {
-            reg = /^[ \u3000]*[\\!\uff01][L\uff2cT\uff34][ \u3000]/u;
+            reg = /^[ \u3000]*[!\uff01][L\uff2cT\uff34][ \u3000]/u;
         } else if (align === parser.AlignmentType.Center) {
-            reg = /^[ \u3000]*[\\!\uff01][C\uff23][ \u3000]/u;
+            reg = /^[ \u3000]*[!\uff01][C\uff23][ \u3000]/u;
         } else {
             return line;
         }
@@ -381,9 +381,9 @@ export class TextParser {
     private _parseContent(items: parser.ParagraphItem[], reg: RegExp,
         callback: (m: string, retItems: parser.ParagraphItem[]) => any) {
 
-        let retItems: parser.ParagraphItem[] = [];
+        const retItems: parser.ParagraphItem[] = [];
 
-        items.forEach((item, index) => {
+        items.forEach((item) => {
             if (item.type !== parser.ParagraphItemType.Text) {
                 retItems.push(item);
                 return;
@@ -392,7 +392,7 @@ export class TextParser {
                 return;
             }
 
-            let m = (item as parser.ParagraphItemText).plainText.match(reg);
+            const m = (item as parser.ParagraphItemText).plainText.match(reg);
             if (!m) {
                 retItems.push(item);
                 return;
@@ -406,12 +406,12 @@ export class TextParser {
             }
         });
         return retItems;
-    };
+    }
 
     private _parseImage(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
-        return this._parseContent(items, /[!！][\[［][^\[\]［］\(（]*[\]］][（\(][^）\)]*[）\)]/g,
+        return this._parseContent(items, /[!\uff01][\[\uff3b][^\[\]\uff3b\uff3d\(\uff08]*[\]\uff3d][\uff08\(][^\uff09\)]*[\uff09\)]/gu,
             (m, retItems) => {
-                const splitImageSyntax = m.split(/[\]］][（\(]/);
+                const splitImageSyntax = m.split(/[\]\uff3d][\uff08\(]/u);
                 retItems.push(new parser.ParagraphItemImage(splitImageSyntax[1].slice(0, -1), ''));
             });
     }
@@ -446,7 +446,7 @@ export class TextParser {
                     if (captured.startsWith('|') || captured.startsWith('｜')) {
                         captured = captured.substring(1, captured.length);
                     }
-                    let m2 = captured.split(reg2);
+                    const m2 = captured.split(reg2);
                     if (!m2) {
                         retItems.push(new parser.ParagraphItemText(m, ''));
                     } else if (m2[0].length === 0) {

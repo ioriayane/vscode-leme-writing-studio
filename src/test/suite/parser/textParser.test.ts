@@ -9,10 +9,10 @@ import { BorderState } from '../../../parser/textParser';
 suite('TextParser Test Suite', () => {
     vscode.window.showInformationMessage('Start TextParser tests.');
 
-    let textParser = new parser.TextParser();
+    const textParser = new parser.TextParser();
 
     test('Simple text test', () => {
-        let document = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
+        const document = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
             'これは|漢字(かんじ)です\n' +
             '## 見出しLv2\n' +
             '!PB\n' +
@@ -91,163 +91,145 @@ suite('TextParser Test Suite', () => {
 
 
     test('_checkEraceConsecutiveBlankLine test(No.1-1)', () => {
-        let lines: string[] = ['line0', 'line1', '', 'line2'];
-        let expect: boolean[] = [false, false, true, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', 'line2'];
+        const expect: boolean[] = [false, false, true, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.1-2)', () => {
-        let lines: string[] = ['line0', 'line1', '', '', 'line2'];
-        let expect: boolean[] = [false, false, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '', 'line2'];
+        const expect: boolean[] = [false, false, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.1-3)', () => {
-        let lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
-        let expect: boolean[] = [false, false, true, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
+        const expect: boolean[] = [false, false, true, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.2-1)', () => {
-        let lines: string[] = ['line0', 'line1', '', '# line2'];
-        let expect: boolean[] = [false, false, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '# line2'];
+        const expect: boolean[] = [false, false, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.2-2)', () => {
-        let lines: string[] = ['line0', 'line1', '', '', '# line2'];
-        let expect: boolean[] = [false, false, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '', '# line2'];
+        const expect: boolean[] = [false, false, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.2-3)', () => {
-        let lines: string[] = ['line0', 'line1', '', '', '', '# line2'];
-        let expect: boolean[] = [false, false, true, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '', '', '# line2'];
+        const expect: boolean[] = [false, false, true, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.3-1)', () => {
-        let lines: string[] = ['line0', '# line1', '', 'line2'];
-        let expect: boolean[] = [false, false, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', '# line1', '', 'line2'];
+        const expect: boolean[] = [false, false, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.3-2)', () => {
-        let lines: string[] = ['line0', '# line1', '', '', 'line2'];
-        let expect: boolean[] = [false, false, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', '# line1', '', '', 'line2'];
+        const expect: boolean[] = [false, false, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.3-3)', () => {
-        let lines: string[] = ['line0', '# line1', '', '', '', 'line2'];
-        let expect: boolean[] = [false, false, true, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', '# line1', '', '', '', 'line2'];
+        const expect: boolean[] = [false, false, true, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.4-1)', () => {
-        let lines: string[] = ['', 'line1'];
-        let expect: boolean[] = [true, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', 'line1'];
+        const expect: boolean[] = [true, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.4-2)', () => {
-        let lines: string[] = ['', '', 'line1'];
-        let expect: boolean[] = [true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', '', 'line1'];
+        const expect: boolean[] = [true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.4-3)', () => {
-        let lines: string[] = ['', '', '', 'line1'];
-        let expect: boolean[] = [true, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', '', '', 'line1'];
+        const expect: boolean[] = [true, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.5-1)', () => {
-        let lines: string[] = ['', '# line1'];
-        let expect: boolean[] = [false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', '# line1'];
+        const expect: boolean[] = [false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.5-2)', () => {
-        let lines: string[] = ['', '', '# line1'];
-        let expect: boolean[] = [true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', '', '# line1'];
+        const expect: boolean[] = [true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.5-3)', () => {
-        let lines: string[] = ['', '', '', '# line1'];
-        let expect: boolean[] = [true, true, false, false];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['', '', '', '# line1'];
+        const expect: boolean[] = [true, true, false, false];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.6-1)', () => {
-        let lines: string[] = ['line0', 'line1', ''];
-        let expect: boolean[] = [false, false, true];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', ''];
+        const expect: boolean[] = [false, false, true];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.6-2)', () => {
-        let lines: string[] = ['line0', 'line1', '', ''];
-        let expect: boolean[] = [false, false, true, true];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', ''];
+        const expect: boolean[] = [false, false, true, true];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
     test('_checkEraceConsecutiveBlankLine test(No.6-3)', () => {
-        let lines: string[] = ['line0', 'line1', '', '', ''];
-        let expect: boolean[] = [false, false, true, true, true];
-        let para = new parser.Paragraph();
-        for(let i=0; i<lines.length; i++){
+        const lines: string[] = ['line0', 'line1', '', '', ''];
+        const expect: boolean[] = [false, false, true, true, true];
+        for (let i = 0; i < lines.length; i++) {
             assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
@@ -255,8 +237,7 @@ suite('TextParser Test Suite', () => {
 
 
     test('_parseIndent test', () => {
-        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
-        let para = new parser.Paragraph();
+        const para = new parser.Paragraph();
         (textParser as any)._indentState = false;
         assert.strictEqual((textParser as any)._parseIndent('!I 1', para), false);
         assert.strictEqual((textParser as any)._indentState, false);
@@ -272,8 +253,8 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseIndent test(sequence)', () => {
-        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
-        let para = new parser.Paragraph();
+        const lines: string[] = ['line1', ' !I4,3　', 'line2', '!I5,6', 'line4', '!I'];
+        const para = new parser.Paragraph();
         let i = 0;
         (textParser as any)._indentState = false;
         // (textParser as any)._indentCommand = {left: 0, right:0};
@@ -303,8 +284,8 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseIndent test(contain invalid format)', () => {
-        let lines: string[] = ['line1', ' !I4,3　', 'line2', '!I,6', 'line4', '!I0,0'];
-        let para = new parser.Paragraph();
+        const lines: string[] = ['line1', ' !I4,3　', 'line2', '!I,6', 'line4', '!I0,0'];
+        const para = new parser.Paragraph();
         let i = 0;
         (textParser as any)._indentState = false;
         // (textParser as any)._indentCommand = {left: 0, right:0};
@@ -334,9 +315,8 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        const lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderState = BorderState.None;
         assert.strictEqual((textParser as any)._parseBorder('!BD,TLRBH', para, 0, lines), true);
         assert.deepStrictEqual((textParser as any)._borderCommand, { top: true, bottom: true, left: true, right: true, inner: true });
@@ -375,9 +355,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(full)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -419,9 +399,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(none inner)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLRB　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TLRB　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -463,9 +443,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(none top)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,LRBH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,LRBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -507,9 +487,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(none bottom)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLRH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TLRH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -551,9 +531,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(none left)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TRBH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TRBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -595,9 +575,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(none right)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLBH　', 'line2', 'line3', 'line4', '!BD'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TLBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -639,9 +619,9 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parseBorder test(only one)', () => {
-        let i: number = 0;
-        let lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', '!BD', 'line3', 'line4'];
-        let para = new parser.Paragraph();
+        let i = 0;
+        const lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', '!BD', 'line3', 'line4'];
+        const para = new parser.Paragraph();
         (textParser as any)._borderCommand = { top: false, bottom: false, left: false, right: false, inner: false };
         (textParser as any)._borderState = BorderState.None;
         i = 0;
@@ -671,8 +651,6 @@ suite('TextParser Test Suite', () => {
     });
 
     test('_parsePageBreak test', () => {
-        let para = new parser.Paragraph();
-
         assert.strictEqual((textParser as any)._parsePageBreak('hoge'), false);
         assert.strictEqual((textParser as any)._parsePageBreak('!PB'), true);
         assert.strictEqual((textParser as any)._parsePageBreak(' !PB'), true);
@@ -682,12 +660,9 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((textParser as any)._parsePageBreak('!ＰB'), true);
         assert.strictEqual((textParser as any)._parsePageBreak('!PＢ'), true);
         assert.strictEqual((textParser as any)._parsePageBreak('！ＰＢ'), true);
-
     });
 
     test('_parseHorizontalRule test', () => {
-        let para = new parser.Paragraph();
-
         assert.strictEqual((textParser as any)._parseHorizontalRule('hoge'), false);
         assert.strictEqual((textParser as any)._parseHorizontalRule('!HR'), true);
         assert.strictEqual((textParser as any)._parseHorizontalRule(' !HR'), true);
@@ -697,90 +672,89 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((textParser as any)._parseHorizontalRule('!ＨR'), true);
         assert.strictEqual((textParser as any)._parseHorizontalRule('!HＲ'), true);
         assert.strictEqual((textParser as any)._parseHorizontalRule('！ＨＲ'), true);
-
     });
 
     test('_parseOutline test', () => {
         // Lv1~9
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('# hoge ', para, 1), 'hoge ');
             assert.strictEqual(para.outlineLv, 1);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 140);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('## hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 2);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 120);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 3);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 110);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('#### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 4);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('##### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 5);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('###### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 6);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('####### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 7);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('######## hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 8);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('######### hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 9);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('＃ hoge ', para, 1), 'hoge ');
             assert.strictEqual(para.outlineLv, 1);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 140);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('＃＃ hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 2);
             assert.strictEqual(para.font.gothic, true);
             assert.strictEqual(para.font.sizeRatio, 120);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('hoge', para, 0), 'hoge');
             assert.strictEqual(para.outlineLv, 1);
             assert.strictEqual(para.font.gothic, true);
@@ -789,21 +763,21 @@ suite('TextParser Test Suite', () => {
 
         //unmatch
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('hoge', para, 1), 'hoge');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('#hoge ', para, 1), '#hoge ');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
             assert.strictEqual(para.font.sizeRatio, 100);
         }
         {
-            let para = new parser.Paragraph();
+            const para = new parser.Paragraph();
             assert.strictEqual((textParser as any)._parseOutline('########## hoge', para, 1), '########## hoge');
             assert.strictEqual(para.outlineLv, 0);
             assert.strictEqual(para.font.gothic, false);
@@ -814,133 +788,133 @@ suite('TextParser Test Suite', () => {
     test('_parseAlignment test', () => {
         {
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.None), '!R hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.None);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment(' !R hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!R　hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　！R　hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
 
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!B hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!Ｂ hoge', para, parser.AlignmentType.Right), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Right);
             }
         }
         {
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.None), '!T hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.None);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment(' !T hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!T　hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　！T　hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
 
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!Ｔ hoge', para, parser.AlignmentType.Left), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Left);
             }
         }
         {
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.None), '!C hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.None);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment(' !C hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!C　hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　！C　hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
             {
-                let para = new parser.Paragraph();
+                const para = new parser.Paragraph();
                 assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.Center), 'hoge');
                 assert.strictEqual(para.alignment, parser.AlignmentType.Center);
             }
@@ -983,6 +957,18 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[3] as parser.ParagraphItemImage).alt, '');
         assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, '複数のパターン');
         assert.strictEqual((actualItems[4] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseImage([
+            new parser.ParagraphItemText('hoge！［fuga］（./media/image.jpg）foo', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemImage).path, './media/image.jpg');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemImage).alt, '');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'foo');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
     });
 
 

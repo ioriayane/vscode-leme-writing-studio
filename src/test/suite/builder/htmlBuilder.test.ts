@@ -15,12 +15,12 @@ class DummyWebview implements vscode.Webview {
     }
     options!: vscode.WebviewOptions;
     html: string;
-    onDidReceiveMessage!: vscode.Event<any>;
-    postMessage(message: any): Thenable<boolean> {
-        throw new Error('Method not implemented.');
+    onDidReceiveMessage!: vscode.Event<unknown>;
+    postMessage(message: unknown): Thenable<boolean> {
+        throw new Error('Method not implemented.' + message);
     }
     asWebviewUri(localResource: vscode.Uri): vscode.Uri {
-        let json = localResource.toJSON();
+        const json = localResource.toJSON();
         json['scheme'] = 'https';
         return vscode.Uri.from(json);
     }
@@ -33,8 +33,8 @@ suite('HtmlBuilder Test Suite', () => {
 
     test('Build text test', () => {
         const dummyWebview = new DummyWebview();
-        let htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME');
-        let textParser = new parser.TextParser();
+        const htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME');
+        const textParser = new parser.TextParser();
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
@@ -99,8 +99,8 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     test('Build text test(web)', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
-        let textParser = new parser.TextParser();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const textParser = new parser.TextParser();
 
         assert.strictEqual(htmlBuilder.build([]), '');
 
@@ -145,7 +145,7 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildText test', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('', '')), '');
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge', '')), 'hoge');
@@ -154,7 +154,7 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     test('_buildParagraphClass test', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 0,
@@ -250,7 +250,7 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     test('_buildFontClass test', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 100,
@@ -294,7 +294,7 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildParagraphClassIndent test', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
@@ -347,7 +347,7 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildParagraphClassBorder test', () => {
-        let htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
 
         htmlBuilder.textFlowDirection = builder.TextFlowDirection.Horizontal;
 
