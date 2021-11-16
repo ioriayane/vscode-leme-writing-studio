@@ -3,9 +3,9 @@ import { ParagraphItem } from './paragraph';
 
 
 export enum BorderState {
-    None,
-    Start,
-    Inner,
+    none,
+    start,
+    inner,
     // End,
 }
 
@@ -13,21 +13,21 @@ export class TextParser {
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
     //カタカナ:http://www.unicode.org/charts/PDF/U30A0.pdf
     //      http://www.unicode.org/charts/PDF/U31F0.pdf
-    private readonly REG_KANA = '[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\u3099-\u309c\uff65-\uff9f]';
+    private readonly regKANA = '[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\u3099-\u309c\uff65-\uff9f]';
     // CJK統合漢字:http://www.unicode.org/charts/PDF/U4E00.pdf
     // CJK互換漢字:http://www.unicode.org/charts/PDF/UF900.pdf
     // CJK統合漢字拡張A:http://www.unicode.org/charts/PDF/U3400.pdf
     // CJK統合漢字拡張B(JIS X 0213の漢字)は省略！（なろうも対応していないっぽいし）
     //〻:303b, 々:3005, 〆:3006, 〇:3007, ヶ:30f6,( 仝:4edd すでに含まれてる）
-    private readonly REG_KANJI = '[\u4e00-\u9fcf\uf900-\ufaff\u3400-\u4dbf\u3005-\u3007\u303b\u30f6]';
-    private readonly REG_ALPHABET = '[a-zA-Z]';
+    private readonly regKANJI = '[\u4e00-\u9fcf\uf900-\ufaff\u3400-\u4dbf\u3005-\u3007\u303b\u30f6]';
+    private readonly regALPHABET = '[a-zA-Z]';
     //《》()を省く[^《》（）｜\\(\\)\\|]
-    private readonly REG_ANY_CHARS = '[^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]';
-    private readonly RUBY_BEGIN_SYMBOL_1 = '\u300a';        //《
-    private readonly RUBY_END_SIMBOL_1 = '\u300b';          //》
-    private readonly RUBY_BEGIN_SYMBOL_2 = '[\uff08\\(]';   //丸括弧
-    private readonly RUBY_END_SYMBOL_2 = '[\uff09\\)]';     //丸括弧
-    private readonly RUBY_SYMBOL = '[\uff5c\\|]';           //縦棒
+    private readonly regAnyCHARS = '[^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]';
+    private readonly regRubyBeginSymbol1 = '\u300a';        //《
+    private readonly regRubyEendSymbol1 = '\u300b';          //》
+    private readonly regRubyBeginSymbol2 = '[\uff08\\(]';   //丸括弧
+    private readonly regRubyEndSymbol2 = '[\uff09\\)]';     //丸括弧
+    private readonly regRubySymbol = '[\uff5c\\|]';           //縦棒
 
 
     private _indentState = false;
@@ -35,7 +35,7 @@ export class TextParser {
         left: 0,
         right: 0
     };
-    private _borderState: BorderState = BorderState.None;
+    private _borderState: BorderState = BorderState.none;
     private _borderCommand: parser.BorderProperty = {
         top: false,
         left: false,
@@ -47,7 +47,7 @@ export class TextParser {
 
     public parse(text: string): parser.Paragraph[] {
         this._indentState = false;
-        this._borderState = BorderState.None;
+        this._borderState = BorderState.none;
 
         const lines = text.split('\n');
         const document: parser.Paragraph[] = lines.map((line, index, array) => {
@@ -213,7 +213,7 @@ export class TextParser {
         const reg = /^[!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
-            if (this._borderState === BorderState.None) {
+            if (this._borderState === BorderState.none) {
                 // out of border area
                 this._borderCommand.top = false;
                 this._borderCommand.bottom = false;
@@ -231,7 +231,7 @@ export class TextParser {
                     nextIsEnd = true;
                 }
                 switch (this._borderState) {
-                    case BorderState.Start:
+                    case BorderState.start:
                         if (nextIsEnd) {
                             // only one paragraph
                             property.border.top = this._borderCommand.top;
@@ -240,10 +240,10 @@ export class TextParser {
                             // first paragraph
                             property.border.top = this._borderCommand.top;
                             property.border.bottom = this._borderCommand.inner;
-                            this._borderState = BorderState.Inner;
+                            this._borderState = BorderState.inner;
                         }
                         break;
-                    case BorderState.Inner:
+                    case BorderState.inner:
                         // 2nd, 3rd, ... paragraph
                         if (nextIsEnd) {
                             // final paragraph
@@ -262,7 +262,7 @@ export class TextParser {
             }
             return false;
 
-        } else if (this._borderState === BorderState.None) {
+        } else if (this._borderState === BorderState.none) {
             // look up start command
             const commandItems = m[0].split(/[,\uff0c]/u);
 
@@ -276,7 +276,7 @@ export class TextParser {
                 return false;
             }
 
-            this._borderState = BorderState.Start;
+            this._borderState = BorderState.start;
             if (commandItems[1].match(/[T\uff34]/u)) {
                 this._borderCommand.top = true;
             }
@@ -301,7 +301,7 @@ export class TextParser {
             this._borderCommand.left = false;
             this._borderCommand.right = false;
             this._borderCommand.inner = false;
-            this._borderState = BorderState.None;
+            this._borderState = BorderState.none;
             return true;
         }
     }
@@ -418,15 +418,15 @@ export class TextParser {
 
     private _parserRuby(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
         //|と()は、半角全角両方
-        const s1 = this.RUBY_BEGIN_SYMBOL_1;
-        const s2 = this.RUBY_END_SIMBOL_1;
-        const s3 = this.RUBY_BEGIN_SYMBOL_2;
-        const s4 = this.RUBY_END_SYMBOL_2;
-        const s5 = this.RUBY_SYMBOL;
-        const s6 = this.REG_ANY_CHARS;
-        const s7 = this.REG_KANJI;
-        const s8 = this.REG_KANA;
-        const s9 = this.REG_ALPHABET;
+        const s1 = this.regRubyBeginSymbol1;
+        const s2 = this.regRubyEendSymbol1;
+        const s3 = this.regRubyBeginSymbol2;
+        const s4 = this.regRubyEndSymbol2;
+        const s5 = this.regRubySymbol;
+        const s6 = this.regAnyCHARS;
+        const s7 = this.regKANJI;
+        const s8 = this.regKANA;
+        const s9 = this.regALPHABET;
 
         const regRuby = [
             `${s5}${s6}*${s1}${s6}+${s2}`,      //|任意《任意》

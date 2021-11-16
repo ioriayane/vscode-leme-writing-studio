@@ -1,7 +1,7 @@
 
 export enum TextFlowDirection {
-    Vertical,
-    Horizontal
+    vertical,
+    horizontal
 }
 
 export interface BuildProperty {

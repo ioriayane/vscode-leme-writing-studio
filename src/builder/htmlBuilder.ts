@@ -5,7 +5,7 @@ import * as builder from './index';
 
 export class HtmlBuilder implements builder.BuildProperty {
 
-    public textFlowDirection = builder.TextFlowDirection.Vertical;
+    public textFlowDirection = builder.TextFlowDirection.vertical;
 
     constructor(
         private readonly _webview: vscode.Webview | undefined,
