@@ -15,7 +15,15 @@
         "curly": "warn",
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": "off",
+        "jest/expect-expect": [
+            "error",
+            {
+                "assertFunctionNames": [
+                    "assert"
+                ]
+            }
+        ]
     },
     "ignorePatterns": [
         "out",

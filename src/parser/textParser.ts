@@ -409,9 +409,9 @@ export class TextParser {
     }
 
     private _parseImage(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
-        return this._parseContent(items, /[!\uff01][\[\uff3b][^\[\]\uff3b\uff3d\(\uff08]*[\]\uff3d][\uff08\(][^\uff09\)]*[\uff09\)]/gu,
+        return this._parseContent(items, /[!\uff01][[\uff3b][^[\]\uff3b\uff3d(\uff08]*[\]\uff3d][\uff08(][^\uff09)]*[\uff09)]/gu,
             (m, retItems) => {
-                const splitImageSyntax = m.split(/[\]\uff3d][\uff08\(]/u);
+                const splitImageSyntax = m.split(/[\]\uff3d][\uff08(]/u);
                 retItems.push(new parser.ParagraphItemImage(splitImageSyntax[1].slice(0, -1), ''));
             });
     }
@@ -439,7 +439,7 @@ export class TextParser {
 
         const reg2 = new RegExp(`${s1}|${s3}`, 'gu');
 
-        regRuby.forEach((reg, index) => {
+        regRuby.forEach((reg) => {
             items = this._parseContent(items, new RegExp(reg, 'gu'),
                 (m, retItems) => {
                     let captured = m;
