@@ -55,7 +55,8 @@ function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode
 			project.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
 				lemePreviewer.update(e, updated);
 				console.log('loaded:' + lemeFileUri.toString() + ':' + updated);
-				console.log('textFlowDirection:' + lemePreviewer.bookSpec.textFlowDirection.toString());
+				console.log('language:' + lemePreviewer.bookSpec.language);
+				console.log('textFlowDirection:' + lemePreviewer.bookSpec.textFlowDirection);
 			});
 		}
 	});

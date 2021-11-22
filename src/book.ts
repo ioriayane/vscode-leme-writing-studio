@@ -1,10 +1,16 @@
 
 export enum TextFlowDirection {
-    vertical,
-    horizontal
+    vertical = 'vertical',
+    horizontal = 'horizontal'
+}
+
+export enum BookLanguage {
+    ja = 0,
+    en = 1
 }
 
 export interface BookSpecification {
+    language: BookLanguage
     textFlowDirection: TextFlowDirection
 }
 
@@ -57,6 +63,7 @@ export interface MarkdownSetting {
 
 export function defaultValueBookSpecification(): BookSpecification {
     return {
+        language: BookLanguage.ja,
         textFlowDirection: TextFlowDirection.vertical
     };
 }

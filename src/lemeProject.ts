@@ -19,17 +19,20 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
         return updated;
     }
 
-    let temp: book.TextFlowDirection;
-    if (obj['spec.textFlowDirection'] === 'horizontal') {
-        temp = book.TextFlowDirection.horizontal;
-    } else {
-        temp = book.TextFlowDirection.vertical;
+    function getValue<T>(obj: any, key: string, current: T): T{
+        let value = current;
+        if(key in obj){
+            value = obj[key];
+            if(current !== value){
+                updated = true;
+            }
+        }
+        return value as T;
     }
-    if (bookSpec.textFlowDirection !== temp) {
-        bookSpec.textFlowDirection = temp;
-        updated = true;
-    }
-    bookTextSetting.eraceConsecutiveBlankLine = true;
+
+    bookSpec.language = getValue<book.BookLanguage>(obj, 'info.language', bookSpec.language);
+    bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, 'spec.textFlowDirection', bookSpec.textFlowDirection);
+
 
     return updated;
 }
