@@ -33,7 +33,25 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     bookSpec.language = getValue<book.BookLanguage>(obj, 'info.language', bookSpec.language);
     bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, 'spec.textFlowDirection', bookSpec.textFlowDirection);
 
-
+    bookTextSetting.advanceMode = getValue<boolean>(obj, 'making.format.text.advanceMode', bookTextSetting.advanceMode);
+    bookTextSetting.bold = getValue<boolean>(obj, 'making.format.text.bold', bookTextSetting.bold);
+    bookTextSetting.border = getValue<boolean>(obj, 'making.format.text.border', bookTextSetting.border);
+    bookTextSetting.emMarkDot = getValue<boolean>(obj, 'making.format.text.emMark', bookTextSetting.emMarkDot);
+    bookTextSetting.emMarkDot2 = getValue<boolean>(obj, 'making.format.text.emMark2', bookTextSetting.emMarkDot2);
+    bookTextSetting.emMarkComma = getValue<boolean>(obj, 'making.format.text.emMarkComma', bookTextSetting.emMarkComma);
+    bookTextSetting.firstLineHeading = getValue<boolean>(obj, 'making.format.text.firstLineHeading', bookTextSetting.firstLineHeading);
+    bookTextSetting.headling = getValue<boolean>(obj, 'making.format.text.heading', bookTextSetting.headling);
+    bookTextSetting.horizontalRule = getValue<boolean>(obj, 'making.format.text.horizontalRule', bookTextSetting.horizontalRule);
+    bookTextSetting.image = getValue<boolean>(obj, 'making.format.text.image', bookTextSetting.image);
+    bookTextSetting.italic = getValue<boolean>(obj, 'making.format.text.italic', bookTextSetting.italic);
+    bookTextSetting.pageBreak = getValue<boolean>(obj, 'making.format.text.pageBreak', bookTextSetting.pageBreak);
+    bookTextSetting.align = getValue<boolean>(obj, 'making.format.text.paragraphAlign', bookTextSetting.align);
+    bookTextSetting.indent = getValue<boolean>(obj, 'making.format.text.paragraphIndent', bookTextSetting.indent);
+    bookTextSetting.rubyBracket = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyBracket);
+    bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
+    bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.shortenEmptyLine', bookTextSetting.eraceConsecutiveBlankLine);
+    bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
+        
     return updated;
 }
 
