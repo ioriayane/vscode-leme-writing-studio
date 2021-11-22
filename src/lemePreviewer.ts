@@ -9,36 +9,15 @@ export class LemePreviewer {
 
     public static readonly comandName = 'leme-writing-studio.preview';
 
-    public bookSpec: book.BookSpecification = {
-        textFlowDirection: book.TextFlowDirection.vertical
-    };
-    public bookTextSetting: book.TextSetting = {
-        eraceConsecutiveBlankLine: false,
-
-        firstLineHeading: true,
-        headling: true,
-        align: true,
-        indent: true,
-        border: true,
-        pageBreak: true,
-        horizontalRule: true, // hr
-        rubyBracket: true, //二重山括弧
-        rubyParen: true, //丸括弧
-        tcy: true,
-        bold: true,
-        italic: true,
-        emMarkDot: true, //傍点 +文字+
-        emMarkDot2: true, //傍点の記法違い 《《文字》》
-        emMarkComma: true,
-        image: true,
-
-        advanceMode: false //細かい書式をMarkdown方式にする
-    };
-
+    public bookSpec: book.BookSpecification;
+    public bookTextSetting: book.TextSetting;
 
     constructor(
         private readonly _extensionUri: vscode.Uri
-    ) { }
+    ) { 
+        this.bookSpec = book.defaultValueBookSpecification();
+        this.bookTextSetting = book.defaultValueTextSetting();
+    }
 
     private _panel: vscode.WebviewPanel | undefined = undefined;
 

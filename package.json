@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:leme-writing-studio.preview"
+		"onCommand:leme-writing-studio.preview",
+		"workspaceContains:*.leme"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

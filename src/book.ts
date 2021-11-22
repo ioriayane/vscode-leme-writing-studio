@@ -12,24 +12,24 @@ export interface BookSpecification {
 export interface TextSetting {
     eraceConsecutiveBlankLine: boolean
 
-    firstLineHeading : boolean  // false
-    headling : boolean          // false
-    align : boolean             // false
-    indent : boolean            // false
-    border : boolean            // false
-    pageBreak : boolean         // false
-    horizontalRule : boolean    // false // hr
-    rubyBracket : boolean       // false //二重山括弧
-    rubyParen : boolean         // false //丸括弧
-    tcy : boolean               // false
-    bold : boolean              // false
-    italic : boolean            // false
-    emMarkDot : boolean         // false //傍点 +文字+
-    emMarkDot2 : boolean        // false //傍点の記法違い 《《文字》》
-    emMarkComma : boolean       // false
-    image : boolean             // false
-    
-    advanceMode : boolean       // false //細かい書式をMarkdown方式にする
+    firstLineHeading: boolean  // false
+    headling: boolean          // false
+    align: boolean             // false
+    indent: boolean            // false
+    border: boolean            // false
+    pageBreak: boolean         // false
+    horizontalRule: boolean    // false // hr
+    rubyBracket: boolean       // false //二重山括弧
+    rubyParen: boolean         // false //丸括弧
+    tcy: boolean               // false
+    bold: boolean              // false
+    italic: boolean            // false
+    emMarkDot: boolean         // false //傍点 +文字+
+    emMarkDot2: boolean        // false //傍点の記法違い 《《文字》》
+    emMarkComma: boolean       // false
+    image: boolean             // false
+
+    advanceMode: boolean       // false //細かい書式をMarkdown方式にする
 }
 
 export interface MarkdownSetting {
@@ -52,4 +52,36 @@ export interface MarkdownSetting {
     link: boolean               // false //リンク [テキスト](/url)  , 画像 ![alt](/uri "title")
     code: boolean               // false //コード `word`
     rawHtml: boolean            // false // HTMLタグ
+}
+
+
+export function defaultValueBookSpecification(): BookSpecification {
+    return {
+        textFlowDirection: TextFlowDirection.vertical
+    };
+}
+
+export function defaultValueTextSetting(): TextSetting {
+    return {
+        eraceConsecutiveBlankLine: false,
+
+        firstLineHeading: true,
+        headling: true,
+        align: true,
+        indent: true,
+        border: true,
+        pageBreak: true,
+        horizontalRule: true, // hr
+        rubyBracket: true, //二重山括弧
+        rubyParen: true, //丸括弧
+        tcy: true,
+        bold: true,
+        italic: true,
+        emMarkDot: true, //傍点 +文字+
+        emMarkDot2: true, //傍点の記法違い 《《文字》》
+        emMarkComma: true,
+        image: true,
+
+        advanceMode: false //細かい書式をMarkdown方式にする
+    };
 }
