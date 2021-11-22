@@ -15,17 +15,17 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     } catch (error) {
         return updated;
     }
-    if(!obj){
+    if (!obj) {
         return updated;
     }
 
     let temp: book.TextFlowDirection;
-    if(obj['spec.textFlowDirection'] === 'horizontal'){
+    if (obj['spec.textFlowDirection'] === 'horizontal') {
         temp = book.TextFlowDirection.horizontal;
-    }else{
+    } else {
         temp = book.TextFlowDirection.vertical;
     }
-    if(bookSpec.textFlowDirection !== temp){
+    if (bookSpec.textFlowDirection !== temp) {
         bookSpec.textFlowDirection = temp;
         updated = true;
     }

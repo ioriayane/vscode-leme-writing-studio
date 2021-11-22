@@ -39,8 +39,8 @@ export function activate(context: vscode.ExtensionContext): void {
 export function deactivate(): void { }
 
 
-function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode.StatusBarItem, lemePreviewer: LemePreviewer): void{
-	if(!e){
+function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode.StatusBarItem, lemePreviewer: LemePreviewer): void {
+	if (!e) {
 		return;
 	}
 
