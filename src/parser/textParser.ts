@@ -135,7 +135,7 @@ export class TextParser {
         //                     Headline            <blank>  stay
         //                                         Headline
 
-        if(!this._textSetting.eraceConsecutiveBlankLine){
+        if (!this._textSetting.eraceConsecutiveBlankLine) {
             return false;
         }
 
@@ -186,9 +186,20 @@ export class TextParser {
                 // out of indent area
                 this._indentCommand.left = 0;
                 this._indentCommand.right = 0;
+                property.indent.left = 0;
+                property.indent.right = 0;
             } else {
-                property.indent.left = this._indentCommand.left;
-                property.indent.right = this._indentCommand.right;
+                const para = new parser.Paragraph();
+                this._parseOutline(line, para, 1);
+                if (para.outlineLv > 0) {
+                    // force 0 when outline
+                    property.indent.left = 0;
+                    property.indent.right = 0;
+                } else {
+                    // continuous
+                    property.indent.left = this._indentCommand.left;
+                    property.indent.right = this._indentCommand.right;
+                }
             }
             return false;
         } else if (m[0].length === 2) {
@@ -196,6 +207,8 @@ export class TextParser {
             this._indentState = false;
             this._indentCommand.left = 0;
             this._indentCommand.right = 0;
+            property.indent.left = 0;
+            property.indent.right = 0;
             return true;
         } else {
             // start command
@@ -211,6 +224,8 @@ export class TextParser {
                 } else {
                     this._indentState = true;
                 }
+                property.indent.left = this._indentCommand.left;
+                property.indent.right = this._indentCommand.right;
                 return true;
             }
         }
