@@ -14,7 +14,7 @@ export class LemePreviewer {
 
     constructor(
         private readonly _extensionUri: vscode.Uri
-    ) { 
+    ) {
         this.bookSpec = book.defaultValueBookSpecification();
         this.bookTextSetting = book.defaultValueTextSetting();
     }
@@ -96,6 +96,12 @@ export class LemePreviewer {
             this._extensionUri, 'ebook_resource', 'book-script.js'));
         const nonce = getNonce();
 
+        let lang: string;
+        if (this.bookSpec.language === book.BookLanguage.ja) {
+            lang = 'ja';
+        } else {
+            lang = 'en';
+        }
         let direction: string;
         if (this.bookSpec.textFlowDirection === book.TextFlowDirection.vertical) {
             direction = 'vrtl';
@@ -104,7 +110,7 @@ export class LemePreviewer {
         }
 
         return `<!DOCTYPE html>
-        <html lang="en" class="${direction}">
+        <html lang="${lang}" class="${direction}">
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource}; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">

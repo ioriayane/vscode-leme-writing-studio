@@ -19,6 +19,7 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
         return updated;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function getValue<T>(obj: any, key: string, current: T): T{
         let value = current;
         if(key in obj){
