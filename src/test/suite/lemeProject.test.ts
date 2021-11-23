@@ -3,7 +3,17 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as project from '../../lemeProject';
 import * as book from '../../book';
+import * as path from 'path';
 
+class WorkspaceFolderTest implements vscode.WorkspaceFolder {
+    public readonly name: string;
+    constructor(
+        public readonly uri: vscode.Uri,
+        public readonly index: number
+    ) {
+        this.name = path.basename(uri.fsPath);
+    }
+}
 
 suite('lemeProject Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
@@ -123,6 +133,25 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.rubyParen, true, 'rubyParen');
         assert.strictEqual(bookTextSetting.eraceConsecutiveBlankLine, false, 'eraceConsecutiveBlankLine');
         assert.strictEqual(bookTextSetting.tcy, true, 'tcy');
+
+    });
+
+
+    test('updateWorkspace test', async () => {
+        const baseUri = vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/');
+
+        const workspaceFolders: vscode.WorkspaceFolder[] = [
+            new WorkspaceFolderTest(vscode.Uri.joinPath(baseUri, 'hoge0'), 0),
+            new WorkspaceFolderTest(vscode.Uri.joinPath(baseUri, 'fuga1'), 1),
+            new WorkspaceFolderTest(baseUri, 2),
+            new WorkspaceFolderTest(vscode.Uri.file(__dirname), 3)
+        ];
+
+        assert.strictEqual(await project.updateWorkspace(undefined, vscode.Uri.file('/hoge/fuga/project.txt')), undefined);
+        assert.strictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.file('/hoge/document.txt')), undefined);
+        assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(baseUri, 'hoge0/document.txt')),
+            vscode.Uri.joinPath(baseUri, 'example.leme'));
+        assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(vscode.Uri.file(__dirname), 'hoge0/document.txt')), undefined);
 
     });
 });

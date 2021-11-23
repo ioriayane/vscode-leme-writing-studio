@@ -20,11 +20,11 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function getValue<T>(obj: any, key: string, current: T): T{
+    function getValue<T>(obj: any, key: string, current: T): T {
         let value = current;
-        if(key in obj){
+        if (key in obj) {
             value = obj[key];
-            if(current !== value){
+            if (current !== value) {
                 updated = true;
             }
         }
@@ -52,22 +52,38 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
     bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.shortenEmptyLine', bookTextSetting.eraceConsecutiveBlankLine);
     bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
-        
+
     return updated;
 }
 
-export function updateWorkspace(
-    workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
-    documentUri: vscode.Uri,
-    callback: (lemeProjectUri: vscode.Uri | undefined) => void): void {
 
-    searchLemeFiles(getWorkspaceUri(workspaceFolders, documentUri)).then((lemeFileUris) => {
-        if (!lemeFileUris) {
-            callback(undefined);
-        } else if (lemeFileUris.length > 0) {
-            callback(lemeFileUris[0]);
+export async function updateWorkspace(
+    workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
+    documentUri: vscode.Uri
+): Promise<vscode.Uri | undefined> {
+
+    if (!workspaceFolders) {
+        return undefined;
+    }
+    const workspaceUri = getWorkspaceUri(workspaceFolders, documentUri);
+    if (!workspaceUri) {
+        return undefined;
+    }
+
+    const children = await vscode.workspace.fs.readDirectory(workspaceUri);
+    const files = children.map(([name, type], index) => {
+        if (type === vscode.FileType.File && path.extname(name).toLowerCase() === '.leme') {
+            console.log('file(' + index + '):' + name);
+            return vscode.Uri.joinPath(workspaceUri, name);
         }
-    });
+        return;
+    }).filter(value => value !== undefined);
+
+    if (files.length > 0) {
+        return files[0];
+    } else {
+        return undefined;
+    }
 }
 
 function getWorkspaceUri(
@@ -87,21 +103,4 @@ function getWorkspaceUri(
     });
 
     return ret;
-}
-
-async function searchLemeFiles(workspaceUri: vscode.Uri | undefined): Promise<vscode.Uri[] | undefined> {
-    if (!workspaceUri) {
-        return undefined;
-    }
-
-    const children = await vscode.workspace.fs.readDirectory(workspaceUri);
-    const files = children.map(([name, type], index) => {
-        if (type === vscode.FileType.File && path.extname(name).toLowerCase() === '.leme') {
-            console.log('file(' + index + '):' + name);
-            return vscode.Uri.joinPath(workspaceUri, name);
-        }
-        return;
-    });
-
-    return (files.filter(value => value !== undefined) as vscode.Uri[]);
 }

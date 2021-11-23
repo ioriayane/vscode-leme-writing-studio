@@ -44,7 +44,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode
 		return;
 	}
 
-	project.updateWorkspace(vscode.workspace.workspaceFolders, e.document.uri, (lemeFileUri) => {
+	project.updateWorkspace(vscode.workspace.workspaceFolders, e.document.uri).then((lemeFileUri) => {
 		if (!lemeFileUri) {
 			statusBarItem.hide();
 			lemePreviewer.update(e);
