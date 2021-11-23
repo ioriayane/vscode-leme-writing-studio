@@ -52,12 +52,15 @@ function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode
 			statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(lemeFileUri.fsPath);
 			statusBarItem.show();
 
-			project.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
-				lemePreviewer.update(e, updated);
-				console.log('loaded:' + lemeFileUri.toString() + ':' + updated);
-				console.log('language:' + lemePreviewer.bookSpec.language);
-				console.log('textFlowDirection:' + lemePreviewer.bookSpec.textFlowDirection);
-			});
+			if (lemePreviewer.isSupportFileType(e.document.uri)) {
+				// loads settings for previewer when acitve editting file is supported file type only.
+				project.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
+					lemePreviewer.update(e, updated);
+					console.log('loaded:' + lemeFileUri.toString() + ':' + updated);
+					console.log('language:' + lemePreviewer.bookSpec.language);
+					console.log('textFlowDirection:' + lemePreviewer.bookSpec.textFlowDirection);
+				});
+			}
 		}
 	});
 }

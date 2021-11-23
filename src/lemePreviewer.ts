@@ -8,6 +8,7 @@ import * as book from './book';
 export class LemePreviewer {
 
     public static readonly comandName = 'leme-writing-studio.preview';
+    public readonly supportExt = ['.txt'];
 
     public bookSpec: book.BookSpecification;
     public bookTextSetting: book.TextSetting;
@@ -26,6 +27,9 @@ export class LemePreviewer {
         if (!editor) {
             // console.log('Not found active text editor.');
             return;
+        }else if (!this.isSupportFileType(editor.document.uri)){
+            // not support file
+            return ;
         }
 
         if (this._panel) {
@@ -59,6 +63,9 @@ export class LemePreviewer {
     public update(editor: vscode.TextEditor | undefined, initialize = false): void {
         if (!editor) {
             // console.log('Not found active text editor.');
+            return;
+        }else if (!this.isSupportFileType(editor.document.uri)){
+            // not support file
             return;
         }
         if (!this._panel) {
@@ -134,5 +141,8 @@ export class LemePreviewer {
         return htmlBuilder.build(textParser.parse(text), cursorLine);
     }
 
+    public isSupportFileType(uri: vscode.Uri): boolean{
+        return this.supportExt.includes(path.extname(uri.fsPath).toLowerCase());
+    }
 }
 
