@@ -5,7 +5,7 @@ import * as assert from 'assert';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as parser from '../../../parser/index';
-import { BorderState } from '../../../parser/textParser';
+import { BorderState, TextFormatType } from '../../../parser/textParser';
 
 suite('TextParser Test Suite', () => {
     vscode.window.showInformationMessage('Start TextParser tests.');
@@ -41,10 +41,11 @@ suite('TextParser Test Suite', () => {
             '!HR\n' +
             '!R line9\n' +
             '!L line10\n' +
-            '!C line11'
+            '!C line11\n' +
+            'line12 ^tcy^ and **bold** and *italic* and +dot+ and \u300a\u300adot2\u300b\u300b and ++comma++.'
         );
 
-        assert.strictEqual(document.length, 11);
+        assert.strictEqual(document.length, 12);
         //
         assert.strictEqual(document[0].outlineLv, 1);
         assert.strictEqual(document[0].items.length, 1);
@@ -109,6 +110,27 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual(document[10].items.length, 1);
         assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).text, 'line11');
         assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).ruby, '');
+        //
+        assert.strictEqual(document[11].items.length, 13);
+        assert.strictEqual((document[11].items[0] as parser.ParagraphItemText).text, 'line12 ');
+        assert.strictEqual((document[11].items[1] as parser.ParagraphItemText).text, 'tcy');
+        assert.strictEqual((document[11].items[1] as parser.ParagraphItemText).font.tcy, true);
+        assert.strictEqual((document[11].items[2] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((document[11].items[3] as parser.ParagraphItemText).text, 'bold');
+        assert.strictEqual((document[11].items[3] as parser.ParagraphItemText).font.bold, true);
+        assert.strictEqual((document[11].items[4] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((document[11].items[5] as parser.ParagraphItemText).text, 'italic');
+        assert.strictEqual((document[11].items[5] as parser.ParagraphItemText).font.italic, true);
+        assert.strictEqual((document[11].items[6] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((document[11].items[7] as parser.ParagraphItemText).text, 'dot');
+        assert.strictEqual((document[11].items[7] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((document[11].items[8] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((document[11].items[9] as parser.ParagraphItemText).text, 'dot2');
+        assert.strictEqual((document[11].items[9] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((document[11].items[10] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((document[11].items[11] as parser.ParagraphItemText).text, 'comma');
+        assert.strictEqual((document[11].items[11] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
+        assert.strictEqual((document[11].items[12] as parser.ParagraphItemText).text, '.');
     });
 
 
@@ -1301,5 +1323,227 @@ suite('TextParser Test Suite', () => {
             assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'わたしはtaroYamada《》です。');
             assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
         }
+    });
+
+    test('_parseTextFormat test(tcy)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('縦中横^12^です', '')
+        ], TextFormatType.tcy);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '12');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.tcy, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('縦中横^34^が^2^つです', '')
+        ], TextFormatType.tcy);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '34');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.tcy, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'が');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.tcy, true);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'つです');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('縦中横^ 56^です', '')
+        ], TextFormatType.tcy);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横^ 56^です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('縦中横^78 ^です', '')
+        ], TextFormatType.tcy);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横^78 ^です');
+    });
+
+    test('_parseTextFormat test(bold)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは**太字**です', '')
+        ], TextFormatType.bold);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '太字');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.bold, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは**太字**の**2つ目**です', '')
+        ], TextFormatType.bold);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '太字');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.bold, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'の');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2つ目');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.bold, true);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは** 太字**です', '')
+        ], TextFormatType.bold);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは** 太字**です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは**太字 **です', '')
+        ], TextFormatType.bold);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは**太字 **です');
+    });
+
+    test('_parseTextFormat test(italic)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは*イタリック*です', '')
+        ], TextFormatType.italic);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, 'イタリック');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.italic, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは*イタリック*の*2つ目*です', '')
+        ], TextFormatType.italic);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, 'イタリック');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.italic, true);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'の');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2つ目');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.italic, true);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは* イタリック*です', '')
+        ], TextFormatType.italic);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは* イタリック*です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは*イタリック *です', '')
+        ], TextFormatType.italic);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは*イタリック *です');
+    });
+
+    test('_parseTextFormat test(emMarkDot)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは+傍点+です', '')
+        ], TextFormatType.emMarkDot);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは+傍点+の+2つ目+です', '')
+        ], TextFormatType.emMarkDot);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'の');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2つ目');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは+ 傍点+です', '')
+        ], TextFormatType.emMarkDot);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは+ 傍点+です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは+傍点 +です', '')
+        ], TextFormatType.emMarkDot);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは+傍点 +です');
+    });
+
+    test('_parseTextFormat test(emMarkDot2)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは\u300a\u300a傍点\u300b\u300bです', '')
+        ], TextFormatType.emMarkDot2);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは\u300a\u300a傍点\u300b\u300bの\u300a\u300a2つ目\u300b\u300bです', '')
+        ], TextFormatType.emMarkDot2);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'の');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2つ目');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは\u300a\u300a 傍点\u300b\u300bです', '')
+        ], TextFormatType.emMarkDot2);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは\u300a\u300a 傍点\u300b\u300bです');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは\u300a\u300a傍点 \u300b\u300bです', '')
+        ], TextFormatType.emMarkDot2);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは\u300a\u300a傍点 \u300b\u300bです');
+    });
+
+    test('_parseTextFormat test(emMarkComma)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは++傍点++です', '')
+        ], TextFormatType.emMarkComma);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは++傍点++の++2つ目++です', '')
+        ], TextFormatType.emMarkComma);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '傍点');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'の');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).text, '2つ目');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, 'です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは++ 傍点++です', '')
+        ], TextFormatType.emMarkComma);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは++ 傍点++です');
+
+        actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは++傍点 ++です', '')
+        ], TextFormatType.emMarkComma);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは++傍点 ++です');
     });
 });

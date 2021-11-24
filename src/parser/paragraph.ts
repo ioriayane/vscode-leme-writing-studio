@@ -26,10 +26,11 @@ export interface FontProperty {
     sizeRatio: number       //基本サイズに対する倍率(%)
     gothic: boolean         //ゴシック?
     bold: boolean           //太字
-    emLine: boolean         //横：下線、縦：右線
+    emLine: boolean         //横：下線、縦：右線(not implement)
     italic: boolean         //斜体
     strike: boolean         //取り消し線
     em: EmphasisMarkType    //圏点（文字の強調の点）
+    tcy: boolean            //縦中横
 }
 
 export interface IndentProperty {
@@ -69,7 +70,8 @@ export class ParagraphItemText extends ParagraphItem {
         emLine: false,
         italic: false,
         strike: false,
-        em: EmphasisMarkType.none
+        em: EmphasisMarkType.none,
+        tcy: false
     };
 
     constructor(
@@ -160,7 +162,8 @@ export class Paragraph implements ParagraphProperty {
         emLine: false,
         italic: false,
         strike: false,
-        em: EmphasisMarkType.none
+        em: EmphasisMarkType.none,
+        tcy: false
     };
 
     public pushText(text = '', ruby = ''): ParagraphItemText {

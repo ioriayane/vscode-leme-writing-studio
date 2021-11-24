@@ -44,6 +44,9 @@
 .vrtl .border-1110{ border-style: none solid solid solid;   border-width: 1px;  }
 .vrtl .border-1111{ border-style: solid solid solid solid;  border-width: 1px;  }
 
+hr {
+  border-color: var(--vscode-contrastActiveBorder);
+}
 
 svg {
   margin:    0;

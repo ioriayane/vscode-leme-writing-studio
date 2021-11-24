@@ -8,6 +8,15 @@ export enum BorderState {
     // End,
 }
 
+export enum TextFormatType {
+    tcy, //縦中横
+    bold,
+    italic,
+    emMarkDot, //丸
+    emMarkDot2, //丸の記法違い
+    emMarkComma //ごま
+}
+
 export class TextParser {
     constructor(
         private readonly _textSetting: book.TextSetting
@@ -94,7 +103,12 @@ export class TextParser {
 
             items = this._parseImage(items);
             items = this._parserRuby(items);
-
+            items = this._parseTextFormat(items, TextFormatType.tcy);
+            items = this._parseTextFormat(items, TextFormatType.bold);
+            items = this._parseTextFormat(items, TextFormatType.italic);
+            items = this._parseTextFormat(items, TextFormatType.emMarkComma);
+            items = this._parseTextFormat(items, TextFormatType.emMarkDot);
+            items = this._parseTextFormat(items, TextFormatType.emMarkDot2);
 
             para.items = items;
             return para;
@@ -481,5 +495,74 @@ export class TextParser {
         });
 
         return items;
+    }
+
+    // Caution
+    // Keep the order of calling
+    //   bold -> italic
+    //   emMarkComma -> emMarkDot
+    private _parseTextFormat(items: parser.ParagraphItem[], type: TextFormatType): parser.ParagraphItem[] {
+        let left: string;
+        let right: string;
+        let symbolLen: number;
+        switch (type) {
+            case TextFormatType.tcy:
+                left = '\\^';
+                right = '\\^';
+                symbolLen = 1;
+                break;
+            case TextFormatType.bold:
+                left = '\\*\\*';
+                right = '\\*\\*';
+                symbolLen = 2;
+                break;
+            case TextFormatType.italic:
+                left = '\\*';
+                right = '\\*';
+                symbolLen = 1;
+                break;
+            case TextFormatType.emMarkDot:
+                left = '\\+';
+                right = '\\+';
+                symbolLen = 1;
+                break;
+            case TextFormatType.emMarkDot2:
+                left = '\u300a\u300a';
+                right = '\u300b\u300b';
+                symbolLen = 2;
+                break;
+            case TextFormatType.emMarkComma:
+                left = '\\+\\+';
+                right = '\\+\\+';
+                symbolLen = 2;
+                break;
+            default:
+                return items;
+        }
+        return this._parseContent(items, new RegExp(`${left}[^ ^\u3000]+?${right}`, 'gu'),
+            (m, retItems) => {
+                const para = new parser.ParagraphItemText(m.substring(symbolLen, m.length - symbolLen), '');
+                switch (type) {
+                    case TextFormatType.tcy:
+                        para.font.tcy = true;
+                        break;
+                    case TextFormatType.bold:
+                        para.font.bold = true;
+                        break;
+                    case TextFormatType.italic:
+                        para.font.italic = true;
+                        break;
+                    case TextFormatType.emMarkDot:
+                    case TextFormatType.emMarkDot2:
+                        para.font.em = parser.EmphasisMarkType.dot;
+                        break;
+                    case TextFormatType.emMarkComma:
+                        para.font.em = parser.EmphasisMarkType.comma;
+                        break;
+                    default:
+                        break;
+                }
+                retItems.push(para);
+            });
     }
 }

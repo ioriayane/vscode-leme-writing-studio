@@ -96,7 +96,12 @@ export class HtmlBuilder {
         } else {
             text = item.text;
         }
-        return text;
+        const classList = this._buildFontClass(item.font);
+        if (classList.length > 0) {
+            return `<span class="${classList.join(' ')}">${text}</span>`;
+        } else {
+            return text;
+        }
     }
 
     private _buildPageBreak(): string {
@@ -154,6 +159,20 @@ export class HtmlBuilder {
         }
         if (font.gothic) {
             str.push('gfont');
+        }
+        if (font.bold) {
+            str.push('bold');
+        }
+        if (font.italic) {
+            str.push('italic');
+        }
+        if (font.em === parser.EmphasisMarkType.dot) {
+            str.push('em-dot');
+        } else if (font.em === parser.EmphasisMarkType.comma) {
+            str.push('em-sesame');
+        }
+        if (font.tcy) {
+            str.push('tcy');
         }
         return str;
     }
