@@ -66,6 +66,9 @@ export class TextParser {
             const para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
 
+            // remove only line feed character
+            line = line.trimRight();
+
             //// Block format
 
             if (this._parseIndent(line, para)) {

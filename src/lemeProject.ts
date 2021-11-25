@@ -50,7 +50,7 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     bookTextSetting.indent = getValue<boolean>(obj, 'making.format.text.paragraphIndent', bookTextSetting.indent);
     bookTextSetting.rubyBracket = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyBracket);
     bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
-    bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.shortenEmptyLine', bookTextSetting.eraceConsecutiveBlankLine);
+    bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.eraceConsecutiveBlankLine', bookTextSetting.eraceConsecutiveBlankLine);
     bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
 
     return updated;
@@ -73,7 +73,6 @@ export async function updateWorkspace(
     const children = await vscode.workspace.fs.readDirectory(workspaceUri);
     const files = children.map(([name, type], index) => {
         if (type === vscode.FileType.File && path.extname(name).toLowerCase() === '.leme') {
-            console.log('file(' + index + '):' + name);
             return vscode.Uri.joinPath(workspaceUri, name);
         }
         return;

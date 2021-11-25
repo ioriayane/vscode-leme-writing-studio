@@ -3,6 +3,8 @@ import * as path from 'path';
 import { LemePreviewer } from './lemePreviewer';
 import * as project from './lemeProject';
 
+let loading = false;
+
 export function activate(context: vscode.ExtensionContext): void {
 
 	const lemePreviewer = new LemePreviewer(context.extensionUri);
@@ -31,7 +33,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(() => {
-		lemePreviewer.update(vscode.window.activeTextEditor);
+		if(!loading){
+			lemePreviewer.update(vscode.window.activeTextEditor);
+		}
 	}));
 }
 
@@ -44,7 +48,9 @@ function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode
 		return;
 	}
 
+	loading = true;
 	project.updateWorkspace(vscode.workspace.workspaceFolders, e.document.uri).then((lemeFileUri) => {
+		loading = false;
 		if (!lemeFileUri) {
 			statusBarItem.hide();
 			lemePreviewer.update(e);
@@ -56,9 +62,6 @@ function updateWorkspace(e: vscode.TextEditor | undefined, statusBarItem: vscode
 				// loads settings for previewer when acitve editting file is supported file type only.
 				project.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
 					lemePreviewer.update(e, updated);
-					console.log('loaded:' + lemeFileUri.toString() + ':' + updated);
-					console.log('language:' + lemePreviewer.bookSpec.language);
-					console.log('textFlowDirection:' + lemePreviewer.bookSpec.textFlowDirection);
 				});
 			}
 		}

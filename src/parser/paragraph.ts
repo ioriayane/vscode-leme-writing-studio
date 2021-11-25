@@ -90,7 +90,10 @@ export class ParagraphItemText extends ParagraphItem {
     }
 
     private _encode(t: string): string {
-        return t.replace('&', '&amp;').replace('<', '&lt;').replace(String.fromCodePoint(0xd), '&#xd').replace(String.fromCodePoint(0x0), '');
+        return t.replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace(String.fromCodePoint(0xd), '&#xd')
+            .replace(String.fromCodePoint(0x0), '');
     }
 
     get text(): string {
