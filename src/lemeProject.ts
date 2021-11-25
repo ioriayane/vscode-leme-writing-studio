@@ -71,7 +71,7 @@ export async function updateWorkspace(
     }
 
     const children = await vscode.workspace.fs.readDirectory(workspaceUri);
-    const files = children.map(([name, type], index) => {
+    const files = children.map(([name, type]) => {
         if (type === vscode.FileType.File && path.extname(name).toLowerCase() === '.leme') {
             return vscode.Uri.joinPath(workspaceUri, name);
         }
