@@ -20,6 +20,10 @@ export function activate(context: vscode.ExtensionContext): void {
 		lemePreviewer.create(context, vscode.window.activeTextEditor);
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand(project.commandNameCreateBook, () => {
+		project.createBook(vscode.workspace.workspaceFolders, vscode.window.activeTextEditor);
+	}));
+
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
 		updateWorkspace(e, statusBarItem, lemePreviewer);
 	}));

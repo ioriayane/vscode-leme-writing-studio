@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as book from './book';
 
-
+export const commandNameCreateBook = 'leme-writing-studio.createBook';
 
 export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookSpecification, bookTextSetting: book.TextSetting): Promise<boolean> {
 
@@ -48,7 +48,7 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     bookTextSetting.pageBreak = getValue<boolean>(obj, 'making.format.text.pageBreak', bookTextSetting.pageBreak);
     bookTextSetting.align = getValue<boolean>(obj, 'making.format.text.paragraphAlign', bookTextSetting.align);
     bookTextSetting.indent = getValue<boolean>(obj, 'making.format.text.paragraphIndent', bookTextSetting.indent);
-    bookTextSetting.rubyBracket = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyBracket);
+    bookTextSetting.rubyAngle = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyAngle);
     bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
     bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.eraceConsecutiveBlankLine', bookTextSetting.eraceConsecutiveBlankLine);
     bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
@@ -56,6 +56,124 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     return updated;
 }
 
+export async function createBook(workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
+    e: vscode.TextEditor | undefined
+): Promise<void> {
+    const newFileOptions: vscode.InputBoxOptions = {
+        placeHolder: 'Please input a new file name. ( in ${}/ )',
+        title: 'LeME: Create a new leme file',
+    };
+    const selectFolderOptions: vscode.QuickPickOptions = {
+        placeHolder: 'Please select a workspace folder.',
+        title: 'LeME: Select a workspace folder'
+    };
+
+    let folderUri: vscode.Uri;
+    let fileName: string;
+
+    if (!workspaceFolders) {
+        // no place to create
+        return;
+    }
+    if (!e) {
+        if (workspaceFolders.length === 1) {
+            // only one
+            folderUri = workspaceFolders[0].uri;
+        } else {
+            // select workspace
+            const folders = workspaceFolders.map(value => {
+                return value.uri.fsPath;
+            });
+            const folder = await vscode.window.showQuickPick(folders, selectFolderOptions);
+            if (!folder) {
+                return;
+            }
+            folderUri = vscode.Uri.file(folder);
+        }
+    } else {
+        // search workspace
+        const workspaceFolder = getWorkspaceUri(workspaceFolders, e.document.uri);
+        if (!workspaceFolder) {
+            return;
+        }
+        folderUri = workspaceFolder;
+    }
+    // input file name
+    newFileOptions['placeHolder'] = newFileOptions['placeHolder']?.replace('${}', path.basename(folderUri.fsPath));
+    const input = await vscode.window.showInputBox(newFileOptions);
+    if (!input) {
+        return;
+    }
+    fileName = input;
+
+    // add extension
+    if (path.extname(fileName).toLowerCase() !== '.leme') {
+        fileName += '.leme';
+    }
+
+    // create!
+    const bookTextSetting = book.defaultValueTextSetting();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const obj: any = {};
+
+    obj['contents'] = [];
+    obj['info.creator1'] = "";
+    obj['info.creator1Kana'] = "";
+    obj['info.creator2'] = "";
+    obj['info.creator2Kana'] = "";
+    obj['info.identifier'] = "";
+    obj['info.language'] = 0;
+    obj['info.publisher'] = "";
+    obj['info.publisherKana'] = "";
+    obj['info.title'] = "";
+    obj['info.titleKana'] = "";
+    obj['making.convertSpaceToEnspace'] = false;
+    obj['making.enableHyperLink'] = false;
+    obj['making.epubPath'] = ".";
+    obj['making.format.markdown.convertCrlfToBr'] = true;
+    obj['making.format.markdown.emMark'] = true;
+    obj['making.format.markdown.emMark2'] = true;
+    obj['making.format.markdown.emMarkComma'] = true;
+    obj['making.format.markdown.pageBreakBeforeH1'] = true;
+    obj['making.format.markdown.rubyAngle'] = true;
+    obj['making.format.markdown.rubyCurly'] = true;
+    obj['making.format.markdown.rubyParen'] = true;
+    obj['making.format.markdown.tcy'] = true;
+    obj['making.format.text.advanceMode'] = bookTextSetting.advanceMode;
+    obj['making.format.text.bold'] = bookTextSetting.bold;
+    obj['making.format.text.border'] = bookTextSetting.border;
+    obj['making.format.text.emMark'] = bookTextSetting.emMarkDot;
+    obj['making.format.text.emMark2'] = bookTextSetting.emMarkDot2;
+    obj['making.format.text.emMarkComma'] = bookTextSetting.emMarkComma;
+    obj['making.format.text.eraceConsecutiveBlankLine'] = bookTextSetting.eraceConsecutiveBlankLine;
+    obj['making.format.text.firstLineHeading'] = bookTextSetting.firstLineHeading;
+    obj['making.format.text.heading'] = bookTextSetting.headling;
+    obj['making.format.text.horizontalRule'] = bookTextSetting.horizontalRule;
+    obj['making.format.text.image'] = bookTextSetting.image;
+    obj['making.format.text.italic'] = bookTextSetting.italic;
+    obj['making.format.text.pageBreak'] = bookTextSetting.pageBreak;
+    obj['making.format.text.paragraphAlign'] = bookTextSetting.align;
+    obj['making.format.text.paragraphIndent'] = bookTextSetting.indent;
+    obj['making.format.text.rubyAngle'] = bookTextSetting.rubyAngle;
+    obj['making.format.text.rubyParen'] = bookTextSetting.rubyParen;
+    obj['making.format.text.tcy'] = bookTextSetting.tcy;
+    obj['making.generateMobi'] = false;
+    obj['making.pdf.fixedImageSize.enable'] = true;
+    obj['making.pdf.fixedImageSize.height'] = 2560;
+    obj['making.pdf.fixedImageSize.width'] = 1815;
+    obj['making.userCss.enable'] = false;
+    obj['making.userCss.path'] = "";
+    obj['spec.allowSpread'] = true;
+    obj['spec.layout'] = "reflowable";
+    obj['spec.pageProgressionDirection'] = "right";
+    obj['spec.primaryWritingMode'] = "horizontal-rl";
+    obj['spec.textFlowDirection'] = "vertical";
+    
+    await vscode.workspace.fs.writeFile(
+        vscode.Uri.joinPath(folderUri, fileName),
+        Uint8Array.from(Buffer.from(JSON.stringify(obj, undefined, '    ')))
+    );
+}
 
 export async function updateWorkspace(
     workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
