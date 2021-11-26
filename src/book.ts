@@ -25,7 +25,7 @@ export interface TextSetting {
     border: boolean            // false
     pageBreak: boolean         // false
     horizontalRule: boolean    // false // hr
-    rubyBracket: boolean       // false //二重山括弧
+    rubyAngle: boolean         // false //二重山括弧
     rubyParen: boolean         // false //丸括弧
     tcy: boolean               // false
     bold: boolean              // false
@@ -43,8 +43,8 @@ export interface MarkdownSetting {
     convertCrlfToBr: boolean    // true  //改行を<br/>に変換（1行の中では処理しない）
     oneLine: boolean            // false // 1行モード（行頭と行末のスペースをはぶかない）
     backSlashEscape: boolean    // false //バックスラッシュエスケープ
-    rubyDen: boolean            // true  //ルビ {任意|任意}, {任意|任|意}
-    rubyBracket: boolean        // true  //ルビ  |任意《任意》
+    rubyCurly: boolean          // true  //ルビ {任意|任意}, {任意|任|意}
+    rubyAngle: boolean          // true  //ルビ  |任意《任意》
     rubyParen: boolean          // true  //ルビ  |任意(任意)
     emMarkDot: boolean          // false //傍点   +word+
     emMarkDot2: boolean         // false //傍点   《《word》》
@@ -79,7 +79,7 @@ export function defaultValueTextSetting(): TextSetting {
         border: true,
         pageBreak: true,
         horizontalRule: true, // hr
-        rubyBracket: true, //二重山括弧
+        rubyAngle: true, //二重山括弧
         rubyParen: true, //丸括弧
         tcy: true,
         bold: true,

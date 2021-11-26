@@ -46,7 +46,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.pageBreak = false;
         bookTextSetting.align = false;
         bookTextSetting.indent = false;
-        bookTextSetting.rubyBracket = false;
+        bookTextSetting.rubyAngle = false;
         bookTextSetting.rubyParen = false;
         bookTextSetting.eraceConsecutiveBlankLine = true;
         bookTextSetting.tcy = false;
@@ -73,7 +73,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.pageBreak, true, 'pageBreak');
         assert.strictEqual(bookTextSetting.align, true, 'align');
         assert.strictEqual(bookTextSetting.indent, true, 'indent');
-        assert.strictEqual(bookTextSetting.rubyBracket, true, 'rubyBracket');
+        assert.strictEqual(bookTextSetting.rubyAngle, true, 'rubyAngle');
         assert.strictEqual(bookTextSetting.rubyParen, true, 'rubyParen');
         assert.strictEqual(bookTextSetting.eraceConsecutiveBlankLine, false, 'eraceConsecutiveBlankLine');
         assert.strictEqual(bookTextSetting.tcy, true, 'tcy');
@@ -102,7 +102,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.pageBreak = true;
         bookTextSetting.align = true;
         bookTextSetting.indent = true;
-        bookTextSetting.rubyBracket = true;
+        bookTextSetting.rubyAngle = true;
         bookTextSetting.rubyParen = true;
         bookTextSetting.eraceConsecutiveBlankLine = false;
         bookTextSetting.tcy = true;
@@ -129,7 +129,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.pageBreak, true, 'pageBreak');
         assert.strictEqual(bookTextSetting.align, true, 'align');
         assert.strictEqual(bookTextSetting.indent, true, 'indent');
-        assert.strictEqual(bookTextSetting.rubyBracket, true, 'rubyBracket');
+        assert.strictEqual(bookTextSetting.rubyAngle, true, 'rubyAngle');
         assert.strictEqual(bookTextSetting.rubyParen, true, 'rubyParen');
         assert.strictEqual(bookTextSetting.eraceConsecutiveBlankLine, false, 'eraceConsecutiveBlankLine');
         assert.strictEqual(bookTextSetting.tcy, true, 'tcy');

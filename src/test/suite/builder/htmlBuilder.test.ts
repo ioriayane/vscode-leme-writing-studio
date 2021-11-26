@@ -43,7 +43,7 @@ suite('HtmlBuilder Test Suite', () => {
         border: true,
         pageBreak: true,
         horizontalRule: true, // hr
-        rubyBracket: true, //二重山括弧
+        rubyAngle: true, //二重山括弧
         rubyParen: true, //丸括弧
         tcy: true,
         bold: true,
