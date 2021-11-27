@@ -83,7 +83,7 @@ export class TextParser {
             } else if (this._parseHorizontalRule(line)) {
                 para.horizontalRule = true;
                 return para;
-            } else if (this._checkEraceConsecutiveBlankLine(line, index, array)) {
+            } else if (this._checkEraseConsecutiveBlankLine(line, index, array)) {
                 para.empty = true;
                 return para;
             }
@@ -121,7 +121,7 @@ export class TextParser {
         return document;
     }
 
-    private _checkEraceConsecutiveBlankLine(line: string, index: number, lines: string[]) {
+    private _checkEraseConsecutiveBlankLine(line: string, index: number, lines: string[]) {
         // No.1 ------------
         // line                line                line
         // <blank>  remove     <blank>  remove     <blank>  remove
@@ -153,7 +153,7 @@ export class TextParser {
         //                     Headline            <blank>  stay
         //                                         Headline
 
-        if (!this._textSetting.eraceConsecutiveBlankLine) {
+        if (!this._textSetting.eraseConsecutiveBlankLine) {
             return false;
         }
 

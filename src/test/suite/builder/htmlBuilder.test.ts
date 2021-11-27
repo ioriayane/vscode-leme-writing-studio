@@ -34,7 +34,7 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     const bookText: book.TextSetting = {
-        eraceConsecutiveBlankLine: true,
+        eraseConsecutiveBlankLine: true,
 
         firstLineHeading: true,
         headling: true,

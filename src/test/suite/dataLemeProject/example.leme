@@ -49,7 +49,7 @@
     "making.format.text.paragraphIndent": true,
     "making.format.text.rubyAngle": true,
     "making.format.text.rubyParen": true,
-    "making.format.text.eraceConsecutiveBlankLine": false,
+    "making.format.text.eraseConsecutiveBlankLine": false,
     "making.format.text.tcy": true,
     "making.generateMobi": false,
     "making.pdf.fixedImageSize.enable": false,

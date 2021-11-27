@@ -16,7 +16,7 @@ export interface BookSpecification {
 
 
 export interface TextSetting {
-    eraceConsecutiveBlankLine: boolean
+    eraseConsecutiveBlankLine: boolean
 
     firstLineHeading: boolean  // false
     headling: boolean          // false
@@ -70,7 +70,7 @@ export function defaultValueBookSpecification(): BookSpecification {
 
 export function defaultValueTextSetting(): TextSetting {
     return {
-        eraceConsecutiveBlankLine: false,
+        eraseConsecutiveBlankLine: false,
 
         firstLineHeading: true,
         headling: true,

@@ -11,7 +11,7 @@ suite('TextParser Test Suite', () => {
     vscode.window.showInformationMessage('Start TextParser tests.');
 
     const textParser = new parser.TextParser({
-        eraceConsecutiveBlankLine: true,
+        eraseConsecutiveBlankLine: true,
 
         firstLineHeading: true,
         headling: true,
@@ -134,158 +134,158 @@ suite('TextParser Test Suite', () => {
     });
 
 
-    test('_checkEraceConsecutiveBlankLine test(No.1-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.1-1)', () => {
         const lines: string[] = ['line0', 'line1', '', 'line2'];
         const expect: boolean[] = [false, false, true, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.1-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.1-2)', () => {
         const lines: string[] = ['line0', 'line1', '', '', 'line2'];
         const expect: boolean[] = [false, false, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.1-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.1-3)', () => {
         const lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
         const expect: boolean[] = [false, false, true, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.2-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.2-1)', () => {
         const lines: string[] = ['line0', 'line1', '', '# line2'];
         const expect: boolean[] = [false, false, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.2-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.2-2)', () => {
         const lines: string[] = ['line0', 'line1', '', '', '# line2'];
         const expect: boolean[] = [false, false, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.2-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.2-3)', () => {
         const lines: string[] = ['line0', 'line1', '', '', '', '# line2'];
         const expect: boolean[] = [false, false, true, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.3-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.3-1)', () => {
         const lines: string[] = ['line0', '# line1', '', 'line2'];
         const expect: boolean[] = [false, false, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.3-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.3-2)', () => {
         const lines: string[] = ['line0', '# line1', '', '', 'line2'];
         const expect: boolean[] = [false, false, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.3-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.3-3)', () => {
         const lines: string[] = ['line0', '# line1', '', '', '', 'line2'];
         const expect: boolean[] = [false, false, true, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.4-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.4-1)', () => {
         const lines: string[] = ['', 'line1'];
         const expect: boolean[] = [true, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.4-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.4-2)', () => {
         const lines: string[] = ['', '', 'line1'];
         const expect: boolean[] = [true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.4-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.4-3)', () => {
         const lines: string[] = ['', '', '', 'line1'];
         const expect: boolean[] = [true, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.5-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.5-1)', () => {
         const lines: string[] = ['', '# line1'];
         const expect: boolean[] = [false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.5-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.5-2)', () => {
         const lines: string[] = ['', '', '# line1'];
         const expect: boolean[] = [true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.5-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.5-3)', () => {
         const lines: string[] = ['', '', '', '# line1'];
         const expect: boolean[] = [true, true, false, false];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.6-1)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.6-1)', () => {
         const lines: string[] = ['line0', 'line1', ''];
         const expect: boolean[] = [false, false, true];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.6-2)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.6-2)', () => {
         const lines: string[] = ['line0', 'line1', '', ''];
         const expect: boolean[] = [false, false, true, true];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.6-3)', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.6-3)', () => {
         const lines: string[] = ['line0', 'line1', '', '', ''];
         const expect: boolean[] = [false, false, true, true, true];
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
     });
 
-    test('_checkEraceConsecutiveBlankLine test(No.1-3) disable', () => {
+    test('_checkEraseConsecutiveBlankLine test(No.1-3) disable', () => {
         const lines: string[] = ['line0', 'line1', '', '', '', 'line2'];
         const expect: boolean[] = [false, false, false, false, false, false];
-        (textParser as any)._textSetting.eraceConsecutiveBlankLine = false;
+        (textParser as any)._textSetting.eraseConsecutiveBlankLine = false;
         for (let i = 0; i < lines.length; i++) {
-            assert.strictEqual((textParser as any)._checkEraceConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
+            assert.strictEqual((textParser as any)._checkEraseConsecutiveBlankLine(lines[i], i, lines), expect[i], 'line:' + i);
         }
-        (textParser as any)._textSetting.eraceConsecutiveBlankLine = true;
+        (textParser as any)._textSetting.eraseConsecutiveBlankLine = true;
     });
 
 

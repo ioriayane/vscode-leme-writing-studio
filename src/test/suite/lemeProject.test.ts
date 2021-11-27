@@ -48,7 +48,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.indent = false;
         bookTextSetting.rubyAngle = false;
         bookTextSetting.rubyParen = false;
-        bookTextSetting.eraceConsecutiveBlankLine = true;
+        bookTextSetting.eraseConsecutiveBlankLine = true;
         bookTextSetting.tcy = false;
 
         assert.strictEqual(await project.loadLemeFile(
@@ -75,7 +75,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.indent, true, 'indent');
         assert.strictEqual(bookTextSetting.rubyAngle, true, 'rubyAngle');
         assert.strictEqual(bookTextSetting.rubyParen, true, 'rubyParen');
-        assert.strictEqual(bookTextSetting.eraceConsecutiveBlankLine, false, 'eraceConsecutiveBlankLine');
+        assert.strictEqual(bookTextSetting.eraseConsecutiveBlankLine, false, 'eraseConsecutiveBlankLine');
         assert.strictEqual(bookTextSetting.tcy, true, 'tcy');
 
     });
@@ -104,7 +104,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.indent = true;
         bookTextSetting.rubyAngle = true;
         bookTextSetting.rubyParen = true;
-        bookTextSetting.eraceConsecutiveBlankLine = false;
+        bookTextSetting.eraseConsecutiveBlankLine = false;
         bookTextSetting.tcy = true;
 
         assert.strictEqual(await project.loadLemeFile(
@@ -131,7 +131,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.indent, true, 'indent');
         assert.strictEqual(bookTextSetting.rubyAngle, true, 'rubyAngle');
         assert.strictEqual(bookTextSetting.rubyParen, true, 'rubyParen');
-        assert.strictEqual(bookTextSetting.eraceConsecutiveBlankLine, false, 'eraceConsecutiveBlankLine');
+        assert.strictEqual(bookTextSetting.eraseConsecutiveBlankLine, false, 'eraseConsecutiveBlankLine');
         assert.strictEqual(bookTextSetting.tcy, true, 'tcy');
 
     });

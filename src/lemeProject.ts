@@ -50,7 +50,7 @@ export async function loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookS
     bookTextSetting.indent = getValue<boolean>(obj, 'making.format.text.paragraphIndent', bookTextSetting.indent);
     bookTextSetting.rubyAngle = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyAngle);
     bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
-    bookTextSetting.eraceConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.eraceConsecutiveBlankLine', bookTextSetting.eraceConsecutiveBlankLine);
+    bookTextSetting.eraseConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.eraseConsecutiveBlankLine', bookTextSetting.eraseConsecutiveBlankLine);
     bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
 
     return updated;
@@ -145,7 +145,7 @@ export async function createBook(workspaceFolders: readonly vscode.WorkspaceFold
     obj['making.format.text.emMark'] = bookTextSetting.emMarkDot;
     obj['making.format.text.emMark2'] = bookTextSetting.emMarkDot2;
     obj['making.format.text.emMarkComma'] = bookTextSetting.emMarkComma;
-    obj['making.format.text.eraceConsecutiveBlankLine'] = bookTextSetting.eraceConsecutiveBlankLine;
+    obj['making.format.text.eraseConsecutiveBlankLine'] = bookTextSetting.eraseConsecutiveBlankLine;
     obj['making.format.text.firstLineHeading'] = bookTextSetting.firstLineHeading;
     obj['making.format.text.heading'] = bookTextSetting.headling;
     obj['making.format.text.horizontalRule'] = bookTextSetting.horizontalRule;
