@@ -4,7 +4,7 @@
 
 .vrtl body,
 .hltr body {
-  padding: 1em;   /* for Preview */
+  padding: 2em;   /* for Preview */
   font-family: serif-ja, serif;
 }
 
