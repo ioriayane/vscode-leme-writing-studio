@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 
 import * as vscode from 'vscode';
-import * as project from '../../lemeProject';
+import { LemeProject } from '../../lemeProject';
 import * as book from '../../book';
 import * as path from 'path';
 
@@ -19,6 +19,7 @@ suite('lemeProject Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
 
     test('getWorkspaceUri test', async () => {
+        const project = new LemeProject();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -26,6 +27,7 @@ suite('lemeProject Test Suite', () => {
     });
 
     test('getWorkspaceUri test(update)', async () => {
+        const project = new LemeProject();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -82,6 +84,7 @@ suite('lemeProject Test Suite', () => {
 
 
     test('getWorkspaceUri test(none update)', async () => {
+        const project = new LemeProject();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -138,6 +141,7 @@ suite('lemeProject Test Suite', () => {
 
 
     test('updateWorkspace test', async () => {
+        const project = new LemeProject();
         const baseUri = vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/');
 
         const workspaceFolders: vscode.WorkspaceFolder[] = [
