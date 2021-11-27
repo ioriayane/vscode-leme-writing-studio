@@ -23,6 +23,8 @@ export class HtmlBuilder {
                         return this._buildText(item as parser.ParagraphItemText);
                     case parser.ParagraphItemType.image:
                         return this._buildImage(item as parser.ParagraphItemImage);
+                    case parser.ParagraphItemType.hyperLink:
+                        return this._buildHyperlink(item as parser.ParagraphItemHyperlink);
                     case parser.ParagraphItemType.multimedia:
                         return '';
                     default:
@@ -119,6 +121,19 @@ export class HtmlBuilder {
             // TODO epubのときもパスは調整が必要
             return `<img alt="" src="${item.path}"/>`;
         }
+    }
+
+    private _buildHyperlink(item: parser.ParagraphItemHyperlink): string {
+
+        // if (this._webview && this._parentPath) {
+        //     const srcPath = this._webview.asWebviewUri(
+        //         vscode.Uri.file(path.join(this._parentPath, item.plainPath))
+        //     );
+        //     return `<a alt="" href="${srcPath}">${item.text}</a>`;
+        // } else {
+            // epub
+            return `<a alt="" href="${item.path}">${item.text}</a>`;
+        // }
     }
 
     private _buildParagraphClass(property: parser.ParagraphProperty): string[] {

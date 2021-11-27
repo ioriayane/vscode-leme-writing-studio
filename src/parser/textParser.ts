@@ -105,6 +105,7 @@ export class TextParser {
             items.push(new parser.ParagraphItemText(line, ''));
 
             items = this._parseImage(items);
+            items = this._parseHyperlink(items);
             items = this._parserRuby(items);
             items = this._parseTextFormat(items, TextFormatType.tcy);
             items = this._parseTextFormat(items, TextFormatType.bold);
@@ -452,6 +453,17 @@ export class TextParser {
             (m, retItems) => {
                 const splitImageSyntax = m.split(/[\]\uff3d][\uff08(]/u);
                 retItems.push(new parser.ParagraphItemImage(splitImageSyntax[1].slice(0, -1), ''));
+            });
+    }
+
+    private _parseHyperlink(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+        return this._parseContent(items, /[[\uff3b][^[\]\uff3b\uff3d(\uff08]*[\]\uff3d][\uff08(][^\uff09)]*[\uff09)]/gu,
+            (m, retItems) => {
+                const splitImageSyntax = m.split(/[\]\uff3d][\uff08(]/u);
+                retItems.push(new parser.ParagraphItemHyperlink(
+                    splitImageSyntax[0].substring(1, splitImageSyntax[0].length),
+                    splitImageSyntax[1].slice(0, -1), '')
+                );
             });
     }
 

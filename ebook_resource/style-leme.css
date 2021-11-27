@@ -48,6 +48,14 @@ hr {
   border-color: var(--vscode-contrastActiveBorder);
 }
 
+a:link,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  color: var(--vscode-textLink-foreground);
+}
+
 svg {
   margin:    0;
   padding:   0;

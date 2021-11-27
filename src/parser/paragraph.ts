@@ -108,9 +108,10 @@ export class ParagraphItemText extends ParagraphItem {
 export class ParagraphItemImage extends ParagraphItem {
     constructor(
         private _path: string,
-        private _alt: string
+        private _alt: string,
+        type = ParagraphItemType.image
     ) {
-        super(ParagraphItemType.image);
+        super(type);
     }
 
     get plainPath(): string {
@@ -136,6 +137,27 @@ export class ParagraphItemImage extends ParagraphItem {
 
     get alt(): string {
         return this._encode(this._alt);
+    }
+}
+
+export class ParagraphItemHyperlink extends ParagraphItemImage {
+    constructor(
+        private _text: string,
+        path: string,
+        alt: string
+    ) {
+        super(path, alt, ParagraphItemType.hyperLink);
+    }
+
+    private _encodeText(t: string): string {
+        return t.replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace(String.fromCodePoint(0xd), '&#xd')
+            .replace(String.fromCodePoint(0x0), '');
+    }
+
+    get text(): string {
+        return this._encodeText(this._text);
     }
 }
 

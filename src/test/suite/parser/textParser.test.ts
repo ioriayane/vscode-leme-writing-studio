@@ -1091,6 +1091,59 @@ suite('TextParser Test Suite', () => {
 
     });
 
+    test('_parseHyperlink test', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('hoge', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('hoge[LeME&](https://leme.style)foo', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).text, 'LeME&amp;');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).path, 'https://leme.style');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).alt, '');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'foo');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('これは[LeME](https://leme.style)画像が[Image](./media/image2.jpg)複数のパターン', '')
+        ]);
+        assert.strictEqual(actualItems.length, 5);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).text, 'LeME');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).path, 'https://leme.style');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).alt, '');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, '画像が');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemHyperlink).text, 'Image');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemHyperlink).path, './media/image2.jpg');
+        assert.strictEqual((actualItems[3] as parser.ParagraphItemHyperlink).alt, '');
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).text, '複数のパターン');
+        assert.strictEqual((actualItems[4] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('hoge［ＬｅＭＥ］（https://leme.style）foo', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).text, 'ＬｅＭＥ');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).path, 'https://leme.style');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemHyperlink).alt, '');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'foo');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
+    });
+
 
     test('_parserRuby test', () => {
         let actualItems: parser.ParagraphItem[];
