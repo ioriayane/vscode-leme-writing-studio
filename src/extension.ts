@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	const lemeProject = new LemeProject();
 
 	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
-	statusBarItem.command = LemePreviewer.comandName;
+	statusBarItem.command = LemeProject.commandNameSelectBook;
 	context.subscriptions.push(statusBarItem);
 
 	updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);
@@ -23,6 +23,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameCreateBook, () => {
 		lemeProject.createBook(vscode.workspace.workspaceFolders, vscode.window.activeTextEditor);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
+		selectBook(vscode.window.activeTextEditor, statusBarItem,lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
@@ -73,6 +77,25 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 					lemePreviewer.update(e, updated);
 				});
 			}
+		}
+	});
+}
+
+function selectBook(e: vscode.TextEditor | undefined,
+	statusBarItem: vscode.StatusBarItem,
+	lemeProject: LemeProject
+): void {
+	if (!e) {
+		return;
+	}
+
+	lemeProject.selectLemeFile(vscode.workspace.workspaceFolders, e.document.uri).then(lemeFileUri => {
+		if (lemeFileUri) {
+			statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(lemeFileUri.fsPath);
+			statusBarItem.show();
+			vscode.workspace.openTextDocument(lemeFileUri).then(document => {
+				vscode.window.showTextDocument(document);
+			});
 		}
 	});
 }

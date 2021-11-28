@@ -5,6 +5,9 @@ import * as book from './book';
 export class LemeProject {
 
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
+    public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
+
+    private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};
 
     public async loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookSpecification, bookTextSetting: book.TextSetting): Promise<boolean> {
 
@@ -177,6 +180,39 @@ export class LemeProject {
         );
     }
 
+    public async selectLemeFile(
+        workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
+        documentUri: vscode.Uri
+    ): Promise<vscode.Uri | undefined> {
+        if (!workspaceFolders) {
+            return;
+        }
+        const workspaceUri = this._getWorkspaceUri(workspaceFolders, documentUri);
+        if (!workspaceUri) {
+            return undefined;
+        }
+
+        const files = await this._searchLemeFiles(workspaceUri);
+        if (files.length <= 1) {
+            // oepn
+            return files[0];
+        } else {
+            // choice by user
+            const candidateFiles = files.map(value => {
+                return value.fsPath;
+            });
+            const file = await vscode.window.showQuickPick(candidateFiles, {
+                placeHolder: 'Please select a LeME file.',
+                title: 'LeME: Select a LeME file'
+            });
+            if (!file) {
+                return undefined;
+            }
+            this._projectHistory[workspaceUri.path] = vscode.Uri.file(file);
+            return this._projectHistory[workspaceUri.path];
+        }
+    }
+
     public async updateWorkspace(
         workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
         documentUri: vscode.Uri
@@ -190,19 +226,30 @@ export class LemeProject {
             return undefined;
         }
 
-        const children = await vscode.workspace.fs.readDirectory(workspaceUri);
+        if (this._projectHistory[workspaceUri.path]) {
+            // from history
+            return this._projectHistory[workspaceUri.path];
+        } else {
+            const files = await this._searchLemeFiles(workspaceUri);
+
+            if (files.length > 0) {
+                this._projectHistory[workspaceUri.path] = files[0];
+                return files[0];
+            } else {
+                return undefined;
+            }
+        }
+    }
+
+    private async _searchLemeFiles(folder: vscode.Uri): Promise<vscode.Uri[]> {
+        const children = await vscode.workspace.fs.readDirectory(folder);
         const files = children.map(([name, type]) => {
             if (type === vscode.FileType.File && path.extname(name).toLowerCase() === '.leme') {
-                return vscode.Uri.joinPath(workspaceUri, name);
+                return vscode.Uri.joinPath(folder, name);
             }
             return;
         }).filter(value => value !== undefined);
-
-        if (files.length > 0) {
-            return files[0];
-        } else {
-            return undefined;
-        }
+        return files as vscode.Uri[];
     }
 
     private _getWorkspaceUri(

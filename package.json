@@ -12,6 +12,7 @@
 	"activationEvents": [
 		"onCommand:leme-writing-studio.preview",
 		"onCommand:leme-writing-studio.createBook",
+		"onCommand:leme-writing-studio.selectBook",
 		"workspaceContains:*.leme"
 	],
 	"main": "./out/extension.js",
@@ -33,6 +34,10 @@
 			{
 				"command": "leme-writing-studio.createBook",
 				"title": "LeME: Create a new book(*.leme)"
+			},
+			{
+				"command": "leme-writing-studio.selectBook",
+				"title": "LeME: Select a book(*.leme)"
 			}
 		]
 	},
