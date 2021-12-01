@@ -44,9 +44,9 @@
 			{
 				"title": "LeME Writing Studio",
 				"properties": {
-					"selected-book-uri": {
-						"type": "object",
-						"default": {},
+					"selected-book-name": {
+						"type": "string",
+						"default": null,
 						"description": "Books that has the last opened documents.",
 						"scope": "resource"
 					}

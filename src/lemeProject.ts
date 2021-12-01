@@ -7,7 +7,7 @@ export class LemeProject {
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
-    private static readonly settingSelectedBookUri = 'selected-book-uri';
+    private static readonly settingSelectedBookUri = 'selected-book-name';
 
     private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};
 
@@ -292,10 +292,9 @@ export class LemeProject {
         // save to settings
         if (vscode.workspace.workspaceFolders) {
             const config = vscode.workspace.getConfiguration('', workspaceUri);
-            const value = config.get<{ [key: string]: string }>(LemeProject.settingSelectedBookUri, {});
-            if (value[workspaceUri.path] !== path.basename(uri.path)) {
-                value[workspaceUri.path] = path.basename(uri.path);
-                await config.update(LemeProject.settingSelectedBookUri, value, vscode.ConfigurationTarget.WorkspaceFolder);
+            const value = config.get<string>(LemeProject.settingSelectedBookUri);
+            if (value !== path.basename(uri.path)) {
+                await config.update(LemeProject.settingSelectedBookUri, path.basename(uri.path), vscode.ConfigurationTarget.WorkspaceFolder);
             }
         }
     }
@@ -310,9 +309,9 @@ export class LemeProject {
         } else {
             // load from settings
             const config = vscode.workspace.getConfiguration('', workspaceUri);
-            const value = config.get<{ [key: string]: string }>(LemeProject.settingSelectedBookUri, {});
-            if (value[workspaceUri.path]) {
-                return vscode.Uri.joinPath(workspaceUri, value[workspaceUri.path]);
+            const value = config.get<string>(LemeProject.settingSelectedBookUri);
+            if (value) {
+                return vscode.Uri.joinPath(workspaceUri, value);
             } else {
                 return undefined;
             }
