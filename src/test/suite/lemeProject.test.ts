@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as assert from 'assert';
 
 import * as vscode from 'vscode';
@@ -156,6 +157,28 @@ suite('lemeProject Test Suite', () => {
         assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(baseUri, 'hoge0/document.txt')),
             vscode.Uri.joinPath(baseUri, 'example.leme'));
         assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(vscode.Uri.file(__dirname), 'hoge0/document.txt')), undefined);
+
+    });
+
+    test('Project history test', async () => {
+        const project = new LemeProject();
+        let workspaceFolderUri: vscode.Uri;
+        
+        
+
+        workspaceFolderUri = vscode.Uri.file('/hoge1');
+        assert.deepStrictEqual((project as any)._getProjectUriFromHistory(workspaceFolderUri), undefined);
+
+        workspaceFolderUri = vscode.Uri.file('/hoge2');
+        await (project as any)._setProjectUriHistory(workspaceFolderUri, vscode.Uri.joinPath(workspaceFolderUri, 'book1.leme'));
+        assert.deepStrictEqual((project as any)._getProjectUriFromHistory(workspaceFolderUri), vscode.Uri.joinPath(workspaceFolderUri, 'book1.leme'));
+        await (project as any)._setProjectUriHistory(workspaceFolderUri, vscode.Uri.joinPath(workspaceFolderUri, 'book2.leme'));
+        assert.deepStrictEqual((project as any)._getProjectUriFromHistory(workspaceFolderUri), vscode.Uri.joinPath(workspaceFolderUri, 'book2.leme'));
+
+        workspaceFolderUri = vscode.Uri.file('/hoge3');
+        await (project as any)._setProjectUriHistory(workspaceFolderUri, vscode.Uri.joinPath(workspaceFolderUri, 'book3.leme'));
+        assert.deepStrictEqual((project as any)._getProjectUriFromHistory(workspaceFolderUri), vscode.Uri.joinPath(workspaceFolderUri, 'book3.leme'));
+        assert.deepStrictEqual((project as any)._getProjectUriFromHistory(vscode.Uri.file('/hoge/fuga3')), undefined);
 
     });
 });

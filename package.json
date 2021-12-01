@@ -39,6 +39,19 @@
 				"command": "leme-writing-studio.selectBook",
 				"title": "LeME: Select a book(*.leme)"
 			}
+		],
+		"configuration":[
+			{
+				"title": "LeME Writing Studio",
+				"properties": {
+					"selected-book-uri": {
+						"type": "object",
+						"default": {},
+						"description": "Books that has the last opened documents.",
+						"scope": "resource"
+					}
+				}
+			}
 		]
 	},
 	"scripts": {

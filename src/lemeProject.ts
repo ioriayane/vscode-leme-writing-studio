@@ -7,6 +7,8 @@ export class LemeProject {
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
+    private static readonly settingSelectedBookUri = 'selected-book-uri';
+
     private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};
 
     public async loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookSpecification, bookTextSetting: book.TextSetting): Promise<boolean> {
@@ -25,7 +27,7 @@ export class LemeProject {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        function getValue<T>(obj: any, key: string, current: T): T {
+        function getValue<T>(obj: { [key: string]: any }, key: string, current: T): T {
             let value = current;
             if (key in obj) {
                 value = obj[key];
@@ -119,7 +121,7 @@ export class LemeProject {
         // create!
         const bookTextSetting = book.defaultValueTextSetting();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const obj: any = {};
+        const obj: { [key: string]: any } = {};
 
         obj['contents'] = [];
         obj['info.creator1'] = "";
@@ -208,8 +210,8 @@ export class LemeProject {
             if (!file) {
                 return undefined;
             }
-            this._projectHistory[workspaceUri.path] = vscode.Uri.file(file);
-            return this._projectHistory[workspaceUri.path];
+            await this._setProjectUriHistory(workspaceUri, vscode.Uri.file(file));
+            return vscode.Uri.file(file);
         }
     }
 
@@ -226,18 +228,31 @@ export class LemeProject {
             return undefined;
         }
 
-        if (this._projectHistory[workspaceUri.path]) {
+        const file = this._getProjectUriFromHistory(workspaceUri);
+        if (await this._fileExists(file)) {
             // from history
-            return this._projectHistory[workspaceUri.path];
+            return file;
         } else {
             const files = await this._searchLemeFiles(workspaceUri);
 
             if (files.length > 0) {
-                this._projectHistory[workspaceUri.path] = files[0];
+                await this._setProjectUriHistory(workspaceUri, files[0]);
                 return files[0];
             } else {
                 return undefined;
             }
+        }
+    }
+
+    private async _fileExists(uri: vscode.Uri | undefined): Promise<boolean> {
+        if (!uri) {
+            return false;
+        }
+        try {
+            const stat = await vscode.workspace.fs.stat(uri);
+            return (stat.type === vscode.FileType.File);
+        } catch (error) {
+            return false;
         }
     }
 
@@ -269,5 +284,38 @@ export class LemeProject {
         });
 
         return ret;
+    }
+
+    private async _setProjectUriHistory(workspaceUri: vscode.Uri, uri: vscode.Uri): Promise<void> {
+        this._projectHistory[workspaceUri.path] = uri;
+
+        // save to settings
+        if (vscode.workspace.workspaceFolders) {
+            const config = vscode.workspace.getConfiguration('', workspaceUri);
+            const value = config.get<{ [key: string]: string }>(LemeProject.settingSelectedBookUri, {});
+            if (value[workspaceUri.path] !== path.basename(uri.path)) {
+                value[workspaceUri.path] = path.basename(uri.path);
+                await config.update(LemeProject.settingSelectedBookUri, value, vscode.ConfigurationTarget.WorkspaceFolder);
+            }
+        }
+    }
+
+    private _getProjectUriFromHistory(workspaceUri: vscode.Uri): vscode.Uri | undefined {
+        if (this._projectHistory[workspaceUri.path]) {
+            // from history
+            return this._projectHistory[workspaceUri.path];
+        } else if (!vscode.workspace.workspaceFolders) {
+            // outside of workspace
+            return undefined;
+        } else {
+            // load from settings
+            const config = vscode.workspace.getConfiguration('', workspaceUri);
+            const value = config.get<{ [key: string]: string }>(LemeProject.settingSelectedBookUri, {});
+            if (value[workspaceUri.path]) {
+                return vscode.Uri.joinPath(workspaceUri, value[workspaceUri.path]);
+            } else {
+                return undefined;
+            }
+        }
     }
 }
