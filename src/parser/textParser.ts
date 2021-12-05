@@ -25,7 +25,7 @@ export class TextParser {
     //ひらがな:http://www.unicode.org/charts/PDF/U3040.pdf
     //カタカナ:http://www.unicode.org/charts/PDF/U30A0.pdf
     //      http://www.unicode.org/charts/PDF/U31F0.pdf
-    private readonly regKANA = '[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\u3099-\u309c\uff65-\uff9f]';
+    private readonly regKANA = '[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\uff65-\uff9f]';
     // CJK統合漢字:http://www.unicode.org/charts/PDF/U4E00.pdf
     // CJK互換漢字:http://www.unicode.org/charts/PDF/UF900.pdf
     // CJK統合漢字拡張A:http://www.unicode.org/charts/PDF/U3400.pdf

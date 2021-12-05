@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { LemePreviewer } from './lemePreviewer';
 import { LemeProject } from './lemeProject';
+import { EditorController } from './editorController';
 
 let loading = false;
 
@@ -9,11 +10,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	const lemePreviewer = new LemePreviewer(context.extensionUri);
 	const lemeProject = new LemeProject();
+	const editorController = new EditorController();
 
 	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
 	statusBarItem.command = LemeProject.commandNameSelectBook;
 	context.subscriptions.push(statusBarItem);
 
+	editorController.update(vscode.window.activeTextEditor);
 	updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);
 
 
@@ -26,18 +29,35 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
-		selectBook(vscode.window.activeTextEditor, statusBarItem,lemeProject);
+		selectBook(vscode.window.activeTextEditor, statusBarItem, lemeProject);
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
+		skipCursor(vscode.window.activeTextEditor, editorController, true, false);
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('skipRightSelect', () => {
+		skipCursor(vscode.window.activeTextEditor, editorController, true, true);
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('skipLeft', () => {
+		skipCursor(vscode.window.activeTextEditor, editorController, false, false);
+	}));
+	context.subscriptions.push(vscode.commands.registerCommand('skipLeftSelect', () => {
+		skipCursor(vscode.window.activeTextEditor, editorController, false, true);
+	}));
+
+
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
+		editorController.update(e);
 		updateWorkspace(e, statusBarItem, lemePreviewer, lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(() => {
+		editorController.update(vscode.window.activeTextEditor);
 		updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
+		editorController.update(vscode.window.activeTextEditor);
 		lemePreviewer.update(vscode.window.activeTextEditor);
 	}));
 
@@ -98,4 +118,38 @@ function selectBook(e: vscode.TextEditor | undefined,
 			});
 		}
 	});
+}
+
+function skipCursor(
+	e: vscode.TextEditor | undefined
+	, editorController: EditorController
+	, right: boolean
+	, selected: boolean
+): void {
+	if (!e) {
+		return;
+	}
+	if (right) {
+		editorController.right(e).then(position => {
+			if (!position) {
+				return;
+			}
+			if (selected) {
+				e.selection = new vscode.Selection(e.selection.anchor, position);
+			} else {
+				e.selection = new vscode.Selection(position, position);
+			}
+		});
+	} else {
+		editorController.left(e).then(position => {
+			if (!position) {
+				return;
+			}
+			if (selected) {
+				e.selection = new vscode.Selection(e.selection.anchor, position);
+			} else {
+				e.selection = new vscode.Selection(position, position);
+			}
+		});
+	}
 }

@@ -52,6 +52,28 @@
 					}
 				}
 			}
+		],
+		"keybindings":[
+			{
+				"command": "skipRight",
+				"key": "ctrl+right",
+				"when": "textInputFocus && !accessibilityModeEnabled"
+			},
+			{
+				"command": "skipRightSelect",
+				"key": "ctrl+shift+right",
+				"when": "textInputFocus && !accessibilityModeEnabled"
+			},
+			{
+				"command": "skipLeft",
+				"key": "ctrl+left",
+				"when": "textInputFocus && !accessibilityModeEnabled"
+			},
+			{
+				"command": "skipLeftSelect",
+				"key": "ctrl+shift+left",
+				"when": "textInputFocus && !accessibilityModeEnabled"
+			}
 		]
 	},
 	"scripts": {
