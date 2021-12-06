@@ -1,11 +1,11 @@
-import * as vscode from 'vscode';
+import { Webview, Uri } from 'vscode';
 import * as path from 'path';
 import * as parser from '../parser/index';
 
 export class HtmlBuilder {
 
     constructor(
-        private readonly _webview: vscode.Webview | undefined,
+        private readonly _webview: Webview | undefined,
         private readonly _parentPath: string | undefined
     ) {
     }
@@ -114,7 +114,7 @@ export class HtmlBuilder {
 
         if (this._webview && this._parentPath) {
             const srcPath = this._webview.asWebviewUri(
-                vscode.Uri.file(path.join(this._parentPath, item.plainPath))
+                Uri.file(path.join(this._parentPath, item.plainPath))
             );
             return `<img alt="" src="${srcPath}"/>`;
         } else {
@@ -127,12 +127,12 @@ export class HtmlBuilder {
 
         // if (this._webview && this._parentPath) {
         //     const srcPath = this._webview.asWebviewUri(
-        //         vscode.Uri.file(path.join(this._parentPath, item.plainPath))
+        //         Uri.file(path.join(this._parentPath, item.plainPath))
         //     );
         //     return `<a alt="" href="${srcPath}">${item.text}</a>`;
         // } else {
-            // epub
-            return `<a alt="" href="${item.path}">${item.text}</a>`;
+        // epub
+        return `<a alt="" href="${item.path}">${item.text}</a>`;
         // }
     }
 

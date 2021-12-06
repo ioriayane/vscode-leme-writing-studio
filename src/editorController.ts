@@ -1,17 +1,17 @@
-import * as vscode from 'vscode';
+import { StatusBarItem, TextEditor, Selection } from 'vscode';
 import * as analyzer from './analyzer';
 
 export class EditorController {
     private _editors: { [key: string]: analyzer.TextAnalyzer; } = {};
 
-    constructor(private _statusBarItem: vscode.StatusBarItem) {
+    constructor(private _statusBarItem: StatusBarItem) {
     }
 
-    get statusBarItem(): vscode.StatusBarItem {
+    get statusBarItem(): StatusBarItem {
         return this._statusBarItem;
     }
 
-    public async update(e: vscode.TextEditor | undefined): Promise<void> {
+    public async update(e: TextEditor | undefined): Promise<void> {
         if (!e) {
             this._statusBarItem.hide();
             return;
@@ -26,7 +26,7 @@ export class EditorController {
         this.statusBarItem.show();
     }
 
-    public async right(e: vscode.TextEditor | undefined, selecting: boolean): Promise<void> {
+    public async right(e: TextEditor | undefined, selecting: boolean): Promise<void> {
         if (!e) {
             return;
         }
@@ -35,13 +35,13 @@ export class EditorController {
         }
         const position = this._editors[e.document.uri.path].right(e.selection.active.line, e.selection.active.character);
         if (selecting) {
-            e.selection = new vscode.Selection(e.selection.anchor, position);
+            e.selection = new Selection(e.selection.anchor, position);
         } else {
-            e.selection = new vscode.Selection(position, position);
+            e.selection = new Selection(position, position);
         }
     }
 
-    public async left(e: vscode.TextEditor | undefined, selecting: boolean): Promise<void> {
+    public async left(e: TextEditor | undefined, selecting: boolean): Promise<void> {
         if (!e) {
             return;
         }
@@ -50,9 +50,9 @@ export class EditorController {
         }
         const position = this._editors[e.document.uri.path].left(e.selection.active.line, e.selection.active.character);
         if (selecting) {
-            e.selection = new vscode.Selection(e.selection.anchor, position);
+            e.selection = new Selection(e.selection.anchor, position);
         } else {
-            e.selection = new vscode.Selection(position, position);
+            e.selection = new Selection(position, position);
         }
     }
 }

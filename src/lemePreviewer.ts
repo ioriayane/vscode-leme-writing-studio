@@ -1,4 +1,7 @@
-import * as vscode from 'vscode';
+import {
+    ExtensionContext, TextEditor, Uri,
+    Webview, WebviewPanel, ViewColumn, window
+} from 'vscode';
 import * as path from 'path';
 import { getNonce } from './utility';
 import * as parser from './parser/index';
@@ -14,22 +17,22 @@ export class LemePreviewer {
     public bookTextSetting: book.TextSetting;
 
     constructor(
-        private readonly _extensionUri: vscode.Uri
+        private readonly _extensionUri: Uri
     ) {
         this.bookSpec = book.defaultValueBookSpecification();
         this.bookTextSetting = book.defaultValueTextSetting();
     }
 
-    private _panel: vscode.WebviewPanel | undefined = undefined;
+    private _panel: WebviewPanel | undefined = undefined;
 
 
-    public create(context: vscode.ExtensionContext, editor: vscode.TextEditor | undefined): void {
+    public create(context: ExtensionContext, editor: TextEditor | undefined): void {
         if (!editor) {
             // console.log('Not found active text editor.');
             return;
-        }else if (!this.isSupportFileType(editor.document.uri)){
+        } else if (!this.isSupportFileType(editor.document.uri)) {
             // not support file
-            return ;
+            return;
         }
 
         if (this._panel) {
@@ -38,9 +41,9 @@ export class LemePreviewer {
 
             this.update(editor, false);
         } else {
-            this._panel = vscode.window.createWebviewPanel(
+            this._panel = window.createWebviewPanel(
                 'leme-writing-studio-preview', 'LeME Preview',
-                vscode.ViewColumn.Beside,
+                ViewColumn.Beside,
                 {
                     enableScripts: true,
                     // localResourceRoots: [vscode.Uri.file(path.dirname(activeEditor.document.uri.fsPath))]
@@ -60,11 +63,11 @@ export class LemePreviewer {
         }
     }
 
-    public update(editor: vscode.TextEditor | undefined, initialize = false): void {
+    public update(editor: TextEditor | undefined, initialize = false): void {
         if (!editor) {
             // console.log('Not found active text editor.');
             return;
-        }else if (!this.isSupportFileType(editor.document.uri)){
+        } else if (!this.isSupportFileType(editor.document.uri)) {
             // not support file
             return;
         }
@@ -96,10 +99,10 @@ export class LemePreviewer {
         });
     }
 
-    private _getWebviewContent(webview: vscode.Webview, body: string) {
-        const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(
+    private _getWebviewContent(webview: Webview, body: string) {
+        const styleUri = webview.asWebviewUri(Uri.joinPath(
             this._extensionUri, 'ebook_resource', 'book-style.css'));
-        const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(
+        const scriptUri = webview.asWebviewUri(Uri.joinPath(
             this._extensionUri, 'ebook_resource', 'book-script.js'));
         const nonce = getNonce();
 
@@ -141,7 +144,7 @@ export class LemePreviewer {
         return htmlBuilder.build(textParser.parse(text), cursorLine);
     }
 
-    public isSupportFileType(uri: vscode.Uri): boolean{
+    public isSupportFileType(uri: Uri): boolean {
         return this.supportExt.includes(path.extname(uri.fsPath).toLowerCase());
     }
 }
