@@ -33,16 +33,16 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
-		skipCursor(vscode.window.activeTextEditor, editorController, true, false);
+		editorController.right(vscode.window.activeTextEditor, false);
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('skipRightSelect', () => {
-		skipCursor(vscode.window.activeTextEditor, editorController, true, true);
+		editorController.right(vscode.window.activeTextEditor, true);
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('skipLeft', () => {
-		skipCursor(vscode.window.activeTextEditor, editorController, false, false);
+		editorController.left(vscode.window.activeTextEditor, false);
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('skipLeftSelect', () => {
-		skipCursor(vscode.window.activeTextEditor, editorController, false, true);
+		editorController.left(vscode.window.activeTextEditor, true);
 	}));
 
 
@@ -118,38 +118,4 @@ function selectBook(e: vscode.TextEditor | undefined,
 			});
 		}
 	});
-}
-
-function skipCursor(
-	e: vscode.TextEditor | undefined
-	, editorController: EditorController
-	, right: boolean
-	, selected: boolean
-): void {
-	if (!e) {
-		return;
-	}
-	if (right) {
-		editorController.right(e).then(position => {
-			if (!position) {
-				return;
-			}
-			if (selected) {
-				e.selection = new vscode.Selection(e.selection.anchor, position);
-			} else {
-				e.selection = new vscode.Selection(position, position);
-			}
-		});
-	} else {
-		editorController.left(e).then(position => {
-			if (!position) {
-				return;
-			}
-			if (selected) {
-				e.selection = new vscode.Selection(e.selection.anchor, position);
-			} else {
-				e.selection = new vscode.Selection(position, position);
-			}
-		});
-	}
 }

@@ -15,25 +15,33 @@ export class EditorController {
         this._editors[e.document.uri.path].update(e.document.getText());
     }
 
-    public async right(e: vscode.TextEditor | undefined): Promise<vscode.Position | undefined> {
+    public async right(e: vscode.TextEditor | undefined, selecting: boolean): Promise<void> {
         if (!e) {
-            return undefined;
+            return;
         }
         if (!this._editors[e.document.uri.path]) {
-            return new vscode.Position(e.selection.active.line, e.selection.active.character + 1);
+            return;
+        }
+        const position = this._editors[e.document.uri.path].right(e.selection.active.line, e.selection.active.character);
+        if (selecting) {
+            e.selection = new vscode.Selection(e.selection.anchor, position);
         } else {
-            return this._editors[e.document.uri.path].right(e.selection.active.line, e.selection.active.character);
+            e.selection = new vscode.Selection(position, position);
         }
     }
 
-    public async left(e: vscode.TextEditor | undefined): Promise<vscode.Position | undefined> {
+    public async left(e: vscode.TextEditor | undefined, selecting: boolean): Promise<void> {
         if (!e) {
-            return undefined;
+            return;
         }
         if (!this._editors[e.document.uri.path]) {
-            return new vscode.Position(e.selection.active.line, e.selection.active.character - 1);
+            return;
+        }
+        const position = this._editors[e.document.uri.path].left(e.selection.active.line, e.selection.active.character);
+        if (selecting) {
+            e.selection = new vscode.Selection(e.selection.anchor, position);
         } else {
-            return this._editors[e.document.uri.path].left(e.selection.active.line, e.selection.active.character);
+            e.selection = new vscode.Selection(position, position);
         }
     }
 }

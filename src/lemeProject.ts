@@ -187,7 +187,7 @@ export class LemeProject {
         documentUri: vscode.Uri
     ): Promise<vscode.Uri | undefined> {
         if (!workspaceFolders) {
-            return;
+            return undefined;
         }
         const workspaceUri = this._getWorkspaceUri(workspaceFolders, documentUri);
         if (!workspaceUri) {
