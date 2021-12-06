@@ -33,11 +33,11 @@
 			},
 			{
 				"command": "leme-writing-studio.createBook",
-				"title": "LeME: Create a new book(*.leme)"
+				"title": "LeME: New LeME file(*.leme)"
 			},
 			{
 				"command": "leme-writing-studio.selectBook",
-				"title": "LeME: Select a book(*.leme)"
+				"title": "LeME: Select LeME file(*.leme)"
 			}
 		],
 		"configuration":[

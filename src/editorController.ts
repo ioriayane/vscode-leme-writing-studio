@@ -3,16 +3,25 @@ import * as analyzer from './analyzer';
 
 export class EditorController {
     private _editors: { [key: string]: analyzer.TextAnalyzer; } = {};
+    private _statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+
+    get statusBarItem(): vscode.StatusBarItem {
+        return this._statusBarItem;
+    }
 
     public async update(e: vscode.TextEditor | undefined): Promise<void> {
         if (!e) {
+            this._statusBarItem.hide();
             return;
         }
         if (!this._editors[e.document.uri.path]) {
             // new
             this._editors[e.document.uri.path] = new analyzer.TextAnalyzer();
         }
-        this._editors[e.document.uri.path].update(e.document.getText());
+        const characterCount = this._editors[e.document.uri.path].update(e.document.getText());
+
+        this.statusBarItem.text = 'TL ' + e.document.lineCount.toLocaleString() + ', TC ' + characterCount.toLocaleString();
+        this.statusBarItem.show();
     }
 
     public async right(e: vscode.TextEditor | undefined, selecting: boolean): Promise<void> {

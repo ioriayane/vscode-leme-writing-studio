@@ -12,9 +12,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	const lemeProject = new LemeProject();
 	const editorController = new EditorController();
 
-	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
 	statusBarItem.command = LemeProject.commandNameSelectBook;
+	statusBarItem.tooltip = 'Select LeME file(*.leme)';
 	context.subscriptions.push(statusBarItem);
+	context.subscriptions.push(editorController.statusBarItem);
 
 	editorController.update(vscode.window.activeTextEditor);
 	updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);

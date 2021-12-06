@@ -40,12 +40,16 @@ export class TextAnalyzer {
     private readonly _regWhitespace = new RegExp('[ \u3000\\t]');
     private readonly _regCrlf = new RegExp('[\\r\\n]');
 
-    public update(text: string): void {
+    public update(text: string): number {
+        let characterCount = 0;
         const lines = text.split('\n');
         this._lines = lines.map((line, index) => {
             if (line.endsWith('\r')) {
                 line = line.substr(0, line.length - 1);
             }
+            // count number of characters
+            characterCount += line.length;
+            // check the change
             if (index < this._lines.length) {
                 if (this._lines[index].original === line) {
                     // This line has not been updated.
@@ -58,6 +62,7 @@ export class TextAnalyzer {
                 characters: this._analyze(line)
             };
         });
+        return characterCount;
     }
 
     public right(line: number, character: number): Position {
@@ -68,23 +73,23 @@ export class TextAnalyzer {
 
         const characters = this._lines[line].characters;
         let retLine = line;
-        let retCharactor = characters.length;
+        let retCharacter = characters.length;
         if (character === characters.length) {
             // The cursor is set at right of last character.
             // move to next line.
             if ((line + 1) < this._lines.length) {
                 retLine = line + 1;
-                retCharactor = 0;
+                retCharacter = 0;
             }
         } else {
             for (let i = character + 1; i < characters.length; i++) {
                 if (characters[i - 1].type !== characters[i].type) {
-                    retCharactor = i;
+                    retCharacter = i;
                     break;
                 }
             }
         }
-        return new Position(retLine, retCharactor);
+        return new Position(retLine, retCharacter);
     }
 
 
@@ -96,24 +101,24 @@ export class TextAnalyzer {
 
         const characters = this._lines[line].characters;
         let retLine = line;
-        let retCharactor = 0;
+        let retCharacter = 0;
         if (character === 0) {
             if (line === 0) {
                 retLine = line;
             } else {
                 // previous line
                 retLine = line - 1;
-                retCharactor = this._lines[retLine].characters.length;
+                retCharacter = this._lines[retLine].characters.length;
             }
         } else {
             for (let i = character - 1; i > 0; i--) {
                 if (characters[i - 1].type !== characters[i].type) {
-                    retCharactor = i;
+                    retCharacter = i;
                     break;
                 }
             }
         }
-        return new Position(retLine, retCharactor);
+        return new Position(retLine, retCharacter);
     }
 
     private _rangeCheck(line: number, character: number): Position | undefined {
@@ -130,7 +135,7 @@ export class TextAnalyzer {
         }
         const characters = this._lines[line].characters;
         if (character > characters.length) {
-            // The cursor can be set right of last charactor.
+            // The cursor can be set right of last character.
             return new Position(line, characters.length);
         }
         return undefined;

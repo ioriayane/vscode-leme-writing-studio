@@ -67,12 +67,12 @@ export class LemeProject {
         e: vscode.TextEditor | undefined
     ): Promise<void> {
         const newFileOptions: vscode.InputBoxOptions = {
-            placeHolder: 'Please input a new file name. ( in ${}/ )',
-            title: 'LeME: Create a new leme file',
+            placeHolder: 'Please input a new LeME file name. ( in ${}/ )',
+            title: 'LeME: New LeME file',
         };
         const selectFolderOptions: vscode.QuickPickOptions = {
             placeHolder: 'Please select a workspace folder.',
-            title: 'LeME: Select a workspace folder'
+            title: 'LeME: Select Workspace folder'
         };
 
         let folderUri: vscode.Uri;
@@ -205,7 +205,7 @@ export class LemeProject {
             });
             const file = await vscode.window.showQuickPick(candidateFiles, {
                 placeHolder: 'Please select a LeME file.',
-                title: 'LeME: Select a LeME file'
+                title: 'LeME: Select LeME file'
             });
             if (!file) {
                 return undefined;
