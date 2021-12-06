@@ -11,6 +11,15 @@ export class LemeProject {
 
     private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};
 
+    constructor(private _statusBarItem: vscode.StatusBarItem) {
+        _statusBarItem.command = LemeProject.commandNameSelectBook;
+        _statusBarItem.tooltip = 'Select LeME file(*.leme)';
+    }
+
+    get statusBarItem(): vscode.StatusBarItem {
+        return this._statusBarItem;
+    }
+
     public async loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookSpecification, bookTextSetting: book.TextSetting): Promise<boolean> {
 
         let updated = false;
@@ -194,28 +203,50 @@ export class LemeProject {
             return undefined;
         }
 
+        let file: vscode.Uri;
         const files = await this._searchLemeFiles(workspaceUri);
         if (files.length <= 1) {
             // oepn
-            return files[0];
+            file = files[0];
         } else {
             // choice by user
             const candidateFiles = files.map(value => {
                 return value.fsPath;
             });
-            const file = await vscode.window.showQuickPick(candidateFiles, {
+            const fileStr = await vscode.window.showQuickPick(candidateFiles, {
                 placeHolder: 'Please select a LeME file.',
                 title: 'LeME: Select LeME file'
             });
-            if (!file) {
+            if (!fileStr) {
                 return undefined;
             }
-            await this._setProjectUriHistory(workspaceUri, vscode.Uri.file(file));
-            return vscode.Uri.file(file);
+            file = vscode.Uri.file(fileStr);
+            await this._setProjectUriHistory(workspaceUri, file);
         }
+        // update Status bar
+        this.statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(file.fsPath);
+        this.statusBarItem.show();
+
+        return file;
     }
 
-    public async updateWorkspace(
+    public async updateWorkspace(e: vscode.TextEditor | undefined,
+        workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
+    ): Promise<vscode.Uri | undefined> {
+        if (!e) {
+            return undefined;
+        }
+        const lemeFileUri = await this._getProjectUri(workspaceFolders, e.document.uri);
+        if (!lemeFileUri) {
+            this._statusBarItem.hide();
+        } else {
+            this._statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(lemeFileUri.fsPath);
+            this._statusBarItem.show();
+        }
+        return lemeFileUri;
+    }
+
+    private async _getProjectUri(
         workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
         documentUri: vscode.Uri
     ): Promise<vscode.Uri | undefined> {

@@ -9,17 +9,14 @@ let loading = false;
 export function activate(context: vscode.ExtensionContext): void {
 
 	const lemePreviewer = new LemePreviewer(context.extensionUri);
-	const lemeProject = new LemeProject();
-	const editorController = new EditorController();
+	const lemeProject = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
+	const editorController = new EditorController(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0));
 
-	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
-	statusBarItem.command = LemeProject.commandNameSelectBook;
-	statusBarItem.tooltip = 'Select LeME file(*.leme)';
-	context.subscriptions.push(statusBarItem);
+	context.subscriptions.push(lemeProject.statusBarItem);
 	context.subscriptions.push(editorController.statusBarItem);
 
 	editorController.update(vscode.window.activeTextEditor);
-	updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);
+	updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject);
 
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemePreviewer.comandName, () => {
@@ -31,7 +28,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
-		selectBook(vscode.window.activeTextEditor, statusBarItem, lemeProject);
+		selectBook(vscode.window.activeTextEditor, lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
@@ -50,12 +47,12 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
 		editorController.update(e);
-		updateWorkspace(e, statusBarItem, lemePreviewer, lemeProject);
+		updateWorkspace(e, lemePreviewer, lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(() => {
 		editorController.update(vscode.window.activeTextEditor);
-		updateWorkspace(vscode.window.activeTextEditor, statusBarItem, lemePreviewer, lemeProject);
+		updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject);
 	}));
 
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
@@ -75,7 +72,6 @@ export function deactivate(): void { }
 
 
 function updateWorkspace(e: vscode.TextEditor | undefined,
-	statusBarItem: vscode.StatusBarItem,
 	lemePreviewer: LemePreviewer,
 	lemeProject: LemeProject
 ): void {
@@ -84,19 +80,17 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 	}
 
 	loading = true;
-	lemeProject.updateWorkspace(vscode.workspace.workspaceFolders, e.document.uri).then((lemeFileUri) => {
-		loading = false;
+	lemeProject.updateWorkspace(e, vscode.workspace.workspaceFolders).then((lemeFileUri) => {
 		if (!lemeFileUri) {
-			statusBarItem.hide();
-			lemePreviewer.update(e);
+			loading = false;
 		} else {
-			statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(lemeFileUri.fsPath);
-			statusBarItem.show();
-
-			if (lemePreviewer.isSupportFileType(e.document.uri)) {
+			if (!lemePreviewer.isSupportFileType(e.document.uri)) {
+				loading = false;
+			} else {
 				// loads settings for previewer when acitve editting file is supported file type only.
 				lemeProject.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
 					lemePreviewer.update(e, updated);
+					loading = false;
 				});
 			}
 		}
@@ -104,7 +98,6 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 }
 
 function selectBook(e: vscode.TextEditor | undefined,
-	statusBarItem: vscode.StatusBarItem,
 	lemeProject: LemeProject
 ): void {
 	if (!e) {
@@ -113,8 +106,6 @@ function selectBook(e: vscode.TextEditor | undefined,
 
 	lemeProject.selectLemeFile(vscode.workspace.workspaceFolders, e.document.uri).then(lemeFileUri => {
 		if (lemeFileUri) {
-			statusBarItem.text = '$(open-editors-view-icon) ' + path.basename(lemeFileUri.fsPath);
-			statusBarItem.show();
 			vscode.workspace.openTextDocument(lemeFileUri).then(document => {
 				vscode.window.showTextDocument(document);
 			});

@@ -3,7 +3,9 @@ import * as analyzer from './analyzer';
 
 export class EditorController {
     private _editors: { [key: string]: analyzer.TextAnalyzer; } = {};
-    private _statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+
+    constructor(private _statusBarItem: vscode.StatusBarItem) {
+    }
 
     get statusBarItem(): vscode.StatusBarItem {
         return this._statusBarItem;

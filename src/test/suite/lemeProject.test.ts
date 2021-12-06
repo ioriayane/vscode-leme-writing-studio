@@ -20,7 +20,7 @@ suite('lemeProject Test Suite', () => {
     vscode.window.showInformationMessage('Start all tests.');
 
     test('getWorkspaceUri test', async () => {
-        const project = new LemeProject();
+        const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -28,7 +28,7 @@ suite('lemeProject Test Suite', () => {
     });
 
     test('getWorkspaceUri test(update)', async () => {
-        const project = new LemeProject();
+        const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -85,7 +85,7 @@ suite('lemeProject Test Suite', () => {
 
 
     test('getWorkspaceUri test(none update)', async () => {
-        const project = new LemeProject();
+        const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
@@ -142,7 +142,7 @@ suite('lemeProject Test Suite', () => {
 
 
     test('updateWorkspace test', async () => {
-        const project = new LemeProject();
+        const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const baseUri = vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/');
 
         const workspaceFolders: vscode.WorkspaceFolder[] = [
@@ -152,19 +152,19 @@ suite('lemeProject Test Suite', () => {
             new WorkspaceFolderTest(vscode.Uri.file(__dirname), 3)
         ];
 
-        assert.strictEqual(await project.updateWorkspace(undefined, vscode.Uri.file('/hoge/fuga/project.txt')), undefined);
-        assert.strictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.file('/hoge/document.txt')), undefined);
-        assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(baseUri, 'hoge0/document.txt')),
+        assert.strictEqual(await (project as any)._getProjectUri(undefined, vscode.Uri.file('/hoge/fuga/project.txt')), undefined);
+        assert.strictEqual(await (project as any)._getProjectUri(workspaceFolders, vscode.Uri.file('/hoge/document.txt')), undefined);
+        assert.deepStrictEqual(await (project as any)._getProjectUri(workspaceFolders, vscode.Uri.joinPath(baseUri, 'hoge0/document.txt')),
             vscode.Uri.joinPath(baseUri, 'example.leme'));
-        assert.deepStrictEqual(await project.updateWorkspace(workspaceFolders, vscode.Uri.joinPath(vscode.Uri.file(__dirname), 'hoge0/document.txt')), undefined);
+        assert.deepStrictEqual(await (project as any)._getProjectUri(workspaceFolders, vscode.Uri.joinPath(vscode.Uri.file(__dirname), 'hoge0/document.txt')), undefined);
 
     });
 
     test('Project history test', async () => {
-        const project = new LemeProject();
+        const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         let workspaceFolderUri: vscode.Uri;
-        
-        
+
+
 
         workspaceFolderUri = vscode.Uri.file('/hoge1');
         assert.deepStrictEqual((project as any)._getProjectUriFromHistory(workspaceFolderUri), undefined);
