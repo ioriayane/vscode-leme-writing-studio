@@ -1,0 +1,13 @@
+:root {
+    --form-padding-vertical: 1px;
+    --form-padding-horizontal: 4px;
+}
+
+select {
+    background-color: var(--vscode-dropdown-background);
+    border-color: var(--vscode-dropdown-border);
+    color: var(--vscode-dropdown-foreground);
+	font-family: var(--vscode-font-family);
+    padding: var(--form-padding-vertical) var(--form-padding-horizontal)
+}
+

@@ -7,6 +7,9 @@ export class LemeProject {
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
+    public static readonly specTextFlowDirection = 'spec.textFlowDirection';
+
+
     private static readonly settingSelectedBookUri = 'selected-book-name';
 
     private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};

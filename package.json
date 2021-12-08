@@ -74,6 +74,17 @@
 				"key": "ctrl+shift+left",
 				"when": "textInputFocus && !accessibilityModeEnabled"
 			}
+		],
+		"customEditors":[
+			{
+				"viewType": "leme-writing-studio.leme-file.editor",
+				"displayName": "LeME file",
+				"selector": [
+					{
+						"filenamePattern": "*.leme"
+					}
+				]
+			}
 		]
 	},
 	"scripts": {

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { LemePreviewer } from './lemePreviewer';
 import { LemeProject } from './lemeProject';
 import { EditorController } from './editorController';
+import { LemeFileEditorProvider } from './lemeFileEditorProvider';
 
 let loading = false;
 
@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	const lemePreviewer = new LemePreviewer(context.extensionUri);
 	const lemeProject = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
 	const editorController = new EditorController(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0));
+	const lemeFileEditor = new LemeFileEditorProvider(context.extensionUri);
 
 	context.subscriptions.push(lemeProject.statusBarItem);
 	context.subscriptions.push(editorController.statusBarItem);
@@ -30,6 +31,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
 		selectBook(vscode.window.activeTextEditor, lemeProject);
 	}));
+
+	context.subscriptions.push(vscode.window.registerCustomEditorProvider(LemeFileEditorProvider.viewType, lemeFileEditor));
+
 
 	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
 		editorController.right(vscode.window.activeTextEditor, false);
