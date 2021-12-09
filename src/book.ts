@@ -15,7 +15,16 @@ export enum BookLanguage {
 }
 
 export interface BookInformation {
+    creator1: string
+    creator1Kana: string
+    creator2: string
+    creator2Kana: string
+    identifier: string
     language: BookLanguage
+    publisher: string
+    publisherKana: string
+    title: string
+    titleKana: string
 }
 
 export interface BookSpecification {
@@ -72,7 +81,16 @@ export interface MarkdownSetting {
 
 export function defaultValueBookInformation(): BookInformation {
     return {
-        language: BookLanguage.ja
+        creator1: '',
+        creator1Kana: '',
+        creator2: '',
+        creator2Kana: '',
+        identifier: '',
+        language: BookLanguage.ja,
+        publisher: '',
+        publisherKana: '',
+        title: '',
+        titleKana: ''
     };
 }
 

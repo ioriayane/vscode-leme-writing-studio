@@ -129,12 +129,17 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
 
         content.push(`<h1>Book Information</h1>`);
 
-        content.push(this._makeTextBox('Title', 'info.title'));
-
-        content.push(this._makeSelect('Language'
-            , LemeProject.infoLanguage
-            , [['' + book.BookLanguage.ja, 'Japanese'], ['' + book.BookLanguage.en, 'English']]));
-
+        content.push(this._makeTextBox('Creator1', LemeProject.infoCreator1));
+        content.push(this._makeTextBox('Creator1 (kana)', LemeProject.infoCreator1Kana));
+        content.push(this._makeTextBox('Creator2', LemeProject.infoCreator2));
+        content.push(this._makeTextBox('Creator2 (kana)', LemeProject.infoCreator2Kana));
+        content.push(this._makeTextBox('Identifier (ISBN etc)', LemeProject.infoIdentifier));
+        content.push(this._makeSelect('Language', LemeProject.infoLanguage
+            , [['' + book.BookLanguage.ja, 'Japanese'], ['' + book.BookLanguage.en, 'English']]));  // select
+        content.push(this._makeTextBox('Publisher', LemeProject.infoPublisher));
+        content.push(this._makeTextBox('Publisher (kana)', LemeProject.infoPublisherKana));
+        content.push(this._makeTextBox('Title', LemeProject.infoTitle));
+        content.push(this._makeTextBox('Title (kana)', LemeProject.infoTitleKana));
 
         content.push(`<h1>Book Specification</h1>`);
 

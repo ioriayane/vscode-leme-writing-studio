@@ -27,7 +27,16 @@ export class LemeProject {
     public static readonly makingFormatTextEraseConsecutiveBlankLine = 'making.format.text.eraseConsecutiveBlankLine';
     public static readonly makingFormatTextTcy = 'making.format.text.tcy';
 
+    public static readonly infoCreator1 = 'info.creator1';
+    public static readonly infoCreator1Kana = 'info.creator1Kana';
+    public static readonly infoCreator2 = 'info.creator2';
+    public static readonly infoCreator2Kana = 'info.creator2Kana';
+    public static readonly infoIdentifier = 'info.identifier';
     public static readonly infoLanguage = 'info.language';
+    public static readonly infoPublisher = 'info.publisher';
+    public static readonly infoPublisherKana = 'info.publisherKana';
+    public static readonly infoTitle = 'info.title';
+    public static readonly infoTitleKana = 'info.titleKana';
 
     public static readonly specAllowSpread = 'spec.allowSpread';
     public static readonly specLayout = 'spec.layout';
@@ -81,7 +90,16 @@ export class LemeProject {
             return value as T;
         }
 
+        bookInfo.creator1 = getValue<string>(obj, LemeProject.infoCreator1, bookInfo.creator1);
+        bookInfo.creator1Kana = getValue<string>(obj, LemeProject.infoCreator1Kana, bookInfo.creator1Kana);
+        bookInfo.creator2 = getValue<string>(obj, LemeProject.infoCreator2, bookInfo.creator2);
+        bookInfo.creator2Kana = getValue<string>(obj, LemeProject.infoCreator2Kana, bookInfo.creator2Kana);
+        bookInfo.identifier = getValue<string>(obj, LemeProject.infoIdentifier, bookInfo.identifier);
         bookInfo.language = getValue<book.BookLanguage>(obj, LemeProject.infoLanguage, bookInfo.language);
+        bookInfo.publisher = getValue<string>(obj, LemeProject.infoPublisher, bookInfo.publisher);
+        bookInfo.publisherKana = getValue<string>(obj, LemeProject.infoPublisherKana, bookInfo.publisherKana);
+        bookInfo.title = getValue<string>(obj, LemeProject.infoTitle, bookInfo.title);
+        bookInfo.titleKana = getValue<string>(obj, LemeProject.infoTitleKana, bookInfo.titleKana);
 
         bookSpec.allowSpread = getValue<boolean>(obj, LemeProject.specAllowSpread, bookSpec.allowSpread);
         bookSpec.pageProgressionDirection = getValue<book.PageProgressionDirection>(obj, LemeProject.specPageProgressionDirection, bookSpec.pageProgressionDirection);
@@ -171,16 +189,16 @@ export class LemeProject {
         const obj: { [key: string]: any } = {};
 
         obj['contents'] = [];
-        obj['info.creator1'] = '';
-        obj['info.creator1Kana'] = '';
-        obj['info.creator2'] = '';
-        obj['info.creator2Kana'] = '';
-        obj['info.identifier'] = '';
+        obj[LemeProject.infoCreator1] = '';
+        obj[LemeProject.infoCreator1Kana] = '';
+        obj[LemeProject.infoCreator2] = '';
+        obj[LemeProject.infoCreator2Kana] = '';
+        obj[LemeProject.infoIdentifier] = '';
         obj[LemeProject.infoLanguage] = 0;
-        obj['info.publisher'] = '';
-        obj['info.publisherKana'] = '';
-        obj['info.title'] = '';
-        obj['info.titleKana'] = '';
+        obj[LemeProject.infoPublisher] = '';
+        obj[LemeProject.infoPublisherKana] = '';
+        obj[LemeProject.infoTitle] = '';
+        obj[LemeProject.infoTitleKana] = '';
         obj['making.convertSpaceToEnspace'] = false;
         obj['making.enableHyperLink'] = false;
         obj['making.epubPath'] = '.';

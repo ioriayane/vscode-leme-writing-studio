@@ -34,7 +34,16 @@ suite('lemeProject Test Suite', () => {
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
+        bookInfo.creator1 = 'a';
+        bookInfo.creator1Kana = 'b';
+        bookInfo.creator2 = 'c';
+        bookInfo.creator2Kana = 'd';
+        bookInfo.identifier = 'd';
         bookInfo.language = book.BookLanguage.en;
+        bookInfo.publisher = 'f';
+        bookInfo.publisherKana = 'g';
+        bookInfo.title = 'h';
+        bookInfo.titleKana = 'i';
 
         bookSpec.allowSpread = false;
         bookSpec.pageProgressionDirection = book.PageProgressionDirection.left;
@@ -64,7 +73,16 @@ suite('lemeProject Test Suite', () => {
             bookInfo, bookSpec, bookTextSetting),
             true);
 
+        assert.strictEqual(bookInfo.creator1, '作者1', 'creator1');
+        assert.strictEqual(bookInfo.creator1Kana, 'さくしゃ1', 'creator1Kana');
+        assert.strictEqual(bookInfo.creator2, '作者2', 'creator2');
+        assert.strictEqual(bookInfo.creator2Kana, 'さくしゃ2', 'creator2Kana');
+        assert.strictEqual(bookInfo.identifier, '123456789456123', 'identifier');
         assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.publisher, '理ろぐ', 'publisher');
+        assert.strictEqual(bookInfo.publisherKana, 'リログ', 'publisherKana');
+        assert.strictEqual(bookInfo.title, 'タイトル', 'title');
+        assert.strictEqual(bookInfo.titleKana, 'たいとる', 'titleKana');
 
         assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
         assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
@@ -98,7 +116,16 @@ suite('lemeProject Test Suite', () => {
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
+        bookInfo.creator1 = '作者1';
+        bookInfo.creator1Kana = 'さくしゃ1';
+        bookInfo.creator2 = '作者2';
+        bookInfo.creator2Kana = 'さくしゃ2';
+        bookInfo.identifier = '123456789456123';
         bookInfo.language = book.BookLanguage.ja;
+        bookInfo.publisher = '理ろぐ';
+        bookInfo.publisherKana = 'リログ';
+        bookInfo.title = 'タイトル';
+        bookInfo.titleKana = 'たいとる';
 
         bookSpec.allowSpread = true;
         bookSpec.pageProgressionDirection = book.PageProgressionDirection.right;
@@ -128,7 +155,16 @@ suite('lemeProject Test Suite', () => {
             bookInfo, bookSpec, bookTextSetting),
             false);
 
+        assert.strictEqual(bookInfo.creator1, '作者1', 'creator1');
+        assert.strictEqual(bookInfo.creator1Kana, 'さくしゃ1', 'creator1Kana');
+        assert.strictEqual(bookInfo.creator2, '作者2', 'creator2');
+        assert.strictEqual(bookInfo.creator2Kana, 'さくしゃ2', 'creator2Kana');
+        assert.strictEqual(bookInfo.identifier, '123456789456123', 'identifier');
         assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.publisher, '理ろぐ', 'publisher');
+        assert.strictEqual(bookInfo.publisherKana, 'リログ', 'publisherKana');
+        assert.strictEqual(bookInfo.title, 'タイトル', 'title');
+        assert.strictEqual(bookInfo.titleKana, 'たいとる', 'titleKana');
 
         assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
         assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
