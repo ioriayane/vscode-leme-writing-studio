@@ -53,10 +53,61 @@
     });
 
 
-    document.getElementById('making.format.text.bold').addEventListener('change', (event) => {
-        console.log(event.target.id + ':' + event.target.checked);
+    document.getElementById('making.format.text.advanceMode').addEventListener('change', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
     });
+    document.getElementById('making.format.text.bold').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.border').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.emMark').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.emMark2').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.emMarkComma').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.firstLineHeading').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.heading').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.horizontalRule').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.image').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.italic').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.pageBreak').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.paragraphAlign').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.paragraphIndent').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.rubyAngle').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.rubyParen').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.eraseConsecutiveBlankLine').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.format.text.tcy').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+
 
     const state = vscode.getState();
     if (state) {

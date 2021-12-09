@@ -8,7 +8,25 @@ export class LemeProject {
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
 
+    public static readonly makingFormatTextAdvanceMode = 'making.format.text.advanceMode';
     public static readonly makingFormatTextBold = 'making.format.text.bold';
+    public static readonly makingFormatTextBorder = 'making.format.text.border';
+    public static readonly makingFormatTextEmMark = 'making.format.text.emMark';
+    public static readonly makingFormatTextEmMark2 = 'making.format.text.emMark2';
+    public static readonly makingFormatTextEmMarkComma = 'making.format.text.emMarkComma';
+    public static readonly makingFormatTextFirstLineHeading = 'making.format.text.firstLineHeading';
+    public static readonly makingFormatTextHeading = 'making.format.text.heading';
+    public static readonly makingFormatTextHorizontalRule = 'making.format.text.horizontalRule';
+    public static readonly makingFormatTextImage = 'making.format.text.image';
+    public static readonly makingFormatTextItalic = 'making.format.text.italic';
+    public static readonly makingFormatTextPageBreak = 'making.format.text.pageBreak';
+    public static readonly makingFormatTextParagraphAlign = 'making.format.text.paragraphAlign';
+    public static readonly makingFormatTextParagraphIndent = 'making.format.text.paragraphIndent';
+    public static readonly makingFormatTextRubyAngle = 'making.format.text.rubyAngle';
+    public static readonly makingFormatTextRubyParen = 'making.format.text.rubyParen';
+    public static readonly makingFormatTextEraseConsecutiveBlankLine = 'making.format.text.eraseConsecutiveBlankLine';
+    public static readonly makingFormatTextTcy = 'making.format.text.tcy';
+
     public static readonly specTextFlowDirection = 'spec.textFlowDirection';
 
 
@@ -55,24 +73,24 @@ export class LemeProject {
         bookSpec.language = getValue<book.BookLanguage>(obj, 'info.language', bookSpec.language);
         bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, LemeProject.specTextFlowDirection, bookSpec.textFlowDirection);
 
-        bookTextSetting.advanceMode = getValue<boolean>(obj, 'making.format.text.advanceMode', bookTextSetting.advanceMode);
+        bookTextSetting.advanceMode = getValue<boolean>(obj, LemeProject.makingFormatTextAdvanceMode, bookTextSetting.advanceMode);
         bookTextSetting.bold = getValue<boolean>(obj, LemeProject.makingFormatTextBold, bookTextSetting.bold);
-        bookTextSetting.border = getValue<boolean>(obj, 'making.format.text.border', bookTextSetting.border);
-        bookTextSetting.emMarkDot = getValue<boolean>(obj, 'making.format.text.emMark', bookTextSetting.emMarkDot);
-        bookTextSetting.emMarkDot2 = getValue<boolean>(obj, 'making.format.text.emMark2', bookTextSetting.emMarkDot2);
-        bookTextSetting.emMarkComma = getValue<boolean>(obj, 'making.format.text.emMarkComma', bookTextSetting.emMarkComma);
-        bookTextSetting.firstLineHeading = getValue<boolean>(obj, 'making.format.text.firstLineHeading', bookTextSetting.firstLineHeading);
-        bookTextSetting.headling = getValue<boolean>(obj, 'making.format.text.heading', bookTextSetting.headling);
-        bookTextSetting.horizontalRule = getValue<boolean>(obj, 'making.format.text.horizontalRule', bookTextSetting.horizontalRule);
-        bookTextSetting.image = getValue<boolean>(obj, 'making.format.text.image', bookTextSetting.image);
-        bookTextSetting.italic = getValue<boolean>(obj, 'making.format.text.italic', bookTextSetting.italic);
-        bookTextSetting.pageBreak = getValue<boolean>(obj, 'making.format.text.pageBreak', bookTextSetting.pageBreak);
-        bookTextSetting.align = getValue<boolean>(obj, 'making.format.text.paragraphAlign', bookTextSetting.align);
-        bookTextSetting.indent = getValue<boolean>(obj, 'making.format.text.paragraphIndent', bookTextSetting.indent);
-        bookTextSetting.rubyAngle = getValue<boolean>(obj, 'making.format.text.rubyAngle', bookTextSetting.rubyAngle);
-        bookTextSetting.rubyParen = getValue<boolean>(obj, 'making.format.text.rubyParen', bookTextSetting.rubyParen);
-        bookTextSetting.eraseConsecutiveBlankLine = getValue<boolean>(obj, 'making.format.text.eraseConsecutiveBlankLine', bookTextSetting.eraseConsecutiveBlankLine);
-        bookTextSetting.tcy = getValue<boolean>(obj, 'making.format.text.tcy', bookTextSetting.tcy);
+        bookTextSetting.border = getValue<boolean>(obj, LemeProject.makingFormatTextBorder, bookTextSetting.border);
+        bookTextSetting.emMarkDot = getValue<boolean>(obj, LemeProject.makingFormatTextEmMark, bookTextSetting.emMarkDot);
+        bookTextSetting.emMarkDot2 = getValue<boolean>(obj, LemeProject.makingFormatTextEmMark2, bookTextSetting.emMarkDot2);
+        bookTextSetting.emMarkComma = getValue<boolean>(obj, LemeProject.makingFormatTextEmMarkComma, bookTextSetting.emMarkComma);
+        bookTextSetting.firstLineHeading = getValue<boolean>(obj, LemeProject.makingFormatTextFirstLineHeading, bookTextSetting.firstLineHeading);
+        bookTextSetting.headling = getValue<boolean>(obj, LemeProject.makingFormatTextHeading, bookTextSetting.headling);
+        bookTextSetting.horizontalRule = getValue<boolean>(obj, LemeProject.makingFormatTextHorizontalRule, bookTextSetting.horizontalRule);
+        bookTextSetting.image = getValue<boolean>(obj, LemeProject.makingFormatTextImage, bookTextSetting.image);
+        bookTextSetting.italic = getValue<boolean>(obj, LemeProject.makingFormatTextItalic, bookTextSetting.italic);
+        bookTextSetting.pageBreak = getValue<boolean>(obj, LemeProject.makingFormatTextPageBreak, bookTextSetting.pageBreak);
+        bookTextSetting.align = getValue<boolean>(obj, LemeProject.makingFormatTextParagraphAlign, bookTextSetting.align);
+        bookTextSetting.indent = getValue<boolean>(obj, LemeProject.makingFormatTextParagraphIndent, bookTextSetting.indent);
+        bookTextSetting.rubyAngle = getValue<boolean>(obj, LemeProject.makingFormatTextRubyAngle, bookTextSetting.rubyAngle);
+        bookTextSetting.rubyParen = getValue<boolean>(obj, LemeProject.makingFormatTextRubyParen, bookTextSetting.rubyParen);
+        bookTextSetting.eraseConsecutiveBlankLine = getValue<boolean>(obj, LemeProject.makingFormatTextEraseConsecutiveBlankLine, bookTextSetting.eraseConsecutiveBlankLine);
+        bookTextSetting.tcy = getValue<boolean>(obj, LemeProject.makingFormatTextTcy, bookTextSetting.tcy);
 
         return updated;
     }
@@ -160,24 +178,24 @@ export class LemeProject {
         obj['making.format.markdown.rubyCurly'] = true;
         obj['making.format.markdown.rubyParen'] = true;
         obj['making.format.markdown.tcy'] = true;
-        obj['making.format.text.advanceMode'] = bookTextSetting.advanceMode;
+        obj[LemeProject.makingFormatTextAdvanceMode] = bookTextSetting.advanceMode;
         obj[LemeProject.makingFormatTextBold] = bookTextSetting.bold;
-        obj['making.format.text.border'] = bookTextSetting.border;
-        obj['making.format.text.emMark'] = bookTextSetting.emMarkDot;
-        obj['making.format.text.emMark2'] = bookTextSetting.emMarkDot2;
-        obj['making.format.text.emMarkComma'] = bookTextSetting.emMarkComma;
-        obj['making.format.text.eraseConsecutiveBlankLine'] = bookTextSetting.eraseConsecutiveBlankLine;
-        obj['making.format.text.firstLineHeading'] = bookTextSetting.firstLineHeading;
-        obj['making.format.text.heading'] = bookTextSetting.headling;
-        obj['making.format.text.horizontalRule'] = bookTextSetting.horizontalRule;
-        obj['making.format.text.image'] = bookTextSetting.image;
-        obj['making.format.text.italic'] = bookTextSetting.italic;
-        obj['making.format.text.pageBreak'] = bookTextSetting.pageBreak;
-        obj['making.format.text.paragraphAlign'] = bookTextSetting.align;
-        obj['making.format.text.paragraphIndent'] = bookTextSetting.indent;
-        obj['making.format.text.rubyAngle'] = bookTextSetting.rubyAngle;
-        obj['making.format.text.rubyParen'] = bookTextSetting.rubyParen;
-        obj['making.format.text.tcy'] = bookTextSetting.tcy;
+        obj[LemeProject.makingFormatTextBorder] = bookTextSetting.border;
+        obj[LemeProject.makingFormatTextEmMark] = bookTextSetting.emMarkDot;
+        obj[LemeProject.makingFormatTextEmMark2] = bookTextSetting.emMarkDot2;
+        obj[LemeProject.makingFormatTextEmMarkComma] = bookTextSetting.emMarkComma;
+        obj[LemeProject.makingFormatTextFirstLineHeading] = bookTextSetting.firstLineHeading;
+        obj[LemeProject.makingFormatTextHeading] = bookTextSetting.headling;
+        obj[LemeProject.makingFormatTextHorizontalRule] = bookTextSetting.horizontalRule;
+        obj[LemeProject.makingFormatTextImage] = bookTextSetting.image;
+        obj[LemeProject.makingFormatTextItalic] = bookTextSetting.italic;
+        obj[LemeProject.makingFormatTextPageBreak] = bookTextSetting.pageBreak;
+        obj[LemeProject.makingFormatTextParagraphAlign] = bookTextSetting.align;
+        obj[LemeProject.makingFormatTextParagraphIndent] = bookTextSetting.indent;
+        obj[LemeProject.makingFormatTextRubyAngle] = bookTextSetting.rubyAngle;
+        obj[LemeProject.makingFormatTextRubyParen] = bookTextSetting.rubyParen;
+        obj[LemeProject.makingFormatTextEraseConsecutiveBlankLine] = bookTextSetting.eraseConsecutiveBlankLine;
+        obj[LemeProject.makingFormatTextTcy] = bookTextSetting.tcy;
         obj['making.generateMobi'] = false;
         obj['making.pdf.fixedImageSize.enable'] = true;
         obj['making.pdf.fixedImageSize.height'] = 2560;

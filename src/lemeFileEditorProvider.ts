@@ -133,9 +133,25 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
             , [[book.TextFlowDirection.vertical, 'Vertical'], [book.TextFlowDirection.horizontal, 'Horizontal']]));
 
         content.push(`<h1>Text file</h1>`);
-
-        content.push(this._makeInput(LemeProject.makingFormatTextBold, 'Bold'));
-
+        content.push(this._makeInput(LemeProject.makingFormatTextAdvanceMode, 'Advance mode (similar markdown format)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextBold, 'Convert Bold (format : **CHAR**)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextBorder, 'Convert border (format : !BD,TBLRH only in the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextEmMark, 'Convert EmMark[dot] (format : +CHAR+)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextEmMark2, 'Convert EmMark[dot] (format : 《《CHAR》》)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextEmMarkComma, 'Convert EmMark[comma] (format : ++CHAR++)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextFirstLineHeading, 'Convert heading (First line in the file)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextHeading, 'Convert heading (Hash marks (#) at the beginning of the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextHorizontalRule, 'Convert HR (format : !HR only in the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextImage, 'Convert Link/Image (format : [TEXT](URL), ![MEMO](FILE PATH))'));
+        content.push(this._makeInput(LemeProject.makingFormatTextItalic, 'Convert Italic (format : *CHAR*)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextPageBreak, 'Convert Page Break (format : !PB only in the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextParagraphAlign, 'Convert paragraph align (format : !R at the beginning of the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextParagraphIndent, 'Convert paragraph indent (format : !Im,n only in the line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextRubyAngle, 'Convert ruby (format : |BODY《RUBY》)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextRubyParen, 'Convert ruby (format : |BODY(RUBY))'));
+        content.push(this._makeInput(LemeProject.makingFormatTextEraseConsecutiveBlankLine, 'Erace consecutive blank line (A line->remove, Two or more line->A line)'));
+        content.push(this._makeInput(LemeProject.makingFormatTextTcy, 'Convert TCY (format : ^CHAR^)'));
+        
         return content.join('\n');
     }
 
