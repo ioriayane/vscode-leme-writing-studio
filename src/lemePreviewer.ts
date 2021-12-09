@@ -13,12 +13,14 @@ export class LemePreviewer {
     public static readonly comandName = 'leme-writing-studio.preview';
     public readonly supportExt = ['.txt'];
 
+    public bookInfo: book.BookInformation;
     public bookSpec: book.BookSpecification;
     public bookTextSetting: book.TextSetting;
 
     constructor(
         private readonly _extensionUri: Uri
     ) {
+        this.bookInfo = book.defaultValueBookInformation();
         this.bookSpec = book.defaultValueBookSpecification();
         this.bookTextSetting = book.defaultValueTextSetting();
     }
@@ -107,7 +109,7 @@ export class LemePreviewer {
         const nonce = getNonce();
 
         let lang: string;
-        if (this.bookSpec.language === book.BookLanguage.ja) {
+        if (this.bookInfo.language === book.BookLanguage.ja) {
             lang = 'ja';
         } else {
             lang = 'en';

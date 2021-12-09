@@ -126,11 +126,26 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
     private _makeMainContent(): string {
         const content: string[] = [];
 
+
+        content.push(`<h1>Book Information</h1>`);
+
+        content.push(this._makeTextBox('Title', 'info.title'));
+
+        content.push(this._makeSelect('Language'
+            , LemeProject.infoLanguage
+            , [['' + book.BookLanguage.ja, 'Japanese'], ['' + book.BookLanguage.en, 'English']]));
+
+
         content.push(`<h1>Book Specification</h1>`);
 
+        content.push(this._makeInput(LemeProject.specAllowSpread, 'Allow spread'));
+        content.push(this._makeSelect('Page progression direction'
+            , LemeProject.specPageProgressionDirection
+            , [[book.PageProgressionDirection.right, 'Right side'], [book.PageProgressionDirection.left, 'Left side']]));
         content.push(this._makeSelect('Text flow direction'
             , LemeProject.specTextFlowDirection
             , [[book.TextFlowDirection.vertical, 'Vertical'], [book.TextFlowDirection.horizontal, 'Horizontal']]));
+
 
         content.push(`<h1>Text file</h1>`);
         content.push(this._makeInput(LemeProject.makingFormatTextAdvanceMode, 'Advance mode (similar markdown format)'));
@@ -151,11 +166,20 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push(this._makeInput(LemeProject.makingFormatTextRubyParen, 'Convert ruby (format : |BODY(RUBY))'));
         content.push(this._makeInput(LemeProject.makingFormatTextEraseConsecutiveBlankLine, 'Erace consecutive blank line (A line->remove, Two or more line->A line)'));
         content.push(this._makeInput(LemeProject.makingFormatTextTcy, 'Convert TCY (format : ^CHAR^)'));
-        
+
         return content.join('\n');
     }
 
-    private _makeInput(id: string, description: string){
+    private _makeTextBox(title: string, id: string) {
+        const content: string[] = [];
+
+        content.push(`<div>`);
+        content.push(`<p>${title} : <input id="${id}" type="text"></p></div>`);
+
+        return content.join('\n');
+    }
+
+    private _makeInput(id: string, description: string) {
         const content: string[] = [];
 
         content.push(`<div>`);

@@ -1,4 +1,9 @@
 
+export enum PageProgressionDirection {
+    left = 'left',
+    right = 'right'
+}
+
 export enum TextFlowDirection {
     vertical = 'vertical',
     horizontal = 'horizontal'
@@ -9,8 +14,13 @@ export enum BookLanguage {
     en = 1
 }
 
-export interface BookSpecification {
+export interface BookInformation {
     language: BookLanguage
+}
+
+export interface BookSpecification {
+    allowSpread: boolean
+    pageProgressionDirection: PageProgressionDirection
     textFlowDirection: TextFlowDirection
 }
 
@@ -60,10 +70,16 @@ export interface MarkdownSetting {
     rawHtml: boolean            // false // HTMLタグ
 }
 
+export function defaultValueBookInformation(): BookInformation {
+    return {
+        language: BookLanguage.ja
+    };
+}
 
 export function defaultValueBookSpecification(): BookSpecification {
     return {
-        language: BookLanguage.ja,
+        allowSpread: false,
+        pageProgressionDirection: PageProgressionDirection.right,
         textFlowDirection: TextFlowDirection.vertical
     };
 }

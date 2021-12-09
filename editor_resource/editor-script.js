@@ -48,6 +48,16 @@
         });
     }
 
+    document.getElementById('info.language').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: parseInt(event.target.value) });
+    });
+
+    document.getElementById('spec.allowSpread').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('spec.pageProgressionDirection').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
+    });
     document.getElementById('spec.textFlowDirection').addEventListener('change', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });

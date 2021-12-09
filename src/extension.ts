@@ -92,7 +92,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 				loading = false;
 			} else {
 				// loads settings for previewer when acitve editting file is supported file type only.
-				lemeProject.loadLemeFile(lemeFileUri, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
+				lemeProject.loadLemeFile(lemeFileUri, lemePreviewer.bookInfo, lemePreviewer.bookSpec, lemePreviewer.bookTextSetting).then(updated => {
 					lemePreviewer.update(e, updated);
 					loading = false;
 				});

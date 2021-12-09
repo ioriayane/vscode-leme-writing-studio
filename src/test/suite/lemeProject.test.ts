@@ -21,18 +21,23 @@ suite('lemeProject Test Suite', () => {
 
     test('getWorkspaceUri test', async () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
+        const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
-        assert.strictEqual(await project.loadLemeFile(vscode.Uri.file('/hoge'), bookSpec, bookTextSetting), false);
+        assert.strictEqual(await project.loadLemeFile(vscode.Uri.file('/hoge'), bookInfo, bookSpec, bookTextSetting), false);
     });
 
     test('getWorkspaceUri test(update)', async () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
+        const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
-        bookSpec.language = book.BookLanguage.en;
+        bookInfo.language = book.BookLanguage.en;
+
+        bookSpec.allowSpread = false;
+        bookSpec.pageProgressionDirection = book.PageProgressionDirection.left;
         bookSpec.textFlowDirection = book.TextFlowDirection.vertical;
 
         bookTextSetting.advanceMode = true;
@@ -56,10 +61,13 @@ suite('lemeProject Test Suite', () => {
 
         assert.strictEqual(await project.loadLemeFile(
             vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/example.leme'),
-            bookSpec, bookTextSetting),
+            bookInfo, bookSpec, bookTextSetting),
             true);
 
-        assert.strictEqual(bookSpec.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+
+        assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
+        assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
         assert.strictEqual(bookSpec.textFlowDirection, book.TextFlowDirection.horizontal, 'textFlowDirection');
 
         assert.strictEqual(bookTextSetting.advanceMode, false, 'advanceMode');
@@ -86,10 +94,14 @@ suite('lemeProject Test Suite', () => {
 
     test('getWorkspaceUri test(none update)', async () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
+        const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
         const bookTextSetting = book.defaultValueTextSetting();
 
-        bookSpec.language = book.BookLanguage.ja;
+        bookInfo.language = book.BookLanguage.ja;
+
+        bookSpec.allowSpread = true;
+        bookSpec.pageProgressionDirection = book.PageProgressionDirection.right;
         bookSpec.textFlowDirection = book.TextFlowDirection.horizontal;
 
         bookTextSetting.advanceMode = false;
@@ -113,10 +125,13 @@ suite('lemeProject Test Suite', () => {
 
         assert.strictEqual(await project.loadLemeFile(
             vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/example.leme'),
-            bookSpec, bookTextSetting),
+            bookInfo, bookSpec, bookTextSetting),
             false);
 
-        assert.strictEqual(bookSpec.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+
+        assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
+        assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
         assert.strictEqual(bookSpec.textFlowDirection, book.TextFlowDirection.horizontal, 'textFlowDirection');
 
         assert.strictEqual(bookTextSetting.advanceMode, false, 'advanceMode');

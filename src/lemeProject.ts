@@ -27,6 +27,12 @@ export class LemeProject {
     public static readonly makingFormatTextEraseConsecutiveBlankLine = 'making.format.text.eraseConsecutiveBlankLine';
     public static readonly makingFormatTextTcy = 'making.format.text.tcy';
 
+    public static readonly infoLanguage = 'info.language';
+
+    public static readonly specAllowSpread = 'spec.allowSpread';
+    public static readonly specLayout = 'spec.layout';
+    public static readonly specPageProgressionDirection = 'spec.pageProgressionDirection';
+    public static readonly specPrimaryWritingMode = 'spec.primaryWritingMode';
     public static readonly specTextFlowDirection = 'spec.textFlowDirection';
 
 
@@ -43,7 +49,12 @@ export class LemeProject {
         return this._statusBarItem;
     }
 
-    public async loadLemeFile(lemeFileUri: vscode.Uri, bookSpec: book.BookSpecification, bookTextSetting: book.TextSetting): Promise<boolean> {
+    public async loadLemeFile(
+        lemeFileUri: vscode.Uri
+        , bookInfo: book.BookInformation
+        , bookSpec: book.BookSpecification
+        , bookTextSetting: book.TextSetting
+    ): Promise<boolean> {
 
         let updated = false;
 
@@ -70,7 +81,10 @@ export class LemeProject {
             return value as T;
         }
 
-        bookSpec.language = getValue<book.BookLanguage>(obj, 'info.language', bookSpec.language);
+        bookInfo.language = getValue<book.BookLanguage>(obj, LemeProject.infoLanguage, bookInfo.language);
+
+        bookSpec.allowSpread = getValue<boolean>(obj, LemeProject.specAllowSpread, bookSpec.allowSpread);
+        bookSpec.pageProgressionDirection = getValue<book.PageProgressionDirection>(obj, LemeProject.specPageProgressionDirection, bookSpec.pageProgressionDirection);
         bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, LemeProject.specTextFlowDirection, bookSpec.textFlowDirection);
 
         bookTextSetting.advanceMode = getValue<boolean>(obj, LemeProject.makingFormatTextAdvanceMode, bookTextSetting.advanceMode);
@@ -152,23 +166,24 @@ export class LemeProject {
 
         // create!
         const bookTextSetting = book.defaultValueTextSetting();
+        const bookSpec = book.defaultValueBookSpecification();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const obj: { [key: string]: any } = {};
 
         obj['contents'] = [];
-        obj['info.creator1'] = "";
-        obj['info.creator1Kana'] = "";
-        obj['info.creator2'] = "";
-        obj['info.creator2Kana'] = "";
-        obj['info.identifier'] = "";
-        obj['info.language'] = 0;
-        obj['info.publisher'] = "";
-        obj['info.publisherKana'] = "";
-        obj['info.title'] = "";
-        obj['info.titleKana'] = "";
+        obj['info.creator1'] = '';
+        obj['info.creator1Kana'] = '';
+        obj['info.creator2'] = '';
+        obj['info.creator2Kana'] = '';
+        obj['info.identifier'] = '';
+        obj[LemeProject.infoLanguage] = 0;
+        obj['info.publisher'] = '';
+        obj['info.publisherKana'] = '';
+        obj['info.title'] = '';
+        obj['info.titleKana'] = '';
         obj['making.convertSpaceToEnspace'] = false;
         obj['making.enableHyperLink'] = false;
-        obj['making.epubPath'] = ".";
+        obj['making.epubPath'] = '.';
         obj['making.format.markdown.convertCrlfToBr'] = true;
         obj['making.format.markdown.emMark'] = true;
         obj['making.format.markdown.emMark2'] = true;
@@ -201,12 +216,12 @@ export class LemeProject {
         obj['making.pdf.fixedImageSize.height'] = 2560;
         obj['making.pdf.fixedImageSize.width'] = 1815;
         obj['making.userCss.enable'] = false;
-        obj['making.userCss.path'] = "";
-        obj['spec.allowSpread'] = true;
-        obj['spec.layout'] = "reflowable";
-        obj['spec.pageProgressionDirection'] = "right";
-        obj['spec.primaryWritingMode'] = "horizontal-rl";
-        obj[LemeProject.specTextFlowDirection] = "vertical";
+        obj['making.userCss.path'] = '';
+        obj[LemeProject.specAllowSpread] = bookSpec.allowSpread;
+        obj[LemeProject.specLayout] = 'reflowable';
+        obj[LemeProject.specPageProgressionDirection] = bookSpec.pageProgressionDirection;
+        obj[LemeProject.specPrimaryWritingMode] = 'horizontal-rl';
+        obj[LemeProject.specTextFlowDirection] = bookSpec.textFlowDirection;
 
         await vscode.workspace.fs.writeFile(
             vscode.Uri.joinPath(folderUri, fileName),
