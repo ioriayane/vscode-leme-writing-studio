@@ -5,9 +5,13 @@
 
 select {
     background-color: var(--vscode-dropdown-background);
-    border-color: var(--vscode-dropdown-border);
+    border: 1px solid var(--vscode-dropdown-border);
     color: var(--vscode-dropdown-foreground);
-	font-family: var(--vscode-font-family);
+	  font-family: var(--vscode-font-family);
     padding: var(--form-padding-vertical) var(--form-padding-horizontal)
 }
 
+input[type="checkbox"] {
+    background-color: var(--vscode-checkbox-background);
+    border: 1px solid var(--vscode-checkbox-border);
+}

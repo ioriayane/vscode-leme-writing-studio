@@ -7,6 +7,8 @@ export class LemeProject {
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
+
+    public static readonly makingFormatTextBold = 'making.format.text.bold';
     public static readonly specTextFlowDirection = 'spec.textFlowDirection';
 
 
@@ -51,10 +53,10 @@ export class LemeProject {
         }
 
         bookSpec.language = getValue<book.BookLanguage>(obj, 'info.language', bookSpec.language);
-        bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, 'spec.textFlowDirection', bookSpec.textFlowDirection);
+        bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, LemeProject.specTextFlowDirection, bookSpec.textFlowDirection);
 
         bookTextSetting.advanceMode = getValue<boolean>(obj, 'making.format.text.advanceMode', bookTextSetting.advanceMode);
-        bookTextSetting.bold = getValue<boolean>(obj, 'making.format.text.bold', bookTextSetting.bold);
+        bookTextSetting.bold = getValue<boolean>(obj, LemeProject.makingFormatTextBold, bookTextSetting.bold);
         bookTextSetting.border = getValue<boolean>(obj, 'making.format.text.border', bookTextSetting.border);
         bookTextSetting.emMarkDot = getValue<boolean>(obj, 'making.format.text.emMark', bookTextSetting.emMarkDot);
         bookTextSetting.emMarkDot2 = getValue<boolean>(obj, 'making.format.text.emMark2', bookTextSetting.emMarkDot2);
@@ -159,7 +161,7 @@ export class LemeProject {
         obj['making.format.markdown.rubyParen'] = true;
         obj['making.format.markdown.tcy'] = true;
         obj['making.format.text.advanceMode'] = bookTextSetting.advanceMode;
-        obj['making.format.text.bold'] = bookTextSetting.bold;
+        obj[LemeProject.makingFormatTextBold] = bookTextSetting.bold;
         obj['making.format.text.border'] = bookTextSetting.border;
         obj['making.format.text.emMark'] = bookTextSetting.emMarkDot;
         obj['making.format.text.emMark2'] = bookTextSetting.emMarkDot2;
@@ -186,7 +188,7 @@ export class LemeProject {
         obj['spec.layout'] = "reflowable";
         obj['spec.pageProgressionDirection'] = "right";
         obj['spec.primaryWritingMode'] = "horizontal-rl";
-        obj['spec.textFlowDirection'] = "vertical";
+        obj[LemeProject.specTextFlowDirection] = "vertical";
 
         await vscode.workspace.fs.writeFile(
             vscode.Uri.joinPath(folderUri, fileName),

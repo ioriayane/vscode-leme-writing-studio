@@ -61,7 +61,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
 
     private _updateDocument(document: TextDocument, key: string, value: any): void {
         const json = this._parseDocument(document);
-        if (!json[key]) {
+        if (!(key in json)) {
             return;
         }
         if (json[key] === value) {
@@ -131,6 +131,19 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push(this._makeSelect('Text flow direction'
             , LemeProject.specTextFlowDirection
             , [[book.TextFlowDirection.vertical, 'Vertical'], [book.TextFlowDirection.horizontal, 'Horizontal']]));
+
+        content.push(`<h1>Text file</h1>`);
+
+        content.push(this._makeInput(LemeProject.makingFormatTextBold, 'Bold'));
+
+        return content.join('\n');
+    }
+
+    private _makeInput(id: string, description: string){
+        const content: string[] = [];
+
+        content.push(`<div>`);
+        content.push(`<p><input id="${id}" type="checkbox"><label for="${id}">${description}</label></p></div>`);
 
         return content.join('\n');
     }

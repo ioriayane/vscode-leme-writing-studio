@@ -27,10 +27,23 @@
         const keys = Object.keys(json);
         keys.forEach(key => {
             const elm = document.getElementById(key);
-            if (elm) {
-                if (elm.value !== json[key]) {
-                    elm.value = json[key];
-                }
+            if (!elm) {
+                return;
+            }
+            console.log(key);
+            // console.log(elm);
+            // console.log(elm.tagName);
+            switch (elm.tagName.toLowerCase()) {
+                case 'select':
+                    if (elm.value !== json[key]) {
+                        elm.value = json[key];
+                    }
+                    break;
+                case 'input':
+                    if (elm.checked !== json[key]) {
+                        elm.checked = json[key];
+                    }
+                    break;
             }
         });
     }
@@ -39,6 +52,11 @@
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
 
+
+    document.getElementById('making.format.text.bold').addEventListener('change', (event) => {
+        console.log(event.target.id + ':' + event.target.checked);
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
 
     const state = vscode.getState();
     if (state) {
