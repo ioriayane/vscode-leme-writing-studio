@@ -196,12 +196,12 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
     private _makeSelect(title: string, id: string, obj: string[][]): string {
         const content: string[] = [];
 
-        content.push(`<div>${title} : `);
+        content.push(`<div><p>${title} : `);
         content.push(`<select id="${id}"">`);
         obj.forEach(item => {
             content.push(`<option value="${item[0]}">${item[1]}</option>`);
         });
-        content.push('</select></div>');
+        content.push('</select></p></div>');
 
         return content.join('\n');
     }
