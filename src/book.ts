@@ -38,7 +38,7 @@ export interface TextSetting {
     eraseConsecutiveBlankLine: boolean
 
     firstLineHeading: boolean  // false
-    headling: boolean          // false
+    heading: boolean           // false
     align: boolean             // false
     indent: boolean            // false
     border: boolean            // false
@@ -107,7 +107,7 @@ export function defaultValueTextSetting(): TextSetting {
         eraseConsecutiveBlankLine: false,
 
         firstLineHeading: true,
-        headling: true,
+        heading: true,
         align: true,
         indent: true,
         border: true,

@@ -14,7 +14,7 @@ suite('TextParser Test Suite', () => {
         eraseConsecutiveBlankLine: true,
 
         firstLineHeading: true,
-        headling: true,
+        heading: true,
         align: true,
         indent: true,
         border: true,
@@ -434,6 +434,16 @@ suite('TextParser Test Suite', () => {
         assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 }, '_indentCommand:' + i);
     });
 
+    test('_parseIndent test(disable)', () => {
+        const para = new parser.Paragraph();
+        (textParser as any)._textSetting.indent = false;
+        (textParser as any)._indentState = false;
+        assert.strictEqual((textParser as any)._parseIndent('!I4,3', para), false);
+        assert.strictEqual((textParser as any)._indentState, false);
+        assert.deepStrictEqual((textParser as any)._indentCommand, { left: 0, right: 0 });
+        (textParser as any)._textSetting.indent = true;
+    });
+
     test('_parseBorder test', () => {
         const lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
         const para = new parser.Paragraph();
@@ -770,6 +780,18 @@ suite('TextParser Test Suite', () => {
         assert.deepStrictEqual(para.border, { top: false, bottom: false, left: false, right: false, inner: false }, 'border:' + i);
     });
 
+    test('_parseBorder test(disable)', () => {
+        const lines: string[] = ['line1', ' !BD,TLRBH　', 'line2', 'line3', 'line4', '!BD'];
+        const para = new parser.Paragraph();
+        (textParser as any)._textSetting.border = false;
+        (textParser as any)._borderState = BorderState.none;
+        assert.strictEqual((textParser as any)._parseBorder('!BD,TLRBH', para, 0, lines), false);
+        assert.deepStrictEqual((textParser as any)._borderCommand, { top: false, bottom: false, left: false, right: false, inner: false });
+        assert.strictEqual((textParser as any)._borderState, BorderState.none);
+        assert.deepStrictEqual(para.border, { top: false, bottom: false, left: false, right: false, inner: false });
+        (textParser as any)._textSetting.border = true;
+    });
+
     test('_parsePageBreak test', () => {
         assert.strictEqual((textParser as any)._parsePageBreak('hoge'), false);
         assert.strictEqual((textParser as any)._parsePageBreak('!PB'), true);
@@ -782,6 +804,13 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((textParser as any)._parsePageBreak('！ＰＢ'), true);
     });
 
+    test('_parsePageBreak test(disable)', () => {
+        (textParser as any)._textSetting.pageBreak = false;
+        assert.strictEqual((textParser as any)._parsePageBreak('hoge'), false);
+        assert.strictEqual((textParser as any)._parsePageBreak('!PB'), false);
+        (textParser as any)._textSetting.pageBreak = true;
+    });
+
     test('_parseHorizontalRule test', () => {
         assert.strictEqual((textParser as any)._parseHorizontalRule('hoge'), false);
         assert.strictEqual((textParser as any)._parseHorizontalRule('!HR'), true);
@@ -792,6 +821,13 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((textParser as any)._parseHorizontalRule('!ＨR'), true);
         assert.strictEqual((textParser as any)._parseHorizontalRule('!HＲ'), true);
         assert.strictEqual((textParser as any)._parseHorizontalRule('！ＨＲ'), true);
+    });
+
+    test('_parseHorizontalRule test(disable)', () => {
+        (textParser as any)._textSetting.horizontalRule = false;
+        assert.strictEqual((textParser as any)._parseHorizontalRule('hoge'), false);
+        assert.strictEqual((textParser as any)._parseHorizontalRule('!HR'), false);
+        (textParser as any)._textSetting.horizontalRule = true;
     });
 
     test('_parseOutline test', () => {
@@ -905,141 +941,166 @@ suite('TextParser Test Suite', () => {
         }
     });
 
-    test('_parseAlignment test', () => {
-        {
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.none), '!R hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.none);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment(' !R hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!R　hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　！R　hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
 
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!B hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!Ｂ hoge', para, parser.AlignmentType.right), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.right);
-            }
+    test('_parseOutline test(disable)', () => {
+        // Lv1~9
+        (textParser as any)._textSetting.heading = false;
+        const para = new parser.Paragraph();
+        assert.strictEqual((textParser as any)._parseOutline('# hoge ', para, 1), '# hoge ');
+        assert.strictEqual(para.outlineLv, 0);
+        assert.strictEqual(para.font.gothic, false);
+        assert.strictEqual(para.font.sizeRatio, 100);
+        (textParser as any)._textSetting.heading = true;
+    });
+
+    test('_parseAlignment test(right)', () => {
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.none), '!R hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.none);
         }
         {
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.none), '!T hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.none);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment(' !T hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!T　hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　！T　hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!Ｔ hoge', para, parser.AlignmentType.left), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.left);
-            }
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
         }
         {
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.none), '!C hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.none);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment(' !C hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!C　hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　！C　hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
-            {
-                const para = new parser.Paragraph();
-                assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.center), 'hoge');
-                assert.strictEqual(para.alignment, parser.AlignmentType.center);
-            }
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment(' !R hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!R　hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　！R　hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｒ　hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
         }
 
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!B hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!Ｂ hoge', para, parser.AlignmentType.right), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.right);
+        }
+    });
+    test('_parseAlignment test(top)', () => {
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.none), '!T hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.none);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment(' !T hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!T　hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　！T　hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｔ　hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!T hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!Ｔ hoge', para, parser.AlignmentType.left), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.left);
+        }
+    });
+
+    test('_parseAlignment test(center)', () => {
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.none), '!C hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.none);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!C hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment(' !C hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!C　hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　！C　hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('　!Ｃ　hoge', para, parser.AlignmentType.center), 'hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.center);
+        }
+    });
+
+    test('_parseAlignment test(disable)', () => {
+        (textParser as any)._textSetting.align = false;
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.none), '!R hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.none);
+        }
+        {
+            const para = new parser.Paragraph();
+            assert.strictEqual((textParser as any)._parseAlignment('!R hoge', para, parser.AlignmentType.right), '!R hoge');
+            assert.strictEqual(para.alignment, parser.AlignmentType.none);
+        }
+        (textParser as any)._textSetting.align = true;
     });
 
     test('_parseImage test', () => {
@@ -1089,6 +1150,28 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'foo');
         assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
 
+    });
+
+    test('_parseImage test(disable)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        (textParser as any)._textSetting.image = false;
+
+        actualItems = (textParser as any)._parseImage([
+            new parser.ParagraphItemText('hoge', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseImage([
+            new parser.ParagraphItemText('hoge![fuga](./media/image.jpg)foo', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge![fuga](./media/image.jpg)foo');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        (textParser as any)._textSetting.image = true;
     });
 
     test('_parseHyperlink test', () => {
@@ -1144,6 +1227,27 @@ suite('TextParser Test Suite', () => {
 
     });
 
+    test('_parseHyperlink test(disable)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        (textParser as any)._textSetting.image = false;
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('hoge', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        actualItems = (textParser as any)._parseHyperlink([
+            new parser.ParagraphItemText('hoge[LeME&](https://leme.style)foo', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'hoge[LeME&amp;](https://leme.style)foo');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        (textParser as any)._textSetting.image = true;
+    });
 
     test('_parserRuby test', () => {
         let actualItems: parser.ParagraphItem[];
@@ -1378,6 +1482,48 @@ suite('TextParser Test Suite', () => {
         }
     });
 
+    test('_parserRuby test(disable)', () => {
+        let actualItems: parser.ParagraphItem[];
+
+        (textParser as any)._textSetting.rubyAngle = false;
+        (textParser as any)._textSetting.rubyParen = true;
+        actualItems = (textParser as any)._parserRuby([
+            new parser.ParagraphItemText('これは|漢字(かんじ)です。私は太郎《たろう》です。', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '漢字');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).ruby, 'かんじ');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です。私は太郎《たろう》です。');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
+        (textParser as any)._textSetting.rubyAngle = true;
+        (textParser as any)._textSetting.rubyParen = false;
+        actualItems = (textParser as any)._parserRuby([
+            new parser.ParagraphItemText('これは|漢字(かんじ)です。私は太郎《たろう》です。', '')
+        ]);
+        assert.strictEqual(actualItems.length, 3);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは|漢字(かんじ)です。私は');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).text, '太郎');
+        assert.strictEqual((actualItems[1] as parser.ParagraphItemText).ruby, 'たろう');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).text, 'です。');
+        assert.strictEqual((actualItems[2] as parser.ParagraphItemText).ruby, '');
+
+        (textParser as any)._textSetting.rubyAngle = false;
+        (textParser as any)._textSetting.rubyParen = false;
+        actualItems = (textParser as any)._parserRuby([
+            new parser.ParagraphItemText('これは|漢字(かんじ)です。私は太郎《たろう》です。', '')
+        ]);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは|漢字(かんじ)です。私は太郎《たろう》です。');
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).ruby, '');
+
+        (textParser as any)._textSetting.rubyAngle = true;
+        (textParser as any)._textSetting.rubyParen = true;
+    });
+
     test('_parseTextFormat test(tcy)', () => {
         let actualItems: parser.ParagraphItem[];
 
@@ -1413,6 +1559,18 @@ suite('TextParser Test Suite', () => {
         ], TextFormatType.tcy);
         assert.strictEqual(actualItems.length, 1);
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横^78 ^です');
+    });
+
+    test('_parseTextFormat test(tcy)(disable)', () => {
+        (textParser as any)._textSetting.tcy = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('縦中横^12^です', '')
+        ], TextFormatType.tcy);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, '縦中横^12^です');
+
+        (textParser as any)._textSetting.tcy = true;
     });
 
     test('_parseTextFormat test(bold)', () => {
@@ -1452,6 +1610,18 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは**太字 **です');
     });
 
+    test('_parseTextFormat test(bold)(disable)', () => {
+        (textParser as any)._textSetting.bold = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは**太字**です', '')
+        ], TextFormatType.bold);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは**太字**です');
+
+        (textParser as any)._textSetting.bold = true;
+    });
+
     test('_parseTextFormat test(italic)', () => {
         let actualItems: parser.ParagraphItem[];
 
@@ -1487,6 +1657,18 @@ suite('TextParser Test Suite', () => {
         ], TextFormatType.italic);
         assert.strictEqual(actualItems.length, 1);
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは*イタリック *です');
+    });
+
+    test('_parseTextFormat test(italic)(disable)', () => {
+        (textParser as any)._textSetting.italic = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは*イタリック*です', '')
+        ], TextFormatType.italic);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは*イタリック*です');
+
+        (textParser as any)._textSetting.italic = true;
     });
 
     test('_parseTextFormat test(emMarkDot)', () => {
@@ -1526,6 +1708,18 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは+傍点 +です');
     });
 
+    test('_parseTextFormat test(emMarkDot)(disable)', () => {
+        (textParser as any)._textSetting.emMarkDot = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは+傍点+です', '')
+        ], TextFormatType.emMarkDot);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは+傍点+です');
+
+        (textParser as any)._textSetting.emMarkDot = true;
+    });
+
     test('_parseTextFormat test(emMarkDot2)', () => {
         let actualItems: parser.ParagraphItem[];
 
@@ -1563,6 +1757,19 @@ suite('TextParser Test Suite', () => {
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは\u300a\u300a傍点 \u300b\u300bです');
     });
 
+    test('_parseTextFormat test(emMarkDot2)(disable)', () => {
+        (textParser as any)._textSetting.emMarkDot2 = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは\u300a\u300a傍点\u300b\u300bです', '')
+        ], TextFormatType.emMarkDot2);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは\u300a\u300a傍点\u300b\u300bです');
+
+        (textParser as any)._textSetting.emMarkDot2 = false;
+
+    });
+
     test('_parseTextFormat test(emMarkComma)', () => {
         let actualItems: parser.ParagraphItem[];
 
@@ -1598,5 +1805,17 @@ suite('TextParser Test Suite', () => {
         ], TextFormatType.emMarkComma);
         assert.strictEqual(actualItems.length, 1);
         assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは++傍点 ++です');
+    });
+
+    test('_parseTextFormat test(emMarkComma)(disable)', () => {
+        (textParser as any)._textSetting.emMarkComma = false;
+
+        const actualItems = (textParser as any)._parseTextFormat([
+            new parser.ParagraphItemText('これは++傍点++です', '')
+        ], TextFormatType.emMarkComma);
+        assert.strictEqual(actualItems.length, 1);
+        assert.strictEqual((actualItems[0] as parser.ParagraphItemText).text, 'これは++傍点++です');
+
+        (textParser as any)._textSetting.emMarkComma = true;
     });
 });

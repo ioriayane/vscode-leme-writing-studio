@@ -56,7 +56,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.emMarkDot2 = false;
         bookTextSetting.emMarkComma = false;
         bookTextSetting.firstLineHeading = false;
-        bookTextSetting.headling = false;
+        bookTextSetting.heading = false;
         bookTextSetting.horizontalRule = false;
         bookTextSetting.image = false;
         bookTextSetting.italic = false;
@@ -95,7 +95,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.emMarkDot2, true, 'emMarkDot2');
         assert.strictEqual(bookTextSetting.emMarkComma, true, 'emMarkComma');
         assert.strictEqual(bookTextSetting.firstLineHeading, true, 'firstLineHeading');
-        assert.strictEqual(bookTextSetting.headling, true, 'headling');
+        assert.strictEqual(bookTextSetting.heading, true, 'heading');
         assert.strictEqual(bookTextSetting.horizontalRule, true, 'horizontalRule');
         assert.strictEqual(bookTextSetting.image, true, 'image');
         assert.strictEqual(bookTextSetting.italic, true, 'italic');
@@ -138,7 +138,7 @@ suite('lemeProject Test Suite', () => {
         bookTextSetting.emMarkDot2 = true;
         bookTextSetting.emMarkComma = true;
         bookTextSetting.firstLineHeading = true;
-        bookTextSetting.headling = true;
+        bookTextSetting.heading = true;
         bookTextSetting.horizontalRule = true;
         bookTextSetting.image = true;
         bookTextSetting.italic = true;
@@ -177,7 +177,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookTextSetting.emMarkDot2, true, 'emMarkDot2');
         assert.strictEqual(bookTextSetting.emMarkComma, true, 'emMarkComma');
         assert.strictEqual(bookTextSetting.firstLineHeading, true, 'firstLineHeading');
-        assert.strictEqual(bookTextSetting.headling, true, 'headling');
+        assert.strictEqual(bookTextSetting.heading, true, 'heading');
         assert.strictEqual(bookTextSetting.horizontalRule, true, 'horizontalRule');
         assert.strictEqual(bookTextSetting.image, true, 'image');
         assert.strictEqual(bookTextSetting.italic, true, 'italic');

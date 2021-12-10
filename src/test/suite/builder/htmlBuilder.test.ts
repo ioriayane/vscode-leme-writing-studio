@@ -37,7 +37,7 @@ suite('HtmlBuilder Test Suite', () => {
         eraseConsecutiveBlankLine: true,
 
         firstLineHeading: true,
-        headling: true,
+        heading: true,
         align: true,
         indent: true,
         border: true,

@@ -112,7 +112,7 @@ export class LemeProject {
         bookTextSetting.emMarkDot2 = getValue<boolean>(obj, LemeProject.makingFormatTextEmMark2, bookTextSetting.emMarkDot2);
         bookTextSetting.emMarkComma = getValue<boolean>(obj, LemeProject.makingFormatTextEmMarkComma, bookTextSetting.emMarkComma);
         bookTextSetting.firstLineHeading = getValue<boolean>(obj, LemeProject.makingFormatTextFirstLineHeading, bookTextSetting.firstLineHeading);
-        bookTextSetting.headling = getValue<boolean>(obj, LemeProject.makingFormatTextHeading, bookTextSetting.headling);
+        bookTextSetting.heading = getValue<boolean>(obj, LemeProject.makingFormatTextHeading, bookTextSetting.heading);
         bookTextSetting.horizontalRule = getValue<boolean>(obj, LemeProject.makingFormatTextHorizontalRule, bookTextSetting.horizontalRule);
         bookTextSetting.image = getValue<boolean>(obj, LemeProject.makingFormatTextImage, bookTextSetting.image);
         bookTextSetting.italic = getValue<boolean>(obj, LemeProject.makingFormatTextItalic, bookTextSetting.italic);
@@ -218,7 +218,7 @@ export class LemeProject {
         obj[LemeProject.makingFormatTextEmMark2] = bookTextSetting.emMarkDot2;
         obj[LemeProject.makingFormatTextEmMarkComma] = bookTextSetting.emMarkComma;
         obj[LemeProject.makingFormatTextFirstLineHeading] = bookTextSetting.firstLineHeading;
-        obj[LemeProject.makingFormatTextHeading] = bookTextSetting.headling;
+        obj[LemeProject.makingFormatTextHeading] = bookTextSetting.heading;
         obj[LemeProject.makingFormatTextHorizontalRule] = bookTextSetting.horizontalRule;
         obj[LemeProject.makingFormatTextImage] = bookTextSetting.image;
         obj[LemeProject.makingFormatTextItalic] = bookTextSetting.italic;

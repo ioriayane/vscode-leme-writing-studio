@@ -197,6 +197,10 @@ export class TextParser {
     }
 
     private _parseIndent(line: string, property: parser.ParagraphProperty): boolean {
+        if (!this._textSetting.indent) {
+            return false;
+        }
+
         const reg = /^[!\uff01][I\uff29]([0-9\uff10-\uff19]+[,\uff0c][0-9\uff10-\uff19]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
@@ -250,6 +254,10 @@ export class TextParser {
     }
 
     private _parseBorder(line: string, property: parser.ParagraphProperty, index: number, lines: string[]): boolean {
+        if (!this._textSetting.border) {
+            return false;
+        }
+
         const reg = /^[!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$/u;
         const m = line.trim().match(reg);
         if (!m) {
@@ -347,6 +355,10 @@ export class TextParser {
     }
 
     private _parsePageBreak(line: string): boolean {
+        if (!this._textSetting.pageBreak) {
+            return false;
+        }
+
         const m = line.trim().match(/^[!\uff01][P\uff30][B\uff22]$/u);
         if (!m) {
             return false;
@@ -356,6 +368,10 @@ export class TextParser {
     }
 
     private _parseHorizontalRule(line: string): boolean {
+        if (!this._textSetting.horizontalRule) {
+            return false;
+        }
+
         const m = line.trim().match(/^[!\uff01][H\uff28][R\uff32]$/u);
         if (!m) {
             return false;
@@ -365,10 +381,14 @@ export class TextParser {
     }
 
     private _parseOutline(line: string, property: parser.ParagraphProperty, index: number): string {
+        if (!this._textSetting.heading) {
+            return line;
+        }
+
         const m = line.match(/^[#\uff03]{1,9}[ \u3000]/u);
         if (!m) {
             // body
-            if (index === 0 && line.length > 0) {
+            if (index === 0 && line.length > 0 && this._textSetting.firstLineHeading) {
                 //最初の行で、空行じゃないので見出しにする
                 property.outlineLv = 1;
                 property.font.gothic = true;
@@ -396,6 +416,10 @@ export class TextParser {
     }
 
     private _parseAlignment(line: string, property: parser.ParagraphProperty, align: parser.AlignmentType): string {
+        if (!this._textSetting.align) {
+            return line;
+        }
+
         let reg: RegExp;
 
         if (align === parser.AlignmentType.right) {
@@ -449,6 +473,10 @@ export class TextParser {
     }
 
     private _parseImage(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+        if (!this._textSetting.image) {
+            return items;
+        }
+
         return this._parseContent(items, /[!\uff01][[\uff3b][^[\]\uff3b\uff3d(\uff08]*[\]\uff3d][\uff08(][^\uff09)]*[\uff09)]/gu,
             (m, retItems) => {
                 const splitImageSyntax = m.split(/[\]\uff3d][\uff08(]/u);
@@ -457,6 +485,10 @@ export class TextParser {
     }
 
     private _parseHyperlink(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+        if (!this._textSetting.image) {
+            return items;
+        }
+
         return this._parseContent(items, /[[\uff3b][^[\]\uff3b\uff3d(\uff08]*[\]\uff3d][\uff08(][^\uff09)]*[\uff09)]/gu,
             (m, retItems) => {
                 const splitImageSyntax = m.split(/[\]\uff3d][\uff08(]/u);
@@ -468,6 +500,10 @@ export class TextParser {
     }
 
     private _parserRuby(items: parser.ParagraphItem[]): parser.ParagraphItem[] {
+        if (!this._textSetting.rubyAngle && !this._textSetting.rubyParen) {
+            return items;
+        }
+
         //|と()は、半角全角両方
         const s1 = this.regRubyBeginSymbol1;
         const s2 = this.regRubyEendSymbol1;
@@ -479,16 +515,34 @@ export class TextParser {
         const s8 = this.regKANA;
         const s9 = this.regALPHABET;
 
-        const regRuby = [
-            `${s5}${s6}*${s1}${s6}+${s2}`,      //|任意《任意》
-            `${s5}${s6}*${s3}${s6}+${s4}`,      //|任意(任意)
-            `${s7}+${s1}${s8}+${s2}`,           //漢字《任意》 説明的には←なのだけど、実際の挙動は、漢字《ひらがなorカタカナ》
-            `${s7}+${s3}${s8}+${s4}`,           //漢字(ひらがなorカタカナ)
-            `${s9}+${s1}${s8}+${s2}`,          //アルファベット《ひらがなorカタカナ》
-            `${s9}+${s3}${s8}+${s4}`           //アルファベット(ひらがなorカタカナ)
-        ];
+        let regRuby: string[];
+        let reg2: RegExp;
 
-        const reg2 = new RegExp(`${s1}|${s3}`, 'gu');
+        if (this._textSetting.rubyAngle && this._textSetting.rubyParen) {
+            regRuby = [
+                `${s5}${s6}*${s1}${s6}+${s2}`,      //|任意《任意》
+                `${s5}${s6}*${s3}${s6}+${s4}`,      //|任意(任意)
+                `${s7}+${s1}${s8}+${s2}`,           //漢字《任意》 説明的には←なのだけど、実際の挙動は、漢字《ひらがなorカタカナ》
+                `${s7}+${s3}${s8}+${s4}`,           //漢字(ひらがなorカタカナ)
+                `${s9}+${s1}${s8}+${s2}`,           //アルファベット《ひらがなorカタカナ》
+                `${s9}+${s3}${s8}+${s4}`            //アルファベット(ひらがなorカタカナ)
+            ];
+            reg2 = new RegExp(`${s1}|${s3}`, 'gu');
+        } else if (this._textSetting.rubyAngle) {
+            regRuby = [
+                `${s5}${s6}*${s1}${s6}+${s2}`,      //|任意《任意》
+                `${s7}+${s1}${s8}+${s2}`,           //漢字《任意》 説明的には←なのだけど、実際の挙動は、漢字《ひらがなorカタカナ》
+                `${s9}+${s1}${s8}+${s2}`            //アルファベット《ひらがなorカタカナ》
+            ];
+            reg2 = new RegExp(`${s1}`, 'gu');
+        } else {
+            regRuby = [
+                `${s5}${s6}*${s3}${s6}+${s4}`,      //|任意(任意)
+                `${s7}+${s3}${s8}+${s4}`,           //漢字(ひらがなorカタカナ)
+                `${s9}+${s3}${s8}+${s4}`            //アルファベット(ひらがなorカタカナ)
+            ];
+            reg2 = new RegExp(`${s3}`, 'gu');
+        }
 
         regRuby.forEach((reg) => {
             items = this._parseContent(items, new RegExp(reg, 'gu'),
@@ -522,31 +576,49 @@ export class TextParser {
         let symbolLen: number;
         switch (type) {
             case TextFormatType.tcy:
+                if (!this._textSetting.tcy) {
+                    return items;
+                }
                 left = '\\^';
                 right = '\\^';
                 symbolLen = 1;
                 break;
             case TextFormatType.bold:
+                if (!this._textSetting.bold) {
+                    return items;
+                }
                 left = '\\*\\*';
                 right = '\\*\\*';
                 symbolLen = 2;
                 break;
             case TextFormatType.italic:
+                if (!this._textSetting.italic) {
+                    return items;
+                }
                 left = '\\*';
                 right = '\\*';
                 symbolLen = 1;
                 break;
             case TextFormatType.emMarkDot:
+                if (!this._textSetting.emMarkDot) {
+                    return items;
+                }
                 left = '\\+';
                 right = '\\+';
                 symbolLen = 1;
                 break;
             case TextFormatType.emMarkDot2:
+                if (!this._textSetting.emMarkDot2) {
+                    return items;
+                }
                 left = '\u300a\u300a';
                 right = '\u300b\u300b';
                 symbolLen = 2;
                 break;
             case TextFormatType.emMarkComma:
+                if (!this._textSetting.emMarkComma) {
+                    return items;
+                }
                 left = '\\+\\+';
                 right = '\\+\\+';
                 symbolLen = 2;
