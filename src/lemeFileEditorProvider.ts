@@ -152,7 +152,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
             , [[book.TextFlowDirection.vertical, 'Vertical'], [book.TextFlowDirection.horizontal, 'Horizontal']]));
 
 
-        content.push(`<h1>Text file</h1>`);
+        content.push(`<h1>Text formatting</h1>`);
         content.push(this._makeInput(LemeProject.makingFormatTextAdvanceMode, 'Advance mode (similar markdown format)'));
         content.push(this._makeInput(LemeProject.makingFormatTextBold, 'Convert Bold (format : **CHAR**)'));
         content.push(this._makeInput(LemeProject.makingFormatTextBorder, 'Convert border (format : !BD,TBLRH only in the line)'));
