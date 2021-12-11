@@ -85,7 +85,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p class="align-left">left</p>
 <p class="align-center">center</p>
 <p>&lt;hr/></p>
-<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
+<p><ruby>今は昔<rt>&lt;span>むかし&lt;/span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -102,7 +102,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p class="align-left">left</p>
 <p class="align-center">center</p>
 <p>&lt;hr/></p>
-<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
+<p><ruby>今は昔<rt>&lt;span>むかし&lt;/span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -119,7 +119,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p class="align-left">left</p>
 <p class="align-center">center</p>
 <p>&lt;hr/></p>
-<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
+<p><ruby>今は昔<rt>&lt;span>むかし&lt;/span></rt></ruby></p>`
         );
     });
 
@@ -150,7 +150,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p class="align-left">left</p>
 <p class="align-center">center</p>
 <p>&lt;hr/></p>
-<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
+<p><ruby>今は昔<rt>&lt;span>むかし&lt;/span></rt></ruby></p>`
         );
 
         assert.strictEqual(htmlBuilder.build(
@@ -167,7 +167,7 @@ suite('HtmlBuilder Test Suite', () => {
 <p class="align-left">left</p>
 <p class="align-center">center</p>
 <p>&lt;hr/></p>
-<p><ruby>今は昔<rt>&lt;span>むかし</span></rt></ruby></p>`
+<p><ruby>今は昔<rt>&lt;span>むかし&lt;/span></rt></ruby></p>`
         );
     });
 

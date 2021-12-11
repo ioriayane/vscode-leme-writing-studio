@@ -53,4 +53,147 @@ suite('Paragraph Test Suite', () => {
             assert.strictEqual(item.font.strike, false);
         }
     });
+
+    test('ParagraphItemText properties(escape)', () => {
+        {
+            const item = new parser.ParagraphItemText('hoge', 'fuga');
+            assert.strictEqual(item.text, 'hoge', 'text1');
+            assert.strictEqual(item.ruby, 'fuga', 'ruby1');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge&<fuga>&<foo>', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.text, 'hoge&amp;&lt;fuga>&amp;&lt;foo>', 'text2');
+            assert.strictEqual(item.ruby, '&lt;fuga>&amp;foo&amp;&lt;bar>', 'ruby2');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge\u000dfuga\u000dfoo', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.text, 'hoge&#xdfuga&#xdfoo', 'text3');
+            assert.strictEqual(item.ruby, 'fuga&#xdfoo&#xdbar', 'ruby3');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge\u0000fuga\u0000foo', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.text, 'hogefugafoo', 'text4');
+            assert.strictEqual(item.ruby, 'fugafoobar', 'ruby4');
+        }
+    });
+
+    test('ParagraphItemText properties(plain)', () => {
+        {
+            const item = new parser.ParagraphItemText('hoge', 'fuga');
+            assert.strictEqual(item.plainText, 'hoge', 'plainText1');
+            assert.strictEqual(item.plainRuby, 'fuga', 'plainRuby1');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge&<fuga>&<foo>', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.plainText, 'hoge&<fuga>&<foo>', 'plainText2');
+            assert.strictEqual(item.plainRuby, '<fuga>&foo&<bar>', 'plainRuby2');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge\u000dfuga\u000dfoo', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.plainText, 'hoge\u000dfuga\u000dfoo', 'plainText3');
+            assert.strictEqual(item.plainRuby, 'fuga\u000dfoo\u000dbar', 'plainRuby3');
+        }
+        {
+            const item = new parser.ParagraphItemText('hoge\u0000fuga\u0000foo', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.plainText, 'hoge\u0000fuga\u0000foo', 'plainText4');
+            assert.strictEqual(item.plainRuby, 'fuga\u0000foo\u0000bar', 'plainRuby4');
+        }
+    });
+
+    test('ParagraphItemImage properties(escape)', () => {
+        {
+            const item = new parser.ParagraphItemImage('hoge', 'fuga');
+            assert.strictEqual(item.path, 'hoge', 'path1');
+            assert.strictEqual(item.alt, 'fuga', 'alt1');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path2');
+            assert.strictEqual(item.alt, '&lt;fuga>&amp;foo&amp;&lt;bar>', 'alt2');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path3');
+            assert.strictEqual(item.alt, 'fuga&#xdfoo&#xdbar', 'alt3');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path4');
+            assert.strictEqual(item.alt, 'fugafoobar', 'alt4');
+        }
+    });
+
+    test('ParagraphItemImage properties(plain)', () => {
+        {
+            const item = new parser.ParagraphItemImage('hoge', 'fuga');
+            assert.strictEqual(item.plainPath, 'hoge', 'plainPath1');
+            assert.strictEqual(item.plainAlt, 'fuga', 'plainAlt1');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath2');
+            assert.strictEqual(item.plainAlt, '<fuga>&foo&<bar>', 'plainAlt2');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath3');
+            assert.strictEqual(item.plainAlt, 'fuga\u000dfoo\u000dbar', 'plainAlt4');
+        }
+        {
+            const item = new parser.ParagraphItemImage('https://leme.style?hoge=<value>&fuga=a b', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath4');
+            assert.strictEqual(item.plainAlt, 'fuga\u0000foo\u0000bar', 'plainAlt4');
+        }
+    });
+
+    
+    test('ParagraphItemHyperlink properties(escape)', () => {
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga');
+            assert.strictEqual(item.text, 'hoge', 'text1');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path1');
+            assert.strictEqual(item.alt, 'fuga', 'alt1');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge&<fuga>&<foo>', 'https://leme.style?hoge=<value>&fuga=a b', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.text, 'hoge&amp;&lt;fuga>&amp;&lt;foo>', 'text2');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path2');
+            assert.strictEqual(item.alt, '&lt;fuga>&amp;foo&amp;&lt;bar>', 'alt2');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge\u000dfuga\u000dfoo', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.text, 'hoge&#xdfuga&#xdfoo', 'text3');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path3');
+            assert.strictEqual(item.alt, 'fuga&#xdfoo&#xdbar', 'alt3');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge\u0000fuga\u0000foo', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.text, 'hogefugafoo', 'text4');
+            assert.strictEqual(item.path, 'https://leme.style?hoge=%3Cvalue%3E&fuga=a%20b', 'path4');
+            assert.strictEqual(item.alt, 'fugafoobar', 'alt4');
+        }
+    });
+
+    test('ParagraphItemHyperlink properties(plain)', () => {
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath1');
+            assert.strictEqual(item.plainAlt, 'fuga', 'plainAlt1');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge&<fuga>&<foo>', 'https://leme.style?hoge=<value>&fuga=a b', '<fuga>&foo&<bar>');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath2');
+            assert.strictEqual(item.plainAlt, '<fuga>&foo&<bar>', 'plainAlt2');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge\u000dfuga\u000dfoo', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga\u000dfoo\u000dbar');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath3');
+            assert.strictEqual(item.plainAlt, 'fuga\u000dfoo\u000dbar', 'plainAlt3');
+        }
+        {
+            const item = new parser.ParagraphItemHyperlink('hoge\u0000fuga\u0000foo', 'https://leme.style?hoge=<value>&fuga=a b', 'fuga\u0000foo\u0000bar');
+            assert.strictEqual(item.plainPath, 'https://leme.style?hoge=<value>&fuga=a b', 'plainPath4');
+            assert.strictEqual(item.plainAlt, 'fuga\u0000foo\u0000bar', 'plainAlt4');
+        }
+    });
 });

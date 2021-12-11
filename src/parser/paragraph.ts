@@ -63,6 +63,11 @@ export abstract class ParagraphItem {
 }
 
 export class ParagraphItemText extends ParagraphItem {
+    private readonly _regAmp = /&/g;
+    private readonly _regLt = /</g;
+    private readonly _regCode0d = new RegExp(String.fromCodePoint(0xd), 'g');
+    private readonly _regCode00 = new RegExp(String.fromCodePoint(0x0), 'g');
+
     public font: FontProperty = {
         sizeRatio: 100,
         gothic: false,
@@ -90,10 +95,10 @@ export class ParagraphItemText extends ParagraphItem {
     }
 
     private _encode(t: string): string {
-        return t.replace('&', '&amp;')
-            .replace('<', '&lt;')
-            .replace(String.fromCodePoint(0xd), '&#xd')
-            .replace(String.fromCodePoint(0x0), '');
+        return t.replace(this._regAmp, '&amp;')
+            .replace(this._regLt, '&lt;')
+            .replace(this._regCode0d, '&#xd')
+            .replace(this._regCode00, '');
     }
 
     get text(): string {
@@ -106,6 +111,13 @@ export class ParagraphItemText extends ParagraphItem {
 }
 
 export class ParagraphItemImage extends ParagraphItem {
+    protected readonly _regAmp = /&/g;
+    protected readonly _regLt = /</g;
+    protected readonly _regCode09 = new RegExp(String.fromCodePoint(0x9), 'g');
+    protected readonly _regCode0a = new RegExp(String.fromCodePoint(0xa), 'g');
+    protected readonly _regCode0d = new RegExp(String.fromCodePoint(0xd), 'g');
+    protected readonly _regCode00 = new RegExp(String.fromCodePoint(0x0), 'g');
+
     constructor(
         private _path: string,
         private _alt: string,
@@ -123,12 +135,12 @@ export class ParagraphItemImage extends ParagraphItem {
     }
 
     private _encode(t: string): string {
-        return t.replace('&', '&amp;')
-            .replace('<', '&lt;')
-            .replace(String.fromCodePoint(0x9), '&#x9')
-            .replace(String.fromCodePoint(0xa), '&#xa')
-            .replace(String.fromCodePoint(0xd), '&#xd')
-            .replace(String.fromCodePoint(0x0), '');
+        return t.replace(this._regAmp, '&amp;')
+            .replace(this._regLt, '&lt;')
+            .replace(this._regCode09, '&#x9')
+            .replace(this._regCode0a, '&#xa')
+            .replace(this._regCode0d, '&#xd')
+            .replace(this._regCode00, '');
     }
 
     get path(): string {
@@ -150,10 +162,10 @@ export class ParagraphItemHyperlink extends ParagraphItemImage {
     }
 
     private _encodeText(t: string): string {
-        return t.replace('&', '&amp;')
-            .replace('<', '&lt;')
-            .replace(String.fromCodePoint(0xd), '&#xd')
-            .replace(String.fromCodePoint(0x0), '');
+        return t.replace(this._regAmp, '&amp;')
+            .replace(this._regLt, '&lt;')
+            .replace(this._regCode0d, '&#xd')
+            .replace(this._regCode00, '');
     }
 
     get text(): string {
