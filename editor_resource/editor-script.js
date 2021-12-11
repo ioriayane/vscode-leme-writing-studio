@@ -54,34 +54,34 @@
         });
     }
 
-    document.getElementById('info.creator1').addEventListener('change', (event) => {
+    document.getElementById('info.creator1').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.creator1Kana').addEventListener('change', (event) => {
+    document.getElementById('info.creator1Kana').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.creator2').addEventListener('change', (event) => {
+    document.getElementById('info.creator2').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.creator2Kana').addEventListener('change', (event) => {
+    document.getElementById('info.creator2Kana').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.identifier').addEventListener('change', (event) => {
+    document.getElementById('info.identifier').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
     document.getElementById('info.language').addEventListener('change', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: parseInt(event.target.value) });   // select
     });
-    document.getElementById('info.publisher').addEventListener('change', (event) => {
+    document.getElementById('info.publisher').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.publisherKana').addEventListener('change', (event) => {
+    document.getElementById('info.publisherKana').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.title').addEventListener('change', (event) => {
+    document.getElementById('info.title').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
-    document.getElementById('info.titleKana').addEventListener('change', (event) => {
+    document.getElementById('info.titleKana').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
 
@@ -93,6 +93,17 @@
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
     document.getElementById('spec.textFlowDirection').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
+    });
+
+
+    document.getElementById('making.convertSpaceToEnspace').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.enableHyperLink').addEventListener('change', (event) => {
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.checked });
+    });
+    document.getElementById('making.epubPath').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
 

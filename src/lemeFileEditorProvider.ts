@@ -22,6 +22,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
 
     resolveCustomTextEditor(document: TextDocument,
         webviewPanel: WebviewPanel,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         token: CancellationToken
     ): void | Thenable<void> {
         webviewPanel.webview.options = {
@@ -59,6 +60,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         updateWebview();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _updateDocument(document: TextDocument, key: string, value: any): void {
         const json = this._parseDocument(document);
         if (!(key in json)) {
@@ -76,6 +78,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         workspace.applyEdit(edit);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _parseDocument(document: TextDocument): any {
         const text = document.getText();
         if (text.trim().length === 0) {
@@ -151,6 +154,11 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
             , LemeProject.specTextFlowDirection
             , [[book.TextFlowDirection.vertical, 'Vertical'], [book.TextFlowDirection.horizontal, 'Horizontal']]));
 
+
+        content.push(`<h1>Book making</h1>`);
+        content.push(this._makeInput(LemeProject.makingConvertSpaceToEnspace, 'Convert space to &amp;ensp;(&amp;#8194;)'));
+        content.push(this._makeInput(LemeProject.makingEnableHyperLink, 'Enable External Hyper Link'));
+        content.push(this._makeTextBox('Epub path', LemeProject.makingEpubPath));
 
         content.push(`<h1>Text formatting</h1>`);
         content.push(this._makeInput(LemeProject.makingFormatTextAdvanceMode, 'Advance mode (similar markdown format)'));
