@@ -15,6 +15,7 @@ export class LemePreviewer {
 
     public bookInfo: book.BookInformation;
     public bookSpec: book.BookSpecification;
+    public bookMaking: book.BookMaking;
     public bookTextSetting: book.TextSetting;
 
     constructor(
@@ -22,6 +23,7 @@ export class LemePreviewer {
     ) {
         this.bookInfo = book.defaultValueBookInformation();
         this.bookSpec = book.defaultValueBookSpecification();
+        this.bookMaking = book.defaultValueBookMakeing();
         this.bookTextSetting = book.defaultValueTextSetting();
     }
 
@@ -141,7 +143,7 @@ export class LemePreviewer {
     }
 
     private async _parse(text: string, cursorLine: number, parentPath: string): Promise<string> {
-        const htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath);
+        const htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath, this.bookMaking);
         const textParser = new parser.TextParser(this.bookTextSetting);
         return htmlBuilder.build(textParser.parse(text), cursorLine);
     }

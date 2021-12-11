@@ -23,15 +23,17 @@ suite('lemeProject Test Suite', () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
+        const bookMaking = book.defaultValueBookMakeing();
         const bookTextSetting = book.defaultValueTextSetting();
 
-        assert.strictEqual(await project.loadLemeFile(vscode.Uri.file('/hoge'), bookInfo, bookSpec, bookTextSetting), false);
+        assert.strictEqual(await project.loadLemeFile(vscode.Uri.file('/hoge'), bookInfo, bookSpec, bookMaking, bookTextSetting), false);
     });
 
     test('getWorkspaceUri test(update)', async () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
+        const bookMaking = book.defaultValueBookMakeing();
         const bookTextSetting = book.defaultValueTextSetting();
 
         bookInfo.creator1 = 'a';
@@ -48,6 +50,10 @@ suite('lemeProject Test Suite', () => {
         bookSpec.allowSpread = false;
         bookSpec.pageProgressionDirection = book.PageProgressionDirection.left;
         bookSpec.textFlowDirection = book.TextFlowDirection.vertical;
+
+        bookMaking.convertSpaceToEnspace = true;
+        bookMaking.enableHyperLink = true;
+        bookMaking.epubPath = 'hoge.epub';
 
         bookTextSetting.advanceMode = true;
         bookTextSetting.bold = false;
@@ -70,7 +76,7 @@ suite('lemeProject Test Suite', () => {
 
         assert.strictEqual(await project.loadLemeFile(
             vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/example.leme'),
-            bookInfo, bookSpec, bookTextSetting),
+            bookInfo, bookSpec, bookMaking, bookTextSetting),
             true);
 
         assert.strictEqual(bookInfo.creator1, '作者1', 'creator1');
@@ -87,6 +93,10 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
         assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
         assert.strictEqual(bookSpec.textFlowDirection, book.TextFlowDirection.horizontal, 'textFlowDirection');
+
+        assert.strictEqual(bookMaking.convertSpaceToEnspace, false, 'convertSpaceToEnspace');
+        assert.strictEqual(bookMaking.enableHyperLink, true, 'enableHyperLink');
+        assert.strictEqual(bookMaking.epubPath, './novel_sample1.epub', 'epubPath');
 
         assert.strictEqual(bookTextSetting.advanceMode, false, 'advanceMode');
         assert.strictEqual(bookTextSetting.bold, true, 'bold');
@@ -114,6 +124,7 @@ suite('lemeProject Test Suite', () => {
         const project = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
         const bookInfo = book.defaultValueBookInformation();
         const bookSpec = book.defaultValueBookSpecification();
+        const bookMaking = book.defaultValueBookMakeing();
         const bookTextSetting = book.defaultValueTextSetting();
 
         bookInfo.creator1 = '作者1';
@@ -130,6 +141,10 @@ suite('lemeProject Test Suite', () => {
         bookSpec.allowSpread = true;
         bookSpec.pageProgressionDirection = book.PageProgressionDirection.right;
         bookSpec.textFlowDirection = book.TextFlowDirection.horizontal;
+
+        bookMaking.convertSpaceToEnspace = false;
+        bookMaking.enableHyperLink = true;
+        bookMaking.epubPath = './novel_sample1.epub';
 
         bookTextSetting.advanceMode = false;
         bookTextSetting.bold = true;
@@ -152,7 +167,7 @@ suite('lemeProject Test Suite', () => {
 
         assert.strictEqual(await project.loadLemeFile(
             vscode.Uri.joinPath(vscode.Uri.file(__dirname), '../../../src/test/suite/dataLemeProject/example.leme'),
-            bookInfo, bookSpec, bookTextSetting),
+            bookInfo, bookSpec, bookMaking, bookTextSetting),
             false);
 
         assert.strictEqual(bookInfo.creator1, '作者1', 'creator1');
@@ -169,6 +184,10 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookSpec.allowSpread, true, 'allowSpread');
         assert.strictEqual(bookSpec.pageProgressionDirection, book.PageProgressionDirection.right, 'pageProgressionDirection');
         assert.strictEqual(bookSpec.textFlowDirection, book.TextFlowDirection.horizontal, 'textFlowDirection');
+
+        assert.strictEqual(bookMaking.convertSpaceToEnspace, false, 'convertSpaceToEnspace');
+        assert.strictEqual(bookMaking.enableHyperLink, true, 'enableHyperLink');
+        assert.strictEqual(bookMaking.epubPath, './novel_sample1.epub', 'epubPath');
 
         assert.strictEqual(bookTextSetting.advanceMode, false, 'advanceMode');
         assert.strictEqual(bookTextSetting.bold, true, 'bold');

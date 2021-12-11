@@ -1,12 +1,14 @@
 import { Webview, Uri } from 'vscode';
 import * as path from 'path';
 import * as parser from '../parser/index';
+import { BookMaking } from '../book';
 
 export class HtmlBuilder {
 
     constructor(
         private readonly _webview: Webview | undefined,
-        private readonly _parentPath: string | undefined
+        private readonly _parentPath: string | undefined,
+        private readonly _bookMaking: BookMaking
     ) {
     }
 
@@ -92,11 +94,12 @@ export class HtmlBuilder {
     }
 
     private _buildText(item: parser.ParagraphItemText): string {
-        let text: string;
+        let text = item.text;
+        if(this._bookMaking.convertSpaceToEnspace){
+            text = text.replace(/ /g, '\u2002');
+        }
         if (item.plainRuby.length > 0) {
-            text = `<ruby>${item.text}<rt>${item.ruby}</rt></ruby>`;
-        } else {
-            text = item.text;
+            text = `<ruby>${text}<rt>${item.ruby}</rt></ruby>`;
         }
         const classList = this._buildFontClass(item.font);
         if (classList.length > 0) {
@@ -132,7 +135,11 @@ export class HtmlBuilder {
         //     return `<a alt="" href="${srcPath}">${item.text}</a>`;
         // } else {
         // epub
-        return `<a alt="" href="${item.path}">${item.text}</a>`;
+        if(this._bookMaking.enableHyperLink){
+            return `<a alt="" href="${item.path}">${item.text}</a>`;
+        }else{
+            return `<span>${item.text}</span>`;
+        }
         // }
     }
 

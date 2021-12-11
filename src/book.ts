@@ -33,6 +33,11 @@ export interface BookSpecification {
     textFlowDirection: TextFlowDirection
 }
 
+export interface BookMaking {
+    convertSpaceToEnspace: boolean
+    enableHyperLink: boolean
+    epubPath: string
+}
 
 export interface TextSetting {
     eraseConsecutiveBlankLine: boolean
@@ -99,6 +104,14 @@ export function defaultValueBookSpecification(): BookSpecification {
         allowSpread: false,
         pageProgressionDirection: PageProgressionDirection.right,
         textFlowDirection: TextFlowDirection.vertical
+    };
+}
+
+export function defaultValueBookMakeing(): BookMaking {
+    return {
+        convertSpaceToEnspace: false,
+        enableHyperLink: false,
+        epubPath: 'book.epub'
     };
 }
 

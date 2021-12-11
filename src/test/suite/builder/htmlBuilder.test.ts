@@ -58,7 +58,8 @@ suite('HtmlBuilder Test Suite', () => {
 
     test('Build text test', () => {
         const dummyWebview = new DummyWebview();
-        const htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME');
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME', bookMaking);
         const textParser = new parser.TextParser(bookText);
 
         assert.strictEqual(htmlBuilder.build([]), '');
@@ -124,7 +125,8 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     test('Build text test(web)', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
         const textParser = new parser.TextParser(bookText);
 
         assert.strictEqual(htmlBuilder.build([]), '');
@@ -170,16 +172,71 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildText test', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
 
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('', '')), '');
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge', '')), 'hoge');
         assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge', 'fuga')), '<ruby>hoge<rt>fuga</rt></ruby>');
     });
 
+    test('_buildText test(convert space)', () => {
+        const bookMaking:book.BookMaking = {
+            convertSpaceToEnspace: true,
+            enableHyperLink: false,
+            epubPath: 'book.epub'
+        };
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
+
+        assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('', '')), '');
+        assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText(' hoge fuga', '')), '\u2002hoge\u2002fuga');
+        assert.strictEqual((htmlBuilder as any)._buildText(new parser.ParagraphItemText('hoge fuga', 'foo bar')), '<ruby>hoge\u2002fuga<rt>foo bar</rt></ruby>');
+    });
+
+    test('_buildImage test(preview)', () => {
+        const dummyWebview = new DummyWebview();
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(dummyWebview, '/LeME', bookMaking);
+
+        const item = new parser.ParagraphItemImage('path/to/image.jpg', 'alt');
+        assert.deepStrictEqual((htmlBuilder as any)._buildImage(item), '<img alt="" src="https:/LeME/path/to/image.jpg"/>');
+    });
+
+    test('_buildImage test(epub)', () => {
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
+
+        const item = new parser.ParagraphItemImage('path/to/image.jpg', 'alt');
+        assert.deepStrictEqual((htmlBuilder as any)._buildImage(item), '<img alt="" src="path/to/image.jpg"/>');
+    });
+
+    test('_buildHyperlink test', () => {
+        const bookMaking:book.BookMaking = {
+            convertSpaceToEnspace: false,
+            enableHyperLink: true,
+            epubPath: 'book.epub'
+        };
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
+
+        const item = new parser.ParagraphItemHyperlink('text', 'https://leme.style', 'alt');
+        assert.deepStrictEqual((htmlBuilder as any)._buildHyperlink(item), '<a alt="" href="https://leme.style">text</a>');
+    });
+
+    test('_buildHyperlink test(disable)', () => {
+        const bookMaking:book.BookMaking = {
+            convertSpaceToEnspace: false,
+            enableHyperLink: false,
+            epubPath: 'book.epub'
+        };
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
+
+        const item = new parser.ParagraphItemHyperlink('text', 'https://leme.style', 'alt');
+        assert.deepStrictEqual((htmlBuilder as any)._buildHyperlink(item), '<span>text</span>');
+    });
 
     test('_buildParagraphClass test', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClass({
             outlineLv: 0,
@@ -275,7 +332,8 @@ suite('HtmlBuilder Test Suite', () => {
 
 
     test('_buildFontClass test', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildFontClass({
             sizeRatio: 100,
@@ -319,7 +377,8 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildParagraphClassIndent test', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassIndent({
             indent: {
@@ -372,7 +431,8 @@ suite('HtmlBuilder Test Suite', () => {
     });
 
     test('_buildParagraphClassBorder test', () => {
-        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined);
+        const bookMaking = book.defaultValueBookMakeing();
+        const htmlBuilder = new builder.HtmlBuilder(undefined, undefined, bookMaking);
 
         assert.deepStrictEqual((htmlBuilder as any)._buildParagraphClassBorder({
             border: {

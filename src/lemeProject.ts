@@ -7,6 +7,20 @@ export class LemeProject {
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
 
+    public static readonly infoCreator1 = 'info.creator1';
+    public static readonly infoCreator1Kana = 'info.creator1Kana';
+    public static readonly infoCreator2 = 'info.creator2';
+    public static readonly infoCreator2Kana = 'info.creator2Kana';
+    public static readonly infoIdentifier = 'info.identifier';
+    public static readonly infoLanguage = 'info.language';
+    public static readonly infoPublisher = 'info.publisher';
+    public static readonly infoPublisherKana = 'info.publisherKana';
+    public static readonly infoTitle = 'info.title';
+    public static readonly infoTitleKana = 'info.titleKana';
+
+    public static readonly makingConvertSpaceToEnspace = 'making.convertSpaceToEnspace';
+    public static readonly makingEnableHyperLink = 'making.enableHyperLink';
+    public static readonly makingEpubPath = 'making.epubPath';
 
     public static readonly makingFormatTextAdvanceMode = 'making.format.text.advanceMode';
     public static readonly makingFormatTextBold = 'making.format.text.bold';
@@ -26,17 +40,6 @@ export class LemeProject {
     public static readonly makingFormatTextRubyParen = 'making.format.text.rubyParen';
     public static readonly makingFormatTextEraseConsecutiveBlankLine = 'making.format.text.eraseConsecutiveBlankLine';
     public static readonly makingFormatTextTcy = 'making.format.text.tcy';
-
-    public static readonly infoCreator1 = 'info.creator1';
-    public static readonly infoCreator1Kana = 'info.creator1Kana';
-    public static readonly infoCreator2 = 'info.creator2';
-    public static readonly infoCreator2Kana = 'info.creator2Kana';
-    public static readonly infoIdentifier = 'info.identifier';
-    public static readonly infoLanguage = 'info.language';
-    public static readonly infoPublisher = 'info.publisher';
-    public static readonly infoPublisherKana = 'info.publisherKana';
-    public static readonly infoTitle = 'info.title';
-    public static readonly infoTitleKana = 'info.titleKana';
 
     public static readonly specAllowSpread = 'spec.allowSpread';
     public static readonly specLayout = 'spec.layout';
@@ -62,6 +65,7 @@ export class LemeProject {
         lemeFileUri: vscode.Uri
         , bookInfo: book.BookInformation
         , bookSpec: book.BookSpecification
+        , bookMaking: book.BookMaking
         , bookTextSetting: book.TextSetting
     ): Promise<boolean> {
 
@@ -101,9 +105,9 @@ export class LemeProject {
         bookInfo.title = getValue<string>(obj, LemeProject.infoTitle, bookInfo.title);
         bookInfo.titleKana = getValue<string>(obj, LemeProject.infoTitleKana, bookInfo.titleKana);
 
-        bookSpec.allowSpread = getValue<boolean>(obj, LemeProject.specAllowSpread, bookSpec.allowSpread);
-        bookSpec.pageProgressionDirection = getValue<book.PageProgressionDirection>(obj, LemeProject.specPageProgressionDirection, bookSpec.pageProgressionDirection);
-        bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, LemeProject.specTextFlowDirection, bookSpec.textFlowDirection);
+        bookMaking.convertSpaceToEnspace = getValue<boolean>(obj, LemeProject.makingConvertSpaceToEnspace, bookMaking.convertSpaceToEnspace);
+        bookMaking.enableHyperLink = getValue<boolean>(obj, LemeProject.makingEnableHyperLink, bookMaking.enableHyperLink);
+        bookMaking.epubPath = getValue<string>(obj, LemeProject.makingEpubPath, bookMaking.epubPath);
 
         bookTextSetting.advanceMode = getValue<boolean>(obj, LemeProject.makingFormatTextAdvanceMode, bookTextSetting.advanceMode);
         bookTextSetting.bold = getValue<boolean>(obj, LemeProject.makingFormatTextBold, bookTextSetting.bold);
@@ -123,6 +127,10 @@ export class LemeProject {
         bookTextSetting.rubyParen = getValue<boolean>(obj, LemeProject.makingFormatTextRubyParen, bookTextSetting.rubyParen);
         bookTextSetting.eraseConsecutiveBlankLine = getValue<boolean>(obj, LemeProject.makingFormatTextEraseConsecutiveBlankLine, bookTextSetting.eraseConsecutiveBlankLine);
         bookTextSetting.tcy = getValue<boolean>(obj, LemeProject.makingFormatTextTcy, bookTextSetting.tcy);
+
+        bookSpec.allowSpread = getValue<boolean>(obj, LemeProject.specAllowSpread, bookSpec.allowSpread);
+        bookSpec.pageProgressionDirection = getValue<book.PageProgressionDirection>(obj, LemeProject.specPageProgressionDirection, bookSpec.pageProgressionDirection);
+        bookSpec.textFlowDirection = getValue<book.TextFlowDirection>(obj, LemeProject.specTextFlowDirection, bookSpec.textFlowDirection);
 
         return updated;
     }
@@ -183,6 +191,7 @@ export class LemeProject {
         }
 
         // create!
+        const bookMaking = book.defaultValueBookMakeing();
         const bookTextSetting = book.defaultValueTextSetting();
         const bookSpec = book.defaultValueBookSpecification();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -199,9 +208,9 @@ export class LemeProject {
         obj[LemeProject.infoPublisherKana] = '';
         obj[LemeProject.infoTitle] = '';
         obj[LemeProject.infoTitleKana] = '';
-        obj['making.convertSpaceToEnspace'] = false;
-        obj['making.enableHyperLink'] = false;
-        obj['making.epubPath'] = '.';
+        obj[LemeProject.makingConvertSpaceToEnspace] = bookMaking.convertSpaceToEnspace;
+        obj[LemeProject.makingEnableHyperLink] = bookMaking.enableHyperLink;
+        obj[LemeProject.makingEpubPath] = '.';
         obj['making.format.markdown.convertCrlfToBr'] = true;
         obj['making.format.markdown.emMark'] = true;
         obj['making.format.markdown.emMark2'] = true;
