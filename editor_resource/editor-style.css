@@ -16,19 +16,18 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 input[type="checkbox"]:before {
-    transition: all 0.3s ease-in-out;
     content: "";
     position: absolute;
     left: 0;
     z-index: 1;
     width: 1rem;
     height: 1rem;
-    border: 2px solid var(--vscode-focusBorder);
 }
 input[type="checkbox"]:checked:before {
     transform: rotate(-45deg);
     height: 0.5rem;
-    border-color: var(--vscode-focusBorder);
+    border-bottom: 2px solid var(--vscode-checkbox-foreground);
+    border-left: 2px solid var(--vscode-checkbox-foreground);
     border-top-style: none;
     border-right-style: none;
 }
