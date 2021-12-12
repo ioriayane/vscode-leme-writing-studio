@@ -51,6 +51,9 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         webviewPanel.webview.onDidReceiveMessage(e => {
             // console.log(e);
             switch (e.command) {
+                case 'loaded':
+                    updateWebview();
+                    break;
                 case 'update':
                     this._updateSetting(document, e.key, e.value);
                     break;
@@ -68,6 +71,9 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
                     break;
                 case 'contents-item-cover':
                     this._updateContentItemCover(document, parseInt(e.key), e.value);
+                    break;
+                case 'contents-item-image-handling':
+                    this._updateContentItemImageHandling(document, parseInt(e.key), e.value);
                     break;
             }
         });
@@ -155,6 +161,30 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         }
         // update
         json['contents'][index]['cover'] = checked;
+
+        this._applyDocument(document, json);
+    }
+
+    private _updateContentItemImageHandling(document: TextDocument, index: number, value: number): void {
+        const json = this._parseDocument(document);
+        if (!('contents' in json)) {
+            return;
+        }
+        if (index < 0 || index >= json['contents'].length) {
+            return;
+        }
+        // book.ImageHandling
+        if (value < 0 || value > 2) {
+            return;
+        }
+        if (!('imageHandling' in json['contents'][index])) {
+            return;
+        }
+        if (json['contents'][index]['imageHandling'] === value) {
+            return;
+        }
+        // update
+        json['contents'][index]['imageHandling'] = value;
 
         this._applyDocument(document, json);
     }
@@ -313,7 +343,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         const content: string[] = [];
 
         content.push(`<div><p>${title} : </p>`);
-        content.push(`<p><select id="${id}"">`);
+        content.push(`<p><select id="${id}" class="wide">`);
         obj.forEach(item => {
             content.push(`<option value="${item[0]}">${item[1]}</option>`);
         });

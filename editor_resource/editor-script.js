@@ -9,7 +9,6 @@
         switch (message.command) {
             case 'update':
                 update(message.text);
-                vscode.setState({ text: message.text });
                 break;
         }
     });
@@ -73,6 +72,8 @@
                 break;
             case 2:
                 text += 'Text';
+                // image handling
+                appendContentItemControlSelect(rootDiv, 5, index, obj);
                 break;
             case 3:
                 if (obj['cover']) {
@@ -81,7 +82,7 @@
                     text += 'Image';
                 }
                 // Cover checkbox
-                appendContentItemControl(rootDiv, 4, index, obj);
+                appendContentItemControlInput(rootDiv, 4, index, obj);
                 break;
             case 4:
                 text += 'Table of contents';
@@ -100,15 +101,15 @@
         div.style = 'float: left';
 
         // Up button
-        appendContentItemControl(rootDiv, 0, index, obj);
+        appendContentItemControlInput(rootDiv, 0, index, obj);
         // Down button
-        appendContentItemControl(rootDiv, 1, index, obj);
+        appendContentItemControlInput(rootDiv, 1, index, obj);
         // Delete button
-        appendContentItemControl(rootDiv, 2, index, obj);
+        appendContentItemControlInput(rootDiv, 2, index, obj);
 
     }
 
-    function appendContentItemControl(parent, command, index, obj) {
+    function appendContentItemControlInput(parent, command, index, obj) {
         const input = document.createElement('input');
         parent.appendChild(input);
 
@@ -171,7 +172,50 @@
                     label.innerText = 'is cover';
                     break;
                 }
+            case 5:
+                // image handling (reserved)
+                break;
+        }
+    }
 
+    function appendContentItemControlSelect(parent, command, index, obj) {
+        // label
+        const span = document.createElement('span');
+        parent.appendChild(span);
+        // select
+        const select = document.createElement('select');
+        parent.appendChild(select);
+
+        select.id = 'contentItem-' + index;
+        select.className = 'small';
+        switch (command) {
+            case 5:
+                // image handling
+                {
+                    // label
+                    span.innerText = 'Image handling : ';
+                    // selecting items
+                    const optValues = ['None', 'Fix', 'Scroll'];
+                    optValues.forEach((value, i) => {
+                        const option = document.createElement('option');
+                        select.appendChild(option);
+                        option.value = i;
+                        option.innerText = value;
+                        if ('imageHandling' in obj) {
+                            if (i === obj['imageHandling']) {
+                                option.selected = true;
+                            }
+                        }
+                    });
+                    select.addEventListener('change', (event) => {
+                        vscode.postMessage({
+                            command: 'contents-item-image-handling',
+                            key: event.target.id.replace('contentItem-', ''),
+                            value: parseInt(event.target.value)
+                        });
+                    });
+                    break;
+                }
         }
     }
 
@@ -318,8 +362,9 @@
     });
 
 
-    const state = vscode.getState();
-    if (state) {
-        update(state.text);
-    }
+    // vscode.setState(), vscode.getStte()を使わない理由
+    // CustomEditorで編集して保存しない状態でVSCodeを終了して再度開くと
+    // 編集中の状態を復元してしまうが、実ファイルの編集内容は破棄されていて
+    // 内容が食い違うから
+    vscode.postMessage({ command: 'loaded', key: '', value: '' });
 }());

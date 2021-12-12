@@ -14,6 +14,12 @@ export enum BookLanguage {
     en = 1
 }
 
+export enum ImageHandling {
+    none = 0,   //そのまま（埋め込み）
+    fix = 1,    //固定（表紙、挿絵）
+    scroll = 2  //スクロール（口絵） bookwalker only
+}
+
 export interface BookInformation {
     creator1: string
     creator1Kana: string

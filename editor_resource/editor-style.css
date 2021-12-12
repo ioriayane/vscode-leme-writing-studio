@@ -14,10 +14,16 @@ select {
     color: var(--vscode-dropdown-foreground);
     font-family: var(--vscode-font-family);
     padding: 3px 5px;
-    width: 10em;
+    margin-right: 3px;
 }
 select:focus {
     outline: 1px solid var(--vscode-focusBorder);
+}
+select.wide {
+    width: 10em;
+}
+select.small {
+    width: 6em;
 }
 
 input[type="button"] {
