@@ -139,3 +139,16 @@ export function defaultValueTextSetting(): TextSetting {
         advanceMode: false //細かい書式をMarkdown方式にする
     };
 }
+
+export function getTocObject(): any {
+    const toc: { [key: string]: any } = {};
+    toc['cover'] = false;
+    toc['firstPagePosition'] = 0;
+    toc['headingLevel'] = 0;
+    toc['headingText'] = '';
+    toc['imageHandling'] = 0;
+    toc['path'] = '目次';
+    toc['tocHeadingLevel'] = 3;
+    toc['type'] = 4;
+    return toc;
+}

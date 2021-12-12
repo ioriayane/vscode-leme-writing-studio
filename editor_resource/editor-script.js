@@ -26,33 +26,187 @@
         }
         const keys = Object.keys(json);
         keys.forEach(key => {
-            const elm = document.getElementById(key);
-            if (!elm) {
-                return;
-            }
-            console.log(key);
-            // console.log(elm);
-            // console.log(elm.tagName);
-            switch (elm.tagName.toLowerCase()) {
-                case 'select':
-                    if (elm.value !== json[key]) {
-                        elm.value = json[key];
-                    }
-                    break;
-                case 'input':
-                    if (elm.type === 'checkbox') {
-                        if (elm.checked !== json[key]) {
-                            elm.checked = json[key];
-                        }
-                    } else {
-                        if (elm.value !== json[key]) {
-                            elm.value = json[key];
-                        }
-                    }
-                    break;
+            if (key === 'contents') {
+                const tempParent = document.getElementById('contents');
+                // clear children
+                const parent = tempParent.cloneNode(false);
+                tempParent.parentNode.replaceChild(parent, tempParent);
+                // append children
+                json[key].forEach((obj, index) => appendContentItem(parent, obj, index));
+            } else {
+                updateSettingItem(key, json);
             }
         });
     }
+
+    function appendContentItem(parent, obj, index) {
+        // console.log(obj['type'] + ':' + obj['path']);
+        // make 
+        const rootDiv = document.createElement('div');
+        parent.appendChild(rootDiv);
+
+        if (index === 0) {
+            rootDiv.className = 'content-first';
+        } else {
+            rootDiv.className = 'content';
+        }
+
+        const div = document.createElement('div');
+        rootDiv.appendChild(div);
+
+        let text = (index + 1) + ' : ';
+        // Blank = 0,
+        // Word = 1,
+        // Text = 2,
+        // Image = 3,
+        // Toc = 4,
+        // Unknown = 5,
+        // Pdf = 6,
+        // Markdown = 7,
+        // DontSave = 999,
+        switch (obj['type']) {
+            case 0:
+                text += 'Blank';
+                break;
+            case 1:
+                text += 'Word';
+                break;
+            case 2:
+                text += 'Text';
+                break;
+            case 3:
+                if (obj['cover']) {
+                    text += 'Cover';
+                } else {
+                    text += 'Image';
+                }
+                // Cover checkbox
+                appendContentItemControl(rootDiv, 4, index, obj);
+                break;
+            case 4:
+                text += 'Table of contents';
+                break;
+            case 6:
+                text += 'PDF';
+                break;
+            case 7:
+                text += 'Markdown';
+                break;
+            default:
+                text += 'Unknown';
+                break;
+        }
+        div.innerText = text + ' : ' + obj['path'];
+        div.style = 'float: left';
+
+        // Up button
+        appendContentItemControl(rootDiv, 0, index, obj);
+        // Down button
+        appendContentItemControl(rootDiv, 1, index, obj);
+        // Delete button
+        appendContentItemControl(rootDiv, 2, index, obj);
+
+    }
+
+    function appendContentItemControl(parent, command, index, obj) {
+        const input = document.createElement('input');
+        parent.appendChild(input);
+
+        input.id = 'contentItem-' + index;
+        switch (command) {
+            case 0:
+                // Up
+                input.type = 'button';
+                input.value = 'Up';
+                input.addEventListener('click', (event) => {
+                    vscode.postMessage({
+                        command: 'contents-item-up',
+                        key: event.target.id.replace('contentItem-', ''),
+                        value: ''
+                    });
+                });
+                break;
+            case 1:
+                // Down
+                input.type = 'button';
+                input.value = 'Down';
+                input.addEventListener('click', (event) => {
+                    vscode.postMessage({
+                        command: 'contents-item-down',
+                        key: event.target.id.replace('contentItem-', ''),
+                        value: ''
+                    });
+                });
+                break;
+            case 2:
+                // Delete
+                input.type = 'button';
+                input.value = 'Del';
+                input.addEventListener('click', (event) => {
+                    vscode.postMessage({
+                        command: 'contents-item-delete',
+                        key: event.target.id.replace('contentItem-', ''),
+                        value: ''
+                    });
+                });
+                break;
+            case 3:
+                // toc (reserved)
+                break;
+            case 4:
+                // is cover
+                {
+                    input.type = 'checkbox';
+                    input.checked = obj['cover'];
+                    input.addEventListener('click', (event) => {
+                        vscode.postMessage({
+                            command: 'contents-item-cover',
+                            key: event.target.id.replace('contentItem-', ''),
+                            value: event.target.checked
+                        });
+                    });
+                    const label = document.createElement('label');
+                    parent.appendChild(label);
+                    label.for = input.id;
+                    label.innerText = 'is cover';
+                    break;
+                }
+
+        }
+    }
+
+    function updateSettingItem(key, json) {
+        const elm = document.getElementById(key);
+        if (!elm) {
+            return;
+        }
+        // console.log(key);
+        // console.log(elm);
+        // console.log(elm.tagName);
+        switch (elm.tagName.toLowerCase()) {
+            case 'select':
+                if (elm.value !== json[key]) {
+                    elm.value = json[key];
+                }
+                break;
+            case 'input':
+                if (elm.type === 'checkbox') {
+                    if (elm.checked !== json[key]) {
+                        elm.checked = json[key];
+                    }
+                } else {
+                    if (elm.value !== json[key]) {
+                        elm.value = json[key];
+                    }
+                }
+                break;
+        }
+    }
+
+    document.getElementById('contents-add-toc').addEventListener('click', (event) => {
+        vscode.postMessage({ command: 'contents-add-toc', key: '', value: '' });
+    });
+
 
     document.getElementById('info.creator1').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });

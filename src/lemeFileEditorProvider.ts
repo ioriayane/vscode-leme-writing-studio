@@ -52,7 +52,22 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
             // console.log(e);
             switch (e.command) {
                 case 'update':
-                    this._updateDocument(document, e.key, e.value);
+                    this._updateSetting(document, e.key, e.value);
+                    break;
+                case 'contents-item-up':
+                    this._moveContentItem(document, 0, parseInt(e.key));
+                    break;
+                case 'contents-item-down':
+                    this._moveContentItem(document, 1, parseInt(e.key));
+                    break;
+                case 'contents-item-delete':
+                    this._moveContentItem(document, 2, parseInt(e.key));
+                    break;
+                case 'contents-add-toc':
+                    this._moveContentItem(document, 3, 0);
+                    break;
+                case 'contents-item-cover':
+                    this._updateContentItemCover(document, parseInt(e.key), e.value);
                     break;
             }
         });
@@ -60,8 +75,92 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         updateWebview();
     }
 
+    private _moveContentItem(document: TextDocument, command: number, index: number): void {
+        const json = this._parseDocument(document);
+        if (!('contents' in json)) {
+            return;
+        }
+        switch (command) {
+            case 0:
+                // Up
+                {
+                    if (index <= 0 || index >= json['contents'].length) {
+                        return;
+                    }
+                    const temp = json['contents'][index];
+                    json['contents'][index] = json['contents'][index - 1];
+                    json['contents'][index - 1] = temp;
+                    break;
+                }
+            case 1:
+                // Down
+                {
+                    if (index < 0 || (index + 1) >= json['contents'].length) {
+                        return;
+                    }
+                    const temp = json['contents'][index];
+                    json['contents'][index] = json['contents'][index + 1];
+                    json['contents'][index + 1] = temp;
+                    break;
+                }
+            case 2:
+                // Delete
+                if (index < 0 || index >= json['contents'].length) {
+                    return;
+                }
+                json['contents'].splice(index, 1);
+                break;
+            case 3:
+                // Add Toc
+                {
+                    let exist = false;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    json['contents'].forEach((item: { [key: string]: any; }) => {
+                        if (item['type'] === 4) {
+                            exist = true;
+                        }
+                    });
+                    if (!exist) {
+                        json['contents'].push(book.getTocObject());
+                    }
+                    break;
+                }
+        }
+
+        this._applyDocument(document, json);
+    }
+
+    private _updateContentItemCover(document: TextDocument, index: number, checked: boolean): void {
+        const json = this._parseDocument(document);
+        if (!('contents' in json)) {
+            return;
+        }
+        if (index < 0 || index >= json['contents'].length) {
+            return;
+        }
+        if (!('cover' in json['contents'][index])) {
+            return;
+        }
+        if (json['contents'][index]['cover'] === checked) {
+            return;
+        }
+        if (checked) {
+            // cover is only one in a book.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            json['contents'].forEach((item: { [key: string]: any; }) => {
+                if (item['type'] === 3 && item['cover']) {
+                    item['cover'] = false;
+                }
+            });
+        }
+        // update
+        json['contents'][index]['cover'] = checked;
+
+        this._applyDocument(document, json);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private _updateDocument(document: TextDocument, key: string, value: any): void {
+    private _updateSetting(document: TextDocument, key: string, value: any): void {
         const json = this._parseDocument(document);
         if (!(key in json)) {
             return;
@@ -71,6 +170,10 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         }
         json[key] = value;
 
+        this._applyDocument(document, json);
+    }
+
+    private _applyDocument(document: TextDocument, json: any): void {
         const edit = new WorkspaceEdit();
         edit.replace(document.uri,
             new Range(0, 0, document.lineCount, 0),
@@ -129,6 +232,11 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
     private _makeMainContent(): string {
         const content: string[] = [];
 
+        content.push(`<h1>Contents</h1>`);
+
+        content.push('<div id="contents"></div>');
+        content.push('<div><input id="contents-add-toc" type="button" value="Add ToC"></div>');
+
 
         content.push(`<h1>Book Information</h1>`);
 
@@ -158,7 +266,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push(`<h1>Book making</h1>`);
         content.push(this._makeInput(LemeProject.makingConvertSpaceToEnspace, 'Convert space to &amp;ensp;(&amp;#8194;)'));
         content.push(this._makeInput(LemeProject.makingEnableHyperLink, 'Enable External Hyper Link'));
-        content.push(this._makeTextBox('Epub path', LemeProject.makingEpubPath));
+        content.push(this._makeTextBox('Epub file name', LemeProject.makingEpubPath));
 
         content.push(`<h1>Text formatting</h1>`);
         content.push(this._makeInput(LemeProject.makingFormatTextAdvanceMode, 'Advance mode (similar markdown format)'));
@@ -187,7 +295,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         const content: string[] = [];
 
         content.push(`<div>`);
-        content.push(`<p>${title} : <input id="${id}" type="text"></p></div>`);
+        content.push(`<p>${title} : </p><p><input id="${id}" type="text"></p></div>`);
 
         return content.join('\n');
     }
@@ -204,8 +312,8 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
     private _makeSelect(title: string, id: string, obj: string[][]): string {
         const content: string[] = [];
 
-        content.push(`<div><p>${title} : `);
-        content.push(`<select id="${id}"">`);
+        content.push(`<div><p>${title} : </p>`);
+        content.push(`<p><select id="${id}"">`);
         obj.forEach(item => {
             content.push(`<option value="${item[0]}">${item[1]}</option>`);
         });
