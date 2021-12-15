@@ -1,3 +1,5 @@
+import { Uri } from 'vscode';
+import * as path from 'path';
 
 export enum PageProgressionDirection {
     left = 'left',
@@ -18,6 +20,17 @@ export enum ImageHandling {
     none = 0,   //そのまま（埋め込み）
     fix = 1,    //固定（表紙、挿絵）
     scroll = 2  //スクロール（口絵） bookwalker only
+}
+
+export enum ContentType {
+    blank = 0,
+    word = 1,
+    text = 2,
+    image = 3,
+    toc = 4,
+    unknown = 5,
+    pdf = 6,
+    markdown = 7,
 }
 
 export interface BookInformation {
@@ -90,6 +103,17 @@ export interface MarkdownSetting {
     rawHtml: boolean            // false // HTMLタグ
 }
 
+export interface ContentItem {
+    cover: boolean,
+    firstPagePosition: number,
+    headingLevel: number,
+    headingText: string,
+    imageHandling: number,
+    path: string,
+    tocHeadingLevel: number,
+    type: ContentType
+}
+
 export function defaultValueBookInformation(): BookInformation {
     return {
         creator1: '',
@@ -146,15 +170,94 @@ export function defaultValueTextSetting(): TextSetting {
     };
 }
 
-export function getTocObject(): any {
-    const toc: { [key: string]: any } = {};
-    toc['cover'] = false;
-    toc['firstPagePosition'] = 0;
-    toc['headingLevel'] = 0;
-    toc['headingText'] = '';
-    toc['imageHandling'] = 0;
-    toc['path'] = '目次';
-    toc['tocHeadingLevel'] = 3;
-    toc['type'] = 4;
-    return toc;
+
+export function getContentItemBlank(): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 0,
+        path: '空白ページ',
+        tocHeadingLevel: 1,
+        type: ContentType.blank
+    };
+}
+
+export function getContentItemWord(bookUri: Uri, fileUri: Uri): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 1,
+        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        tocHeadingLevel: 1,
+        type: ContentType.word
+    };
+}
+
+export function getContentItemText(bookUri: Uri, fileUri: Uri): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 1,
+        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        tocHeadingLevel: 1,
+        type: ContentType.text
+    };
+}
+
+export function getContentItemImage(bookUri: Uri, fileUri: Uri): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 0,
+        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        tocHeadingLevel: 1,
+        type: ContentType.image
+    };
+}
+
+export function getContentItemToc(): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 0,
+        path: '目次',
+        tocHeadingLevel: 3,
+        type: ContentType.toc
+    };
+}
+
+export function getContentItemPdf(bookUri: Uri, fileUri: Uri): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 1,
+        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        tocHeadingLevel: 1,
+        type: ContentType.pdf
+    };
+}
+
+export function getContentItemMarkdown(bookUri: Uri, fileUri: Uri): ContentItem {
+    return {
+        cover: false,
+        firstPagePosition: 0,
+        headingLevel: 0,
+        headingText: '',
+        imageHandling: 1,
+        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        tocHeadingLevel: 1,
+        type: ContentType.markdown
+    };
 }

@@ -13,6 +13,7 @@
 		"onCommand:leme-writing-studio.preview",
 		"onCommand:leme-writing-studio.createBook",
 		"onCommand:leme-writing-studio.selectBook",
+		"onCommand:leme-writing-studio.addToBook",
 		"workspaceContains:*.leme"
 	],
 	"main": "./out/extension.js",
@@ -40,7 +41,7 @@
 				"title": "LeME: Select LeME file(*.leme)"
 			}
 		],
-		"configuration":[
+		"configuration": [
 			{
 				"title": "LeME Writing Studio",
 				"properties": {
@@ -53,7 +54,7 @@
 				}
 			}
 		],
-		"keybindings":[
+		"keybindings": [
 			{
 				"command": "skipRight",
 				"key": "ctrl+right",
@@ -75,7 +76,7 @@
 				"when": "textInputFocus && !accessibilityModeEnabled"
 			}
 		],
-		"customEditors":[
+		"customEditors": [
 			{
 				"viewType": "leme-writing-studio.leme-file.editor",
 				"displayName": "LeME file",

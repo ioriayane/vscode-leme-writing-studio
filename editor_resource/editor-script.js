@@ -54,6 +54,7 @@
         rootDiv.appendChild(div);
 
         let text = (index + 1) + ' : ';
+        // book.ContentType
         // Blank = 0,
         // Word = 1,
         // Text = 2,
@@ -62,24 +63,23 @@
         // Unknown = 5,
         // Pdf = 6,
         // Markdown = 7,
-        // DontSave = 999,
         switch (obj['type']) {
             case 0:
                 text += 'Blank';
                 break;
             case 1:
-                text += 'Word';
+                text += 'Word : ' + obj['path'];
                 break;
             case 2:
-                text += 'Text';
+                text += 'Text : ' + obj['path'];
                 // image handling
                 appendContentItemControlSelect(rootDiv, 5, index, obj);
                 break;
             case 3:
                 if (obj['cover']) {
-                    text += 'Cover';
+                    text += 'Cover : ' + obj['path'];
                 } else {
-                    text += 'Image';
+                    text += 'Image : ' + obj['path'];
                 }
                 // Cover checkbox
                 appendContentItemControlInput(rootDiv, 4, index, obj);
@@ -88,16 +88,16 @@
                 text += 'Table of contents';
                 break;
             case 6:
-                text += 'PDF';
+                text += 'PDF : ' + obj['path'];
                 break;
             case 7:
-                text += 'Markdown';
+                text += 'Markdown : ' + obj['path'];
                 break;
             default:
-                text += 'Unknown';
+                text += 'Unknown : ' + obj['path'];
                 break;
         }
-        div.innerText = text + ' : ' + obj['path'];
+        div.innerText = text;
         div.style = 'float: left';
 
         // Up button
@@ -175,6 +175,9 @@
             case 5:
                 // image handling (reserved)
                 break;
+            case 6:
+                // blank page(reserved)
+                break;
         }
     }
 
@@ -247,8 +250,14 @@
         }
     }
 
+    document.getElementById('contents-add-item').addEventListener('click', (event) => {
+        vscode.postMessage({ command: 'contents-add-item', key: '', value: '' });
+    });
     document.getElementById('contents-add-toc').addEventListener('click', (event) => {
         vscode.postMessage({ command: 'contents-add-toc', key: '', value: '' });
+    });
+    document.getElementById('contents-add-blank').addEventListener('click', (event) => {
+        vscode.postMessage({ command: 'contents-add-blank', key: '', value: '' });
     });
 
 

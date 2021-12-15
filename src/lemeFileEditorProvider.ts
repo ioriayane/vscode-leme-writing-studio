@@ -6,16 +6,18 @@ import {
     , Uri
     , Webview
     , WebviewPanel
-    , workspace
+    , window, workspace
     , WorkspaceEdit
 } from 'vscode';
 import { LemeProject } from './lemeProject';
 import { getNonce } from './utility';
 import * as book from './book';
+import * as path from 'path';
 
 export class LemeFileEditorProvider implements CustomTextEditorProvider {
 
     public static readonly viewType = 'leme-writing-studio.leme-file.editor';
+    // public static readonly comandNameAddFile = 'leme-writing-studio.addToBook';
 
     constructor(private _extensionUri: Uri) { }
 
@@ -70,10 +72,33 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
                     this._moveContentItem(document, 3, 0);
                     break;
                 case 'contents-item-cover':
+                    // 4
                     this._updateContentItemCover(document, parseInt(e.key), e.value);
                     break;
                 case 'contents-item-image-handling':
+                    // 5
                     this._updateContentItemImageHandling(document, parseInt(e.key), e.value);
+                    break;
+                case 'contents-add-blank':
+                    this._moveContentItem(document, 6, 0);
+                    break;
+                case 'contents-add-item':
+                    window.showOpenDialog({
+                        canSelectFiles: true,
+                        canSelectMany: true,
+                        defaultUri: Uri.file(path.dirname(document.uri.path)),
+                        filters: {
+                            'Supported files': ['txt', 'png', 'jpg', 'pdf', 'docx', 'md']
+                        },
+                        title: 'Add to book'
+                    }).then(items => {
+                        if (!items) {
+                            return;
+                        }
+                        items.forEach(itemUri => {
+                            this.addContentItem(document, itemUri);
+                        });
+                    });
                     break;
             }
         });
@@ -127,10 +152,14 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
                         }
                     });
                     if (!exist) {
-                        json['contents'].push(book.getTocObject());
+                        json['contents'].push(book.getContentItemToc());
                     }
                     break;
                 }
+            case 6:
+                // Add Blank page
+                json['contents'].push(book.getContentItemBlank());
+                break;
         }
 
         this._applyDocument(document, json);
@@ -189,6 +218,35 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         this._applyDocument(document, json);
     }
 
+    public addContentItem(document: TextDocument, itemUri: Uri): void {
+        const json = this._parseDocument(document);
+        if (!('contents' in json)) {
+            return;
+        }
+        switch (path.extname(itemUri.path)) {
+            case '.docx':
+                json['contents'].push(book.getContentItemWord(document.uri, itemUri));
+                break;
+            case '.txt':
+                json['contents'].push(book.getContentItemText(document.uri, itemUri));
+                break;
+            case '.jpg':
+                json['contents'].push(book.getContentItemImage(document.uri, itemUri));
+                break;
+            case '.png':
+                json['contents'].push(book.getContentItemImage(document.uri, itemUri));
+                break;
+            case '.pdf':
+                json['contents'].push(book.getContentItemPdf(document.uri, itemUri));
+                break;
+            case '.md':
+                json['contents'].push(book.getContentItemMarkdown(document.uri, itemUri));
+                break;
+        }
+
+        this._applyDocument(document, json);
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _updateSetting(document: TextDocument, key: string, value: any): void {
         const json = this._parseDocument(document);
@@ -203,6 +261,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         this._applyDocument(document, json);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _applyDocument(document: TextDocument, json: any): void {
         const edit = new WorkspaceEdit();
         edit.replace(document.uri,
@@ -265,7 +324,11 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push(`<h1>Contents</h1>`);
 
         content.push('<div id="contents"></div>');
-        content.push('<div><input id="contents-add-toc" type="button" value="Add ToC"></div>');
+        content.push('<div class="contentControl">');
+        content.push('<input id="contents-add-item" class="large" type="button" value="Add File">');
+        content.push('<input id="contents-add-toc" class="large" type="button" value="Add ToC">');
+        content.push('<input id="contents-add-blank" class="large" type="button" value="Add Blank">');
+        content.push('</div>');
 
 
         content.push(`<h1>Book Information</h1>`);

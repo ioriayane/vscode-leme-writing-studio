@@ -7,6 +7,10 @@ div.content {
     padding: 5px;
     text-align: right;
 }
+div.contentControl {
+    padding: 5px;
+    text-align: right;
+}
 
 select {
     background-color: var(--vscode-dropdown-background);
@@ -14,7 +18,7 @@ select {
     color: var(--vscode-dropdown-foreground);
     font-family: var(--vscode-font-family);
     padding: 3px 5px;
-    margin-right: 3px;
+    margin-right: 4px;
 }
 select:focus {
     outline: 1px solid var(--vscode-focusBorder);
@@ -31,6 +35,9 @@ input[type="button"] {
     border: 1px solid var(--vscode-button-border);
     color: var(--vscode-button-foreground);
     margin-right: 3px;
+}
+input[type="button"].large {
+    padding: 5px 10px 5px 10px;
 }
 input[type="button"]:focus {
     outline: 1px solid var(--vscode-focusBorder);
