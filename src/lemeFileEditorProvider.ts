@@ -97,7 +97,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
                         canSelectMany: true,
                         defaultUri: Uri.file(path.dirname(document.uri.path)),
                         filters: {
-                            'Supported files': ['txt', 'png', 'jpg', 'pdf', 'docx', 'md']
+                            'supported': ['txt', 'png', 'jpg', 'pdf', 'docx', 'md']
                         },
                         title: 'Add to book'
                     }).then(items => {
