@@ -73,6 +73,10 @@ export function activate(context: vscode.ExtensionContext): void {
 		updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject);
 	}));
 
+	lemeFileEditor.onActivate = (document => {
+		lemeProject.updateWorkspace(document, vscode.workspace.workspaceFolders);
+	});
+
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
 		editorController.update(vscode.window.activeTextEditor);
 		lemePreviewer.update(vscode.window.activeTextEditor);
@@ -98,7 +102,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 	}
 
 	loading = true;
-	lemeProject.updateWorkspace(e, vscode.workspace.workspaceFolders).then((lemeFileUri) => {
+	lemeProject.updateWorkspace(e.document, vscode.workspace.workspaceFolders).then((lemeFileUri) => {
 		if (!lemeFileUri) {
 			loading = false;
 		} else {

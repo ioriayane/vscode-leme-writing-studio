@@ -295,13 +295,13 @@ export class LemeProject {
         return file;
     }
 
-    public async updateWorkspace(e: vscode.TextEditor | undefined,
+    public async updateWorkspace(document: vscode.TextDocument | undefined,
         workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
     ): Promise<vscode.Uri | undefined> {
-        if (!e) {
+        if (!document) {
             return undefined;
         }
-        const lemeFileUri = await this._getProjectUri(workspaceFolders, e.document.uri);
+        const lemeFileUri = await this._getProjectUri(workspaceFolders, document.uri);
         if (!lemeFileUri) {
             this._statusBarItem.hide();
         } else {

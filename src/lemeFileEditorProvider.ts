@@ -14,10 +14,13 @@ import { getNonce } from './utility';
 import * as book from './book';
 import * as path from 'path';
 
+
 export class LemeFileEditorProvider implements CustomTextEditorProvider {
 
     public static readonly viewType = 'leme-writing-studio.leme-file.editor';
     // public static readonly comandNameAddFile = 'leme-writing-studio.addToBook';
+
+    public onActivate: (document: TextDocument) => void = (() => { /**/ });
 
     constructor(private _extensionUri: Uri) { }
 
@@ -38,6 +41,12 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
                 text: document.getText(),
             });
         }
+
+        webviewPanel.onDidChangeViewState(e => {
+            if(e.webviewPanel.active){
+                this.onActivate(document);
+            }
+        });
 
         const changeDocumentSubscription = workspace.onDidChangeTextDocument(e => {
             if (e.document.uri.toString() === document.uri.toString()) {
@@ -104,6 +113,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         });
 
         updateWebview();
+        this.onActivate(document);
     }
 
     private _moveContentItem(document: TextDocument, command: number, index: number): void {
