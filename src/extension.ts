@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
-		selectBook(vscode.window.activeTextEditor, lemeProject);
+		selectBook(vscode.window.activeTextEditor, lemePreviewer, lemeProject);
 	}));
 
 	// context.subscriptions.push(vscode.commands.registerCommand(LemeFileEditorProvider.comandNameAddFile, (e) => {
@@ -123,6 +123,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 }
 
 function selectBook(e: vscode.TextEditor | undefined,
+	lemePreviewer: LemePreviewer,
 	lemeProject: LemeProject
 ): void {
 	if (!e) {
@@ -130,11 +131,12 @@ function selectBook(e: vscode.TextEditor | undefined,
 	}
 
 	lemeProject.selectLemeFile(vscode.workspace.workspaceFolders, e.document.uri).then(lemeFileUri => {
-		if (lemeFileUri) {
-			vscode.workspace.openTextDocument(lemeFileUri).then(document => {
-				vscode.window.showTextDocument(document);
-			});
-		}
+		updateWorkspace(e, lemePreviewer, lemeProject);
+		// if (lemeFileUri) {
+		// 	vscode.workspace.openTextDocument(lemeFileUri).then(document => {
+		// 		vscode.window.showTextDocument(document);
+		// 	});
+		// }
 	});
 }
 
