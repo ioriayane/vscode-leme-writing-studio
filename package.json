@@ -24,6 +24,7 @@
 		"onCommand:leme-writing-studio.createBook",
 		"onCommand:leme-writing-studio.selectBook",
 		"onCommand:leme-writing-studio.addToBook",
+		"onCommand:leme-writing-studio.makeEbook",
 		"workspaceContains:*.leme"
 	],
 	"main": "./out/extension.js",
@@ -49,17 +50,27 @@
 			{
 				"command": "leme-writing-studio.selectBook",
 				"title": "LeME: Select LeME file(*.leme)"
+			},
+			{
+				"command": "leme-writing-studio.makeEbook",
+				"title": "LeME: Make a ebook(*.epub)"
 			}
 		],
 		"configuration": [
 			{
 				"title": "LeME Writing Studio",
 				"properties": {
-					"selected-book-name": {
+					"lemeWritingStudio.lemeCliExecutablePath": {
 						"type": "string",
 						"default": null,
-						"description": "Books that has the last opened documents.",
-						"scope": "resource"
+						"description": "Path to the LeMEcli executable.",
+						"scope": "machine"
+					},
+					"lemeWritingStudio.selectedBookName": {
+						"type": "string",
+						"default": null,
+						"description": "Books that has a last opened document. This is only used by this extension.",
+						"scope": "machine-overridable"
 					}
 				}
 			}

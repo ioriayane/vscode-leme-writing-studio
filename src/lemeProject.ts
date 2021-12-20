@@ -1,11 +1,16 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as child_process from 'child_process';
 import * as book from './book';
 
 export class LemeProject {
 
     public static readonly commandNameCreateBook = 'leme-writing-studio.createBook';
     public static readonly commandNameSelectBook = 'leme-writing-studio.selectBook';
+    public static readonly commandNameMakeEbook = 'leme-writing-studio.makeEbook';
+
+    private static readonly settingSelectedBookUri = 'lemeWritingStudio.selectedBookName';
+
 
     public static readonly infoCreator1 = 'info.creator1';
     public static readonly infoCreator1Kana = 'info.creator1Kana';
@@ -47,8 +52,6 @@ export class LemeProject {
     public static readonly specPrimaryWritingMode = 'spec.primaryWritingMode';
     public static readonly specTextFlowDirection = 'spec.textFlowDirection';
 
-
-    private static readonly settingSelectedBookUri = 'selected-book-name';
 
     private _projectHistory: { [key: string]: vscode.Uri | undefined; } = {};
 
@@ -293,6 +296,35 @@ export class LemeProject {
         this.statusBarItem.show();
 
         return file;
+    }
+
+    public async makeEbook(
+        document: vscode.TextDocument | undefined,
+        workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
+        outputChannel: vscode.OutputChannel
+    ): Promise<void> {
+        if (!document) {
+            return undefined;
+        }
+        const lemeFileUri = await this._getProjectUri(workspaceFolders, document.uri);
+        if (!lemeFileUri) {
+            //
+            return;
+        }
+        const config = vscode.workspace.getConfiguration('');
+        const lemePath = config.get<string>('lemeWritingStudio.lemeCliExecutablePath');
+        if (!lemePath) {
+            return;
+        }
+        const folder = path.dirname(lemePath);
+        let command = lemePath;
+        command += ' -platform offscreen';
+        command += ' --leme-file ' + lemeFileUri.path;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        child_process.exec(command, { env: { LD_LIBRARY_PATH: folder } }, (error, stdout, stderror) => {
+            outputChannel.appendLine(stdout);
+            outputChannel.appendLine(stderror);
+        });
     }
 
     public async updateWorkspace(document: vscode.TextDocument | undefined,

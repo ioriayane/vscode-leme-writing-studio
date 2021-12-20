@@ -9,8 +9,8 @@ let loading = false;
 
 export function activate(context: vscode.ExtensionContext): void {
 
-	const outputPanel = vscode.window.createOutputChannel('LeME Writing Studio');
-	outputPanel.appendLine('LeME Writing Studio Extension is starting');
+	const outputChannel = vscode.window.createOutputChannel('LeME Writing Studio');
+	outputChannel.appendLine('LeME Writing Studio Extension is starting');
 
 	const lemePreviewer = new LemePreviewer(context.extensionUri);
 	const lemeProject = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(editorController.statusBarItem);
 
 	editorController.update(vscode.window.activeTextEditor);
-	updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject, outputPanel);
+	updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject, outputChannel);
 
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemePreviewer.comandName, () => {
@@ -33,7 +33,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameSelectBook, () => {
-		selectBook(vscode.window.activeTextEditor, lemePreviewer, lemeProject, outputPanel);
+		selectBook(vscode.window.activeTextEditor, lemePreviewer, lemeProject, outputChannel);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameMakeEbook, () => {
+		lemeProject.makeEbook(vscode.window.activeTextEditor?.document, vscode.workspace.workspaceFolders, outputChannel);
 	}));
 
 	// context.subscriptions.push(vscode.commands.registerCommand(LemeFileEditorProvider.comandNameAddFile, (e) => {
@@ -69,7 +73,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
 		editorController.update(e);
-		updateWorkspace(e, lemePreviewer, lemeProject, outputPanel);
+		updateWorkspace(e, lemePreviewer, lemeProject, outputChannel);
 	}));
 
 	// context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(() => {
@@ -100,7 +104,7 @@ export function deactivate(): void { }
 function updateWorkspace(e: vscode.TextEditor | undefined,
 	lemePreviewer: LemePreviewer,
 	lemeProject: LemeProject,
-	outputPanel: vscode.OutputChannel
+	outputChannel: vscode.OutputChannel
 ): void {
 	if (!e) {
 		return;
@@ -121,7 +125,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 				).then(updated => {
 					lemePreviewer.update(e, updated);
 					loading = false;
-					outputPanel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
+					outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
 				});
 			}
 		}
@@ -131,7 +135,7 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 function selectBook(e: vscode.TextEditor | undefined,
 	lemePreviewer: LemePreviewer,
 	lemeProject: LemeProject,
-	outputPanel: vscode.OutputChannel
+	outputChannel: vscode.OutputChannel
 ): void {
 	if (!e) {
 		return;
@@ -139,8 +143,8 @@ function selectBook(e: vscode.TextEditor | undefined,
 
 	lemeProject.selectLemeFile(vscode.workspace.workspaceFolders, e.document.uri).then(lemeFileUri => {
 		if (lemeFileUri) {
-			outputPanel.appendLine('Selected a LeME file : ' + path.basename(lemeFileUri.path));
-			updateWorkspace(e, lemePreviewer, lemeProject, outputPanel);
+			outputChannel.appendLine('Selected a LeME file : ' + path.basename(lemeFileUri.path));
+			updateWorkspace(e, lemePreviewer, lemeProject, outputChannel);
 			// vscode.workspace.openTextDocument(lemeFileUri).then(document => {
 			// 	vscode.window.showTextDocument(document);
 			// });
