@@ -626,7 +626,7 @@ export class TextParser {
             default:
                 return items;
         }
-        return this._parseContent(items, new RegExp(`${left}[^ ^\u3000]+?${right}`, 'gu'),
+        return this._parseContent(items, new RegExp(`${left}[^ \u3000]+?${right}`, 'gu'),
             (m, retItems) => {
                 const para = new parser.ParagraphItemText(m.substring(symbolLen, m.length - symbolLen), '');
                 switch (type) {
