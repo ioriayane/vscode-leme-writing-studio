@@ -144,10 +144,8 @@ function selectBook(e: vscode.TextEditor | undefined,
 	lemeProject.selectLemeFile(vscode.workspace.workspaceFolders, e.document.uri).then(lemeFileUri => {
 		if (lemeFileUri) {
 			outputChannel.appendLine('Selected a LeME file : ' + path.basename(lemeFileUri.path));
-			updateWorkspace(e, lemePreviewer, lemeProject, outputChannel);
-			// vscode.workspace.openTextDocument(lemeFileUri).then(document => {
-			// 	vscode.window.showTextDocument(document);
-			// });
+			// updateWorkspace(e, lemePreviewer, lemeProject, outputChannel);
+			vscode.commands.executeCommand('vscode.openWith', lemeFileUri, LemeFileEditorProvider.viewType);
 		}
 	});
 }
