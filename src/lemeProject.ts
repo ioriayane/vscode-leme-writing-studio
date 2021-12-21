@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as child_process from 'child_process';
 import * as book from './book';
+import * as os from 'os';
 
 export class LemeProject {
 
@@ -318,7 +319,9 @@ export class LemeProject {
         }
         const folder = path.dirname(lemePath);
         let command = lemePath;
-        command += ' -platform offscreen';
+        if (os.platform() === 'linux') {
+            command += ' -platform offscreen';
+        }
         command += ' --leme-file ' + lemeFileUri.path;
         // eslint-disable-next-line @typescript-eslint/naming-convention
         child_process.exec(command, { env: { LD_LIBRARY_PATH: folder } }, (error, stdout, stderror) => {
