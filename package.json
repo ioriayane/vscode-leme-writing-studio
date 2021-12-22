@@ -4,14 +4,14 @@
 	"description": "This is an extension that supports writing your ebook.",
 	"version": "0.0.1",
 	"author": {
-        "name": "Takayuki Orito"
-    },
+		"name": "Takayuki Orito"
+	},
 	"license": "MIT",
 	"homepage": "https://github.com/ioriayane/vscode-leme-writing-studio",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ioriayane/vscode-leme-writing-studio"
-    },
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ioriayane/vscode-leme-writing-studio"
+	},
 	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.61.0"
@@ -106,6 +106,19 @@
 						"filenamePattern": "*.leme"
 					}
 				]
+			}
+		],
+		"languages": [
+			{
+				"id": "lemeText",
+				"aliases": ["LeME Text"]
+			}
+		],
+		"grammars": [
+			{
+				"language": "lemeText",
+				"scopeName": "text.leme",
+				"path": "./syntaxes/lemetext.tmLanguage.json"
 			}
 		]
 	},

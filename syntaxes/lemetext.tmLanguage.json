@@ -1,0 +1,201 @@
+{
+    "scopeName": "text.leme",
+    "patterns": [
+        {
+            "include": "#block"
+        }
+    ],
+    "repository": {
+        "block": {
+            "patterns": [
+                {
+                    "include": "#indent"
+                },
+                {
+                    "include": "#border"
+                },
+                {
+                    "include": "#pageBreak"
+                },
+                {
+                    "include": "#horizontalRule"
+                },
+                {
+                    "include": "#outline.alignment"
+                },
+                {
+                    "include": "#outline"
+                },
+                {
+                    "include": "#alignment"
+                },
+                {
+                    "include": "#inline"
+                }
+            ]
+        },
+        "indent": {
+            "match": "^[!\uff01][I\uff29]([0-9\uff10-\uff19]+[,\uff0c][0-9\uff10-\uff19]+)?$",
+            "name": "keyword.control.leme.indent"
+        },
+        "border": {
+            "match": "^[!\uff01][B\uff22][D\uff24]([,\uff0c][TBLRH\uff34\uff22\uff2c\uff32\uff28]+)?$",
+            "name": "keyword.control.leme.border"
+        },
+        "pageBreak": {
+            "match": "^[!\uff01][P\uff30][B\uff22]$",
+            "name": "keyword.control.leme.pageBreak"
+        },
+        "horizontalRule": {
+            "match": "^[!\uff01][H\uff28][R\uff32]$",
+            "name": "keyword.control.leme.horizontalRule"
+        },
+        "outline": {
+            "match": "^([#\uff03]{1,9}[ \u3000])(.*)",
+            "captures": {
+                "1": {
+                    "name": "keyword.control.leme.outline"
+                },
+                "2": {
+                    "patterns": [
+                        {
+                            "include": "#inline"
+                        }
+                    ]
+                }
+            }
+        },
+        "outline.alignment": {
+            "match": "^([#\uff03]{1,9}[ \u3000]+[!\uff01][R\uff32B\uff22L\uff2cT\uff34C\uff23][ \u3000])(.*)",
+            "captures": {
+                "1": {
+                    "name": "keyword.control.leme.outline.alignment"
+                },
+                "2": {
+                    "patterns": [
+                        {
+                            "include": "#inline"
+                        }
+                    ]
+                }
+            }
+        },
+        "alignment": {
+            "match": "^([ \u3000]*[!\uff01][R\uff32B\uff22L\uff2cT\uff34C\uff23][ \u3000])(.*)",
+            "captures": {
+                "1": {
+                    "name": "keyword.control.leme.alignment"
+                },
+                "2": {
+                    "patterns": [
+                        {
+                            "include": "#inline"
+                        }
+                    ]
+                }
+            }
+        },
+        "inline": {
+            "patterns": [
+                {
+                    "include": "#image"
+                },
+                {
+                    "include": "#hyperlink"
+                },
+                {
+                    "include": "#ruby1"
+                },
+                {
+                    "include": "#ruby2"
+                },
+                {
+                    "include": "#ruby3"
+                },
+                {
+                    "include": "#ruby4"
+                },
+                {
+                    "include": "#ruby5"
+                },
+                {
+                    "include": "#ruby6"
+                },
+                {
+                    "include": "#tcy"
+                },
+                {
+                    "include": "#bold"
+                },
+                {
+                    "include": "#italic"
+                },
+                {
+                    "include": "#emMarkDot"
+                },
+                {
+                    "include": "#emMarkDot2"
+                },
+                {
+                    "include": "#emMarkComma"
+                }
+            ]
+        },
+        "image": {
+            "match": "[!\uff01][\\[\uff3b][^\\[\\]\uff3b\uff3d\\(\uff08]*[\\]\uff3d][\uff08\\(][^\uff09\\)]*[\uff09\\)]",
+            "name": "keyword.control.leme.image"
+        },
+        "hyperlink": {
+            "match": "[\\[\uff3b][^\\[\\]\uff3b\uff3d\\(\uff08]*[\\]\uff3d][\uff08\\(][^\uff09\\)]*[\uff09\\)]",
+            "name": "markup.bold.leme.hyperlink"
+        },
+        "ruby1": {
+            "match": "[\uff5c\\|][^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]+\u300a[^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]+\u300b",
+            "name": "markup.bold.leme.ruby1"
+        },
+        "ruby2": {
+            "match": "[\uff5c\\|][^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]+[\uff08\\(][^\u300a\u300b\uff08\uff09\uff5c\\(\\)\\|]+[\uff09\\)]",
+            "name": "markup.bold.leme.ruby2"
+        },
+        "ruby3": {
+            "match": "[\u4e00-\u9fcf\uf900-\ufaff\u3400-\u4dbf\u3005-\u3007\u303b\u30f6]+\u300a[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\uff65-\uff9f]+\u300b",
+            "name": "markup.bold.leme.ruby3"
+        },
+        "ruby4": {
+            "match": "[\u4e00-\u9fcf\uf900-\ufaff\u3400-\u4dbf\u3005-\u3007\u303b\u30f6]+[\uff08\\(][\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\uff65-\uff9f]+[\uff09\\)]",
+            "name": "markup.bold.leme.ruby4"
+        },
+        "ruby5": {
+            "match": "[a-zA-Z]+\u300a[\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\uff65-\uff9f]+\u300b",
+            "name": "markup.bold.leme.ruby5"
+        },
+        "ruby6": {
+            "match": "[a-zA-Z]+[\uff08\\(][\u3041-\u309f\u30fc\u30a0\u30a0-\u30ff\u31f0-\u31ff\uff65-\uff9f]+[\uff09\\)]",
+            "name": "markup.bold.leme.ruby6"
+        },
+        "tcy": {
+            "match": "\\^[^ \u3000]+?\\^",
+            "name": "markup.bold.leme.tcy"
+        },
+        "bold": {
+            "match": "\\*\\*[^ \u3000]+?\\*\\*",
+            "name": "markup.bold.leme.bold"
+        },
+        "italic": {
+            "match": "\\*[^\\* \u3000]+?\\*",
+            "name": "markup.italic.leme.italic"
+        },
+        "emMarkDot": {
+            "match": "\\+[^\\+ \u3000]+?\\+",
+            "name": "markup.bold.leme.emMarkDot"
+        },
+        "emMarkDot2": {
+            "match": "\u300a\u300a[^ \u3000]+?\u300b\u300b",
+            "name": "markup.bold.leme.emMarkDot2"
+        },
+        "emMarkComma": {
+            "match": "\\+\\+[^ \u3000]+?\\+\\+",
+            "name": "markup.bold.leme.emMarkComma"
+        }
+    }
+}
