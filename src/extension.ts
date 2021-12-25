@@ -4,6 +4,7 @@ import { LemePreviewer } from './lemePreviewer';
 import { LemeProject } from './lemeProject';
 import { EditorController } from './editorController';
 import { LemeFileEditorProvider } from './lemeFileEditorProvider';
+import { LemeTextCompletionItemProvider } from './lemeTextCompletionItemProvider';
 
 let loading = false;
 
@@ -61,6 +62,10 @@ export function activate(context: vscode.ExtensionContext): void {
 		editorController.formatRuby(editor, vscode.window.showInputBox);
 	}));
 
+	context.subscriptions.push(vscode.languages.registerCompletionItemProvider(
+		{ scheme: 'file', language: 'lemeText' },
+		new LemeTextCompletionItemProvider()));
+
 
 	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
 		editorController.right(vscode.window.activeTextEditor, false);
@@ -95,9 +100,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		lemePreviewer.update(vscode.window.activeTextEditor);
 	}));
 
-	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(() => {
+	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection((e) => {
 		if (!loading) {
-			lemePreviewer.update(vscode.window.activeTextEditor);
+			lemePreviewer.update(e.textEditor);
 		}
 	}));
 }
