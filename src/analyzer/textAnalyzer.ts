@@ -121,6 +121,78 @@ export class TextAnalyzer {
         return new Position(retLine, retCharacter);
     }
 
+    public leftWord(line: number, character: number): Position {
+        const pos = this._rangeCheck(line, character);
+        if (pos) {
+            return pos;
+        }
+
+        const characters = this._lines[line].characters;
+        let retLine = line;
+        let retCharacter = 0;
+        if (character === 0) {
+            retLine = line;
+            retCharacter = character;
+        } else if (characters[character - 1].type !== CharType.kanji && characters[character - 1].type !== CharType.kana) {
+            retLine = line;
+            retCharacter = character;
+        } else {
+            for (let i = character - 1; i > 0; i--) {
+                // kanji <- kanaの並びは送り仮名
+                // other <- kanjiの並びは終了
+                // required at least one kanji.
+                if (characters[i - 1].type !== characters[i].type) {
+                    if (characters[i].type === CharType.kanji) {
+                        retCharacter = i;
+                        break;
+                    } else if (characters[i - 1].type === CharType.kanji && characters[i].type === CharType.kana) {
+                        //送り仮名から漢字
+                    } else {
+                        retCharacter = character;
+                        break;
+                    }
+                }
+            }
+        }
+        return new Position(retLine, retCharacter);
+    }
+
+    public trimKana(text: string): string{
+        if(text.length === 0 || !this._isKanji(text.charAt(0))){
+            return text;
+        }
+        for(let i=0; i<text.length; i++){
+            if(!this._isKanji(text.charAt(i))){
+                text = text.substring(0, i);
+                break;
+            }
+        }
+        return text;
+    }
+
+    public trimOkurigana(text: string, ruby: string): { text: string, ruby: string } {
+        let rubyPos = ruby.length - 1;
+        if(text.length === 0 || ruby.length === 0 || !this._isKanji(text.charAt(0))){
+            return { text: text, ruby: ruby };
+        }
+        for (let i = text.length - 1; i > 0; i--) {
+            if (!this._isKana(text.charAt(i))) {
+                break;
+            }
+            if (text.charAt(i) === ruby.charAt(rubyPos)) {
+                text = text.substring(0, i);
+                ruby = ruby.substring(0, rubyPos);
+                rubyPos--;
+            }else{
+                break;
+            }
+            if(rubyPos < 0){
+                break;
+            }
+        }
+        return { text: text, ruby: ruby };
+    }
+
     private _rangeCheck(line: number, character: number): Position | undefined {
         if (line < 0) {
             return new Position(0, 0);

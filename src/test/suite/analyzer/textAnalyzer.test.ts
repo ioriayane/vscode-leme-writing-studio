@@ -94,6 +94,85 @@ suite('TextAnalyzer Test Suite', () => {
         assert.deepStrictEqual(textAnalyzer.left(0, 0), new vscode.Position(0, 0), '0,0 -> 0,0');
     });
 
+    test('leftWordStartPosition test', () => {
+        const textAnalyzer = new analyzer.TextAnalyzer();
+
+        const text = '# 百人一首\r\n'
+            + '花の色は 移りにけりな いたづらに\r\n'
+            + '__わが＊身世＊にふる__ ながめせしまに\r\n'
+            + '\r\n'
+            + '```\r\n'
+            + '千早振る　神代もきかず　竜田川\r\n'
+            + '     から紅に　水くくるとは\r\n'
+            + '```\r\n';
+        const lines = text.split('\n');
+        const lastLineNo = lines.length - 1;
+        textAnalyzer.update(text);
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(-1, -1), new vscode.Position(0, 0), 'under line');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, -1), new vscode.Position(1, 0), 'under character');
+        assert.deepStrictEqual(textAnalyzer.leftWord(lines.length, lines[lastLineNo].length), new vscode.Position(lastLineNo, lines[lastLineNo].length), 'over line');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, lines[1].length + 1), new vscode.Position(1, lines[1].length - 1), 'over character');
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 0), new vscode.Position(1, 0), '1,0 -> 1,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 2), new vscode.Position(1, 0), '1,2 -> 1,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 3), new vscode.Position(1, 2), '1,3 -> 1,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 4), new vscode.Position(1, 2), '1,4 -> 1,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 5), new vscode.Position(1, 5), '1,5 -> 1,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 6), new vscode.Position(1, 5), '1,6 -> 1,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 11), new vscode.Position(1, 5), '1,11 -> 1,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(1, 17), new vscode.Position(1, 17), '1,17 -> 1,2');
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 0), new vscode.Position(2, 0), '2,0 -> 2,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 2), new vscode.Position(2, 2), '2,2 -> 2,2');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 4), new vscode.Position(2, 4), '2,4 -> 2,4');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 5), new vscode.Position(2, 5), '2,5 -> 2,5');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 7), new vscode.Position(2, 5), '2,7 -> 2,7');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 8), new vscode.Position(2, 8), '2,8 -> 2,8');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 11), new vscode.Position(2, 11), '2,11 -> 2,11');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 13), new vscode.Position(2, 13), '2,13 -> 2,13');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 14), new vscode.Position(2, 14), '2,14 -> 2,14');
+        assert.deepStrictEqual(textAnalyzer.leftWord(2, 21), new vscode.Position(2, 21), '2,21 -> 2,21');
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(3, 0), new vscode.Position(3, 0), '3,0 -> 3,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(4, 1), new vscode.Position(4, 1), '4,1 -> 4,1');
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(5, 1), new vscode.Position(5, 0), '5,1 -> 5,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(5, 4), new vscode.Position(5, 0), '5,4 -> 5,0');
+        assert.deepStrictEqual(textAnalyzer.leftWord(5, 11), new vscode.Position(5, 5), '5,11 -> 5,5');
+        assert.deepStrictEqual(textAnalyzer.leftWord(5, 15), new vscode.Position(5, 12), '5,15 -> 5,12');
+
+        assert.deepStrictEqual(textAnalyzer.leftWord(0, 0), new vscode.Position(0, 0), '0,0 -> 0,0');
+    });
+
+    test('trimKana test', () => {
+        const textAnalyzer = new analyzer.TextAnalyzer();
+
+        assert.deepStrictEqual(textAnalyzer.trimKana('千早振る'), '千早振');
+        assert.deepStrictEqual(textAnalyzer.trimKana('千早振'), '千早振');
+        assert.deepStrictEqual(textAnalyzer.trimKana('君がため'), '君');
+
+        assert.deepStrictEqual(textAnalyzer.trimKana('花の色は'), '花');
+        assert.deepStrictEqual(textAnalyzer.trimKana('ちはやふる'), 'ちはやふる');
+        assert.deepStrictEqual(textAnalyzer.trimKana(''), '');
+    });
+
+    test('trimOkurigana test', () => {
+        const textAnalyzer = new analyzer.TextAnalyzer();
+
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('千早振る', 'ちはやふる'), { text: '千早振', ruby: 'ちはやふ' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('千早振', 'ちはやふ'), { text: '千早振', ruby: 'ちはやふ' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('君がため', 'きみがため'), { text: '君', ruby: 'きみ' });
+
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('君がため', 'きみが'), { text: '君がため', ruby: 'きみが' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('君がため', 'がため'), { text: '君', ruby: '' });
+
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('ちはやふる', 'ちはやふる'), { text: 'ちはやふる', ruby: 'ちはやふる' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('', 'ちはやふる'), { text: '', ruby: 'ちはやふる' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('千早振る', ''), { text: '千早振る', ruby: '' });
+        assert.deepStrictEqual(textAnalyzer.trimOkurigana('', ''), { text: '', ruby: '' });
+    });
+
     test('_rangeCheck test', () => {
         const textAnalyzer = new analyzer.TextAnalyzer();
 

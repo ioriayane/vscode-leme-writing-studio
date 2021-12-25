@@ -77,6 +77,11 @@
 		],
 		"keybindings": [
 			{
+				"command": "leme-writing-studio.format.text.ruby",
+				"key": "ctrl+r",
+				"when": "textInputFocus && editorLangId == lemeText"
+			},
+			{
 				"command": "skipRight",
 				"key": "ctrl+right",
 				"when": "textInputFocus && !accessibilityModeEnabled"

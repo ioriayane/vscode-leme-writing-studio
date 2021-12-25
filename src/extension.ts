@@ -57,6 +57,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.window.registerCustomEditorProvider(LemeFileEditorProvider.viewType, lemeFileEditor));
 
 
+	context.subscriptions.push(vscode.commands.registerTextEditorCommand(EditorController.commandNameFormatRuby, async editor => {
+		editorController.formatRuby(editor, vscode.window.showInputBox);
+	}));
+
+
 	context.subscriptions.push(vscode.commands.registerCommand('skipRight', () => {
 		editorController.right(vscode.window.activeTextEditor, false);
 	}));
