@@ -67,17 +67,17 @@ export class LemePreviewer {
         }
     }
 
-    public update(editor: TextEditor | undefined, initialize = false): void {
+    public async update(editor: TextEditor | undefined, initialize = false): Promise<parser.Paragraph[] | undefined> {
         if (!editor) {
             // console.log('Not found active text editor.');
-            return;
+            return undefined;
         } else if (!this.isSupportFileType(editor.document.uri)) {
             // not support file
-            return;
+            return undefined;
         }
         if (!this._panel) {
             // console.log('Not found preview panel.');
-            return;
+            return undefined;
         }
         const newTitle = 'LeME Preview : ' + path.basename(editor.document.fileName);
         if (this._panel.title !== newTitle) {
@@ -85,22 +85,27 @@ export class LemePreviewer {
         }
 
         const editorText = editor.document.getText();
-        this._parse(editorText, editor.selection.active.line, path.dirname(editor.document.uri.fsPath)).then((result) => {
-            if (this._panel) {
-                if (initialize) {
-                    this._panel.webview.html = this._getWebviewContent(this._panel.webview, result);
-                    this._panel.webview.postMessage({
-                        command: 'sync',
-                        body: ''
-                    });
-                } else {
-                    this._panel.webview.postMessage({
-                        command: 'update',
-                        body: result
-                    });
-                }
-            }
-        });
+        const parentPath = path.dirname(editor.document.uri.fsPath);
+
+        const htmlBuilder = new builder.HtmlBuilder(this._panel.webview, parentPath, this.bookMaking);
+        const textParser = new parser.TextParser(this.bookTextSetting);
+        const document = textParser.parse(editorText);
+        const htmlText = htmlBuilder.build(document, editor.selection.active.line);
+
+        if (initialize) {
+            this._panel.webview.html = this._getWebviewContent(this._panel.webview, htmlText);
+            this._panel.webview.postMessage({
+                command: 'sync',
+                body: ''
+            });
+        } else {
+            this._panel.webview.postMessage({
+                command: 'update',
+                body: htmlText
+            });
+        }
+
+        return document;
     }
 
     private _getWebviewContent(webview: Webview, body: string) {
@@ -140,12 +145,6 @@ export class LemePreviewer {
         </body>
         </html>`;
 
-    }
-
-    private async _parse(text: string, cursorLine: number, parentPath: string): Promise<string> {
-        const htmlBuilder = new builder.HtmlBuilder(this._panel?.webview, parentPath, this.bookMaking);
-        const textParser = new parser.TextParser(this.bookTextSetting);
-        return htmlBuilder.build(textParser.parse(text), cursorLine);
     }
 
     public isSupportFileType(uri: Uri): boolean {

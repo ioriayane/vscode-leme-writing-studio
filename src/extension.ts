@@ -97,7 +97,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
 		editorController.update(vscode.window.activeTextEditor);
-		lemePreviewer.update(vscode.window.activeTextEditor);
+		if (!loading) {
+			lemePreviewer.update(vscode.window.activeTextEditor);
+		}
 	}));
 
 	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection((e) => {
@@ -133,9 +135,10 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 					lemeFileUri, lemePreviewer.bookInfo, lemePreviewer.bookSpec,
 					lemePreviewer.bookMaking, lemePreviewer.bookTextSetting
 				).then(updated => {
-					lemePreviewer.update(e, updated);
-					loading = false;
-					outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
+					lemePreviewer.update(e, updated).then(() => {
+						loading = false;
+						outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
+					});
 				});
 			}
 		}
