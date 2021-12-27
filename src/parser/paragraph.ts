@@ -213,4 +213,16 @@ export class Paragraph implements ParagraphProperty {
         this.items.push(item);
         return item;
     }
+
+    public text(): string {
+        return this.items.map(item => {
+            if (item.type === ParagraphItemType.text) {
+                return (item as ParagraphItemText).text;
+            }else if (item.type === ParagraphItemType.hyperLink) {
+                return (item as ParagraphItemHyperlink).text;
+            } else {
+                return undefined;
+            }
+        }).filter(value => value !== undefined).join('');
+    }
 }

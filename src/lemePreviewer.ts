@@ -75,21 +75,22 @@ export class LemePreviewer {
             // not support file
             return undefined;
         }
+        const editorText = editor.document.getText();
+        const textParser = new parser.TextParser(this.bookTextSetting);
+        const document = textParser.parse(editorText);
+
+
         if (!this._panel) {
             // console.log('Not found preview panel.');
-            return undefined;
+            return document;
         }
         const newTitle = 'LeME Preview : ' + path.basename(editor.document.fileName);
         if (this._panel.title !== newTitle) {
             this._panel.title = newTitle;
         }
 
-        const editorText = editor.document.getText();
         const parentPath = path.dirname(editor.document.uri.fsPath);
-
         const htmlBuilder = new builder.HtmlBuilder(this._panel.webview, parentPath, this.bookMaking);
-        const textParser = new parser.TextParser(this.bookTextSetting);
-        const document = textParser.parse(editorText);
         const htmlText = htmlBuilder.build(document, editor.selection.active.line);
 
         if (initialize) {

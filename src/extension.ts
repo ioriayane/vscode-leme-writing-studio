@@ -5,6 +5,7 @@ import { LemeProject } from './lemeProject';
 import { EditorController } from './editorController';
 import { LemeFileEditorProvider } from './lemeFileEditorProvider';
 import { LemeTextCompletionItemProvider } from './lemeTextCompletionItemProvider';
+import { LemeTextTreeDataProvider } from './lemeTextTreeDataProvider';
 
 let loading = false;
 
@@ -17,12 +18,13 @@ export function activate(context: vscode.ExtensionContext): void {
 	const lemeProject = new LemeProject(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1));
 	const editorController = new EditorController(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0));
 	const lemeFileEditor = new LemeFileEditorProvider(context.extensionUri);
-
+	const lemeTextTreeDataProvider = new LemeTextTreeDataProvider();
+	
 	context.subscriptions.push(lemeProject.statusBarItem);
 	context.subscriptions.push(editorController.statusBarItem);
 
 	editorController.update(vscode.window.activeTextEditor);
-	updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject, outputChannel);
+	updateWorkspace(vscode.window.activeTextEditor, lemePreviewer, lemeProject, lemeTextTreeDataProvider, outputChannel);
 
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemePreviewer.comandName, () => {
@@ -83,7 +85,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(e => {
 		editorController.update(e);
-		updateWorkspace(e, lemePreviewer, lemeProject, outputChannel);
+		updateWorkspace(e, lemePreviewer, lemeProject, lemeTextTreeDataProvider, outputChannel);
 	}));
 
 	// context.subscriptions.push(vscode.window.onDidChangeVisibleTextEditors(() => {
@@ -98,7 +100,9 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
 		editorController.update(vscode.window.activeTextEditor);
 		if (!loading) {
-			lemePreviewer.update(vscode.window.activeTextEditor);
+			lemePreviewer.update(vscode.window.activeTextEditor).then(document =>{
+				lemeTextTreeDataProvider.refresh(document);
+			});
 		}
 	}));
 
@@ -107,6 +111,10 @@ export function activate(context: vscode.ExtensionContext): void {
 			lemePreviewer.update(e.textEditor);
 		}
 	}));
+
+	vscode.window.registerTreeDataProvider('lemeTextTree', lemeTextTreeDataProvider);
+	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameRefresh, () => lemeTextTreeDataProvider.refresh());
+	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameSelection, (element) => lemeTextTreeDataProvider.selection(element));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -116,6 +124,7 @@ export function deactivate(): void { }
 function updateWorkspace(e: vscode.TextEditor | undefined,
 	lemePreviewer: LemePreviewer,
 	lemeProject: LemeProject,
+	lemeTextTreeDataProvider: LemeTextTreeDataProvider,
 	outputChannel: vscode.OutputChannel
 ): void {
 	if (!e) {
@@ -135,8 +144,9 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 					lemeFileUri, lemePreviewer.bookInfo, lemePreviewer.bookSpec,
 					lemePreviewer.bookMaking, lemePreviewer.bookTextSetting
 				).then(updated => {
-					lemePreviewer.update(e, updated).then(() => {
+					lemePreviewer.update(e, updated).then((document) => {
 						loading = false;
+						lemeTextTreeDataProvider.refresh(document);
 						outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
 					});
 				});

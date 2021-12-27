@@ -41,8 +41,14 @@
 				{
 					"when": "editorTextFocus && editorLangId == lemeText",
 					"command": "leme-writing-studio.format.text.ruby",
-					"group": "navigation",
-					"alt": "Ruby"
+					"group": "navigation"
+				}
+			],
+			"view/title": [
+				{
+					"command": "leme-writing-studio.outline.refresh",
+					"when": "view == lemeTextTree",
+					"group": "navigation"
 				}
 			]
 		},
@@ -67,6 +73,11 @@
 				"command": "leme-writing-studio.format.text.ruby",
 				"title": "LeME: Formatting : Ruby",
 				"icon": "$(ruby)"
+			},
+			{
+				"command": "leme-writing-studio.outline.refresh",
+				"title": "LeME: Outline : Refresh",
+				"icon": "$(refresh)"
 			}
 		],
 		"configuration": [
@@ -140,7 +151,15 @@
 				"scopeName": "text.leme",
 				"path": "./syntaxes/lemetext.tmLanguage.json"
 			}
-		]
+		],
+		"views": {
+			"explorer": [
+				{
+					"id": "lemeTextTree",
+					"name": "LeME Text Outline"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

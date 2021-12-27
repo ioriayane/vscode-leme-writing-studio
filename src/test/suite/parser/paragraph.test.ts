@@ -196,4 +196,20 @@ suite('Paragraph Test Suite', () => {
             assert.strictEqual(item.plainAlt, 'fuga\u0000foo\u0000bar', 'plainAlt4');
         }
     });
+
+    test('Paragraph text', () => {
+        const para = new parser.Paragraph();
+
+        assert.strictEqual(para.text(), '');
+
+        para.pushText('hoge', 'ruby');
+        assert.strictEqual(para.text(), 'hoge');
+
+        para.items.push(new parser.ParagraphItemText('fuga', 'fuby2'));
+        assert.strictEqual(para.text(), 'hogefuga');
+        para.items.push(new parser.ParagraphItemText('foo', 'fuby2'));
+        assert.strictEqual(para.text(), 'hogefugafoo');
+        para.items.push(new parser.ParagraphItemHyperlink('link text', 'https://leme.style', 'alt text'));
+        assert.strictEqual(para.text(), 'hogefugafoolink text');
+    });
 });
