@@ -12,6 +12,13 @@ import {
     TreeItemCollapsibleState
 } from 'vscode';
 import * as parser from './parser/index';
+import * as path from 'path';
+
+enum DocumentTreeItemType {
+    file,
+    heading,
+    unknown
+}
 
 export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeItem> {
 
@@ -29,7 +36,17 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
     getTreeItem(element: DocumentTreeItem): TreeItem | Thenable<TreeItem> {
         const item = new TreeItem(element.text,
             element.children.length > 0 ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.None);
-        item.iconPath = new ThemeIcon('selection', new ThemeColor('focusBorder'));
+        switch (element.type) {
+            case DocumentTreeItemType.file:
+                item.iconPath = new ThemeIcon('file-text')
+                break;
+            case DocumentTreeItemType.heading:
+                item.iconPath = new ThemeIcon('library', new ThemeColor('focusBorder'));
+                break;
+            default:
+                item.iconPath = new ThemeIcon('warning', new ThemeColor('errorForeground'));
+                break;
+        }
         item.command = {
             command: LemeTextTreeDataProvider.commandNameSelection,
             title: '',
@@ -70,37 +87,30 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
             //
         } else if (this._paragraphs) {
             const stack: DocumentTreeItem[] = [];
-            let lastLv = 1;
-            let lastData: DocumentTreeItem | undefined;
+            let lastLv = 0;
+            // root element is file name.
+            let lastData = this._pushData(DocumentTreeItemType.file, 1, path.basename(this._editor.document.uri.path), stack);
 
             this._paragraphs.forEach((paragraph, index) => {
                 if (paragraph.outlineLv > 0) {
-                    if (paragraph.outlineLv > 1 && this._treeData.length === 0) {
-                        // Special if a level is skipped when the stack is empty
-                        lastData = this._pushData(index, `<Missing lv1>`, stack);
-                        stack.push(lastData);
-                    } else if (paragraph.outlineLv < lastLv) {
+                    if (paragraph.outlineLv < lastLv) {
                         // Bring up to current level
-                        while (stack.length > 0) {
+                        while (stack.length > 1) {
                             stack.pop();
-                            if (paragraph.outlineLv > stack.length) {
+                            if (paragraph.outlineLv > (stack.length - 1)) {
                                 break;
                             }
                         }
                     } else if (paragraph.outlineLv > lastLv) {
                         // Completing a skipped level
                         for (let i = 1; i < (paragraph.outlineLv - lastLv); i++) {
-                            if (lastData) {
-                                stack.push(lastData);
-                            }
-                            lastData = this._pushData(index, `<Missing lv${lastLv + i}>`, stack);
-                        }
-                        if (lastData) {
                             stack.push(lastData);
+                            lastData = this._pushData(DocumentTreeItemType.unknown, index, `<Missing lv${lastLv + i}>`, stack);
                         }
+                        stack.push(lastData);
                     }
 
-                    lastData = this._pushData(index, paragraph.text(), stack);
+                    lastData = this._pushData(DocumentTreeItemType.heading, index, paragraph.text(), stack);
                     lastLv = paragraph.outlineLv;
                 }
             });
@@ -120,8 +130,8 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
         callback('revealLine', { lineNumber: element.lineNo, at: 'center' });
     }
 
-    private _pushData(index: number, text: string, stack: DocumentTreeItem[]): DocumentTreeItem {
-        const data = new DocumentTreeItem(index, text);
+    private _pushData(type: DocumentTreeItemType, index: number, text: string, stack: DocumentTreeItem[]): DocumentTreeItem {
+        const data = new DocumentTreeItem(type, index, text);
         if (stack.length === 0) {
             this._treeData.push(data);
         } else {
@@ -134,6 +144,7 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
 class DocumentTreeItem {
     public children: DocumentTreeItem[] = [];
     constructor(
+        readonly type: DocumentTreeItemType,
         readonly lineNo: number,
         readonly text: string,
     ) {
