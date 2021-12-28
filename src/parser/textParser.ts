@@ -62,7 +62,7 @@ export class TextParser {
         this._borderState = BorderState.none;
 
         const lines = text.split('\n');
-        const document: parser.Paragraph[] = lines.map((line, index, array) => {
+        const paragraphs: parser.Paragraph[] = lines.map((line, index, array) => {
             const para = new parser.Paragraph();
             let items: parser.ParagraphItem[] = [];
 
@@ -118,7 +118,7 @@ export class TextParser {
             return para;
         });
 
-        return document;
+        return paragraphs;
     }
 
     private _checkEraseConsecutiveBlankLine(line: string, index: number, lines: string[]) {

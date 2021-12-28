@@ -34,7 +34,7 @@ suite('TextParser Test Suite', () => {
     });
 
     test('Simple text test', () => {
-        const document = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
+        const paragraphs = textParser.parse('line1\nline2\nThis is a ![image](media/image1.png).\nline4\n' +
             'これは|漢字(かんじ)です\n' +
             '## 見出しLv2\n' +
             '!PB\n' +
@@ -45,92 +45,92 @@ suite('TextParser Test Suite', () => {
             'line12 ^tcy^ and **bold** and *italic* and +dot+ and \u300a\u300adot2\u300b\u300b and ++comma++.'
         );
 
-        assert.strictEqual(document.length, 12);
+        assert.strictEqual(paragraphs.length, 12);
         //
-        assert.strictEqual(document[0].outlineLv, 1);
-        assert.strictEqual(document[0].items.length, 1);
-        assert.strictEqual((document[0].items[0] as parser.ParagraphItemText).text, 'line1');
-        assert.strictEqual((document[0].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[0].outlineLv, 1);
+        assert.strictEqual(paragraphs[0].items.length, 1);
+        assert.strictEqual((paragraphs[0].items[0] as parser.ParagraphItemText).text, 'line1');
+        assert.strictEqual((paragraphs[0].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[1].outlineLv, 0);
-        assert.strictEqual(document[1].items.length, 1);
-        assert.strictEqual((document[1].items[0] as parser.ParagraphItemText).text, 'line2');
-        assert.strictEqual((document[1].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[1].outlineLv, 0);
+        assert.strictEqual(paragraphs[1].items.length, 1);
+        assert.strictEqual((paragraphs[1].items[0] as parser.ParagraphItemText).text, 'line2');
+        assert.strictEqual((paragraphs[1].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[2].outlineLv, 0);
-        assert.strictEqual(document[2].items.length, 3);
-        assert.strictEqual((document[2].items[0] as parser.ParagraphItemText).text, 'This is a ');
-        assert.strictEqual((document[2].items[0] as parser.ParagraphItemText).ruby, '');
-        assert.strictEqual((document[2].items[1] as parser.ParagraphItemImage).path, 'media/image1.png');
-        assert.strictEqual((document[2].items[1] as parser.ParagraphItemImage).alt, '');
-        assert.strictEqual((document[2].items[2] as parser.ParagraphItemText).text, '.');
-        assert.strictEqual((document[2].items[2] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[2].outlineLv, 0);
+        assert.strictEqual(paragraphs[2].items.length, 3);
+        assert.strictEqual((paragraphs[2].items[0] as parser.ParagraphItemText).text, 'This is a ');
+        assert.strictEqual((paragraphs[2].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((paragraphs[2].items[1] as parser.ParagraphItemImage).path, 'media/image1.png');
+        assert.strictEqual((paragraphs[2].items[1] as parser.ParagraphItemImage).alt, '');
+        assert.strictEqual((paragraphs[2].items[2] as parser.ParagraphItemText).text, '.');
+        assert.strictEqual((paragraphs[2].items[2] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[3].outlineLv, 0);
-        assert.strictEqual(document[3].items.length, 1);
-        assert.strictEqual((document[3].items[0] as parser.ParagraphItemText).text, 'line4');
-        assert.strictEqual((document[3].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[3].outlineLv, 0);
+        assert.strictEqual(paragraphs[3].items.length, 1);
+        assert.strictEqual((paragraphs[3].items[0] as parser.ParagraphItemText).text, 'line4');
+        assert.strictEqual((paragraphs[3].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[4].outlineLv, 0);
-        assert.strictEqual(document[4].items.length, 3);
-        assert.strictEqual((document[4].items[0] as parser.ParagraphItemText).text, 'これは');
-        assert.strictEqual((document[4].items[0] as parser.ParagraphItemText).ruby, '');
-        assert.strictEqual((document[4].items[1] as parser.ParagraphItemText).text, '漢字');
-        assert.strictEqual((document[4].items[1] as parser.ParagraphItemText).ruby, 'かんじ');
-        assert.strictEqual((document[4].items[2] as parser.ParagraphItemText).text, 'です');
-        assert.strictEqual((document[4].items[2] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[4].outlineLv, 0);
+        assert.strictEqual(paragraphs[4].items.length, 3);
+        assert.strictEqual((paragraphs[4].items[0] as parser.ParagraphItemText).text, 'これは');
+        assert.strictEqual((paragraphs[4].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual((paragraphs[4].items[1] as parser.ParagraphItemText).text, '漢字');
+        assert.strictEqual((paragraphs[4].items[1] as parser.ParagraphItemText).ruby, 'かんじ');
+        assert.strictEqual((paragraphs[4].items[2] as parser.ParagraphItemText).text, 'です');
+        assert.strictEqual((paragraphs[4].items[2] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[5].outlineLv, 2);
-        assert.strictEqual(document[5].items.length, 1);
-        assert.strictEqual((document[5].items[0] as parser.ParagraphItemText).text, '見出しLv2');
-        assert.strictEqual((document[5].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[5].outlineLv, 2);
+        assert.strictEqual(paragraphs[5].items.length, 1);
+        assert.strictEqual((paragraphs[5].items[0] as parser.ParagraphItemText).text, '見出しLv2');
+        assert.strictEqual((paragraphs[5].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[6].outlineLv, 0);
-        assert.strictEqual(document[6].pageBreak, true);
-        assert.strictEqual(document[6].items.length, 0);
+        assert.strictEqual(paragraphs[6].outlineLv, 0);
+        assert.strictEqual(paragraphs[6].pageBreak, true);
+        assert.strictEqual(paragraphs[6].items.length, 0);
         //
-        assert.strictEqual(document[7].outlineLv, 0);
-        assert.strictEqual(document[7].horizontalRule, true);
-        assert.strictEqual(document[7].items.length, 0);
+        assert.strictEqual(paragraphs[7].outlineLv, 0);
+        assert.strictEqual(paragraphs[7].horizontalRule, true);
+        assert.strictEqual(paragraphs[7].items.length, 0);
         //
-        assert.strictEqual(document[8].outlineLv, 0);
-        assert.strictEqual(document[8].alignment, parser.AlignmentType.right);
-        assert.strictEqual(document[8].items.length, 1);
-        assert.strictEqual((document[8].items[0] as parser.ParagraphItemText).text, 'line9');
-        assert.strictEqual((document[8].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[8].outlineLv, 0);
+        assert.strictEqual(paragraphs[8].alignment, parser.AlignmentType.right);
+        assert.strictEqual(paragraphs[8].items.length, 1);
+        assert.strictEqual((paragraphs[8].items[0] as parser.ParagraphItemText).text, 'line9');
+        assert.strictEqual((paragraphs[8].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[9].outlineLv, 0);
-        assert.strictEqual(document[9].alignment, parser.AlignmentType.left);
-        assert.strictEqual(document[9].items.length, 1);
-        assert.strictEqual((document[9].items[0] as parser.ParagraphItemText).text, 'line10');
-        assert.strictEqual((document[9].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[9].outlineLv, 0);
+        assert.strictEqual(paragraphs[9].alignment, parser.AlignmentType.left);
+        assert.strictEqual(paragraphs[9].items.length, 1);
+        assert.strictEqual((paragraphs[9].items[0] as parser.ParagraphItemText).text, 'line10');
+        assert.strictEqual((paragraphs[9].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[10].outlineLv, 0);
-        assert.strictEqual(document[10].alignment, parser.AlignmentType.center);
-        assert.strictEqual(document[10].items.length, 1);
-        assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).text, 'line11');
-        assert.strictEqual((document[10].items[0] as parser.ParagraphItemText).ruby, '');
+        assert.strictEqual(paragraphs[10].outlineLv, 0);
+        assert.strictEqual(paragraphs[10].alignment, parser.AlignmentType.center);
+        assert.strictEqual(paragraphs[10].items.length, 1);
+        assert.strictEqual((paragraphs[10].items[0] as parser.ParagraphItemText).text, 'line11');
+        assert.strictEqual((paragraphs[10].items[0] as parser.ParagraphItemText).ruby, '');
         //
-        assert.strictEqual(document[11].items.length, 13);
-        assert.strictEqual((document[11].items[0] as parser.ParagraphItemText).text, 'line12 ');
-        assert.strictEqual((document[11].items[1] as parser.ParagraphItemText).text, 'tcy');
-        assert.strictEqual((document[11].items[1] as parser.ParagraphItemText).font.tcy, true);
-        assert.strictEqual((document[11].items[2] as parser.ParagraphItemText).text, ' and ');
-        assert.strictEqual((document[11].items[3] as parser.ParagraphItemText).text, 'bold');
-        assert.strictEqual((document[11].items[3] as parser.ParagraphItemText).font.bold, true);
-        assert.strictEqual((document[11].items[4] as parser.ParagraphItemText).text, ' and ');
-        assert.strictEqual((document[11].items[5] as parser.ParagraphItemText).text, 'italic');
-        assert.strictEqual((document[11].items[5] as parser.ParagraphItemText).font.italic, true);
-        assert.strictEqual((document[11].items[6] as parser.ParagraphItemText).text, ' and ');
-        assert.strictEqual((document[11].items[7] as parser.ParagraphItemText).text, 'dot');
-        assert.strictEqual((document[11].items[7] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
-        assert.strictEqual((document[11].items[8] as parser.ParagraphItemText).text, ' and ');
-        assert.strictEqual((document[11].items[9] as parser.ParagraphItemText).text, 'dot2');
-        assert.strictEqual((document[11].items[9] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
-        assert.strictEqual((document[11].items[10] as parser.ParagraphItemText).text, ' and ');
-        assert.strictEqual((document[11].items[11] as parser.ParagraphItemText).text, 'comma');
-        assert.strictEqual((document[11].items[11] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
-        assert.strictEqual((document[11].items[12] as parser.ParagraphItemText).text, '.');
+        assert.strictEqual(paragraphs[11].items.length, 13);
+        assert.strictEqual((paragraphs[11].items[0] as parser.ParagraphItemText).text, 'line12 ');
+        assert.strictEqual((paragraphs[11].items[1] as parser.ParagraphItemText).text, 'tcy');
+        assert.strictEqual((paragraphs[11].items[1] as parser.ParagraphItemText).font.tcy, true);
+        assert.strictEqual((paragraphs[11].items[2] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((paragraphs[11].items[3] as parser.ParagraphItemText).text, 'bold');
+        assert.strictEqual((paragraphs[11].items[3] as parser.ParagraphItemText).font.bold, true);
+        assert.strictEqual((paragraphs[11].items[4] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((paragraphs[11].items[5] as parser.ParagraphItemText).text, 'italic');
+        assert.strictEqual((paragraphs[11].items[5] as parser.ParagraphItemText).font.italic, true);
+        assert.strictEqual((paragraphs[11].items[6] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((paragraphs[11].items[7] as parser.ParagraphItemText).text, 'dot');
+        assert.strictEqual((paragraphs[11].items[7] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((paragraphs[11].items[8] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((paragraphs[11].items[9] as parser.ParagraphItemText).text, 'dot2');
+        assert.strictEqual((paragraphs[11].items[9] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.dot);
+        assert.strictEqual((paragraphs[11].items[10] as parser.ParagraphItemText).text, ' and ');
+        assert.strictEqual((paragraphs[11].items[11] as parser.ParagraphItemText).text, 'comma');
+        assert.strictEqual((paragraphs[11].items[11] as parser.ParagraphItemText).font.em, parser.EmphasisMarkType.comma);
+        assert.strictEqual((paragraphs[11].items[12] as parser.ParagraphItemText).text, '.');
     });
 
 

@@ -12,9 +12,9 @@ export class HtmlBuilder {
     ) {
     }
 
-    public build(document: parser.Paragraph[], cursorLine = -1): string {
+    public build(paragraphs: parser.Paragraph[], cursorLine = -1): string {
 
-        const lines = document.map((paragraph, index) => {
+        const lines = paragraphs.map((paragraph, index) => {
             if (paragraph.empty) {
                 return '';
             }

@@ -16,7 +16,7 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
     public static readonly commandNameRefresh = 'leme-writing-studio.outline.refresh';
     public static readonly commandNameSelection = 'leme-writing-studio.outline.selection';
 
-    private _document: parser.Paragraph[] | undefined = undefined;
+    private _paragraphs: parser.Paragraph[] | undefined = undefined;
     private _treeData: DocumentTreeItem[] = [];
 
     private _onDidChangeTreeData: EventEmitter<DocumentTreeItem | undefined> = new EventEmitter<DocumentTreeItem | undefined>();
@@ -44,18 +44,18 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
         }
     }
 
-    public refresh(document?: parser.Paragraph[]): void {
+    public refresh(paragraphs?: parser.Paragraph[]): void {
         this._treeData = [];
-        if (document) {
-            this._document = document;
+        if (paragraphs) {
+            this._paragraphs = paragraphs;
         }
 
-        if (this._document) {
+        if (this._paragraphs) {
             const stack: DocumentTreeItem[] = [];
             let lastLv = 1;
             let lastData: DocumentTreeItem | undefined;
 
-            this._document.forEach((paragraph, index) => {
+            this._paragraphs.forEach((paragraph, index) => {
                 if (paragraph.outlineLv > 0) {
                     if (paragraph.outlineLv > 1 && this._treeData.length === 0) {
                         // Special if a level is skipped when the stack is empty

@@ -100,8 +100,8 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
 		editorController.update(vscode.window.activeTextEditor);
 		if (!loading) {
-			lemePreviewer.update(vscode.window.activeTextEditor).then(document => {
-				lemeTextTreeDataProvider.refresh(document);
+			lemePreviewer.update(vscode.window.activeTextEditor).then(paragraphs => {
+				lemeTextTreeDataProvider.refresh(paragraphs);
 			});
 		}
 	}));
