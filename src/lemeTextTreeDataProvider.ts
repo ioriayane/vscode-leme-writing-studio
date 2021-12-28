@@ -1,7 +1,17 @@
-import * as vscode from 'vscode';
+import {
+    Event,
+    EventEmitter,
+    ProviderResult,
+    TextEditor,
+    ThemeColor,
+    ThemeIcon,
+    TreeDataProvider,
+    TreeItem,
+    TreeItemCollapsibleState
+} from 'vscode';
 import * as parser from './parser/index';
 
-export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<DocumentTreeItem> {
+export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeItem> {
 
     public static readonly commandNameRefresh = 'leme-writing-studio.outline.refresh';
     public static readonly commandNameSelection = 'leme-writing-studio.outline.selection';
@@ -9,13 +19,13 @@ export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<Documen
     private _document: parser.Paragraph[] | undefined = undefined;
     private _treeData: DocumentTreeItem[] = [];
 
-    private _onDidChangeTreeData: vscode.EventEmitter<DocumentTreeItem | undefined> = new vscode.EventEmitter<DocumentTreeItem | undefined>();
-    readonly onDidChangeTreeData: vscode.Event<DocumentTreeItem | undefined> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: EventEmitter<DocumentTreeItem | undefined> = new EventEmitter<DocumentTreeItem | undefined>();
+    readonly onDidChangeTreeData: Event<DocumentTreeItem | undefined> = this._onDidChangeTreeData.event;
 
-    getTreeItem(element: DocumentTreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
-        const item = new vscode.TreeItem(element.text,
-            element.children.length > 0 ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None);
-        item.iconPath = new vscode.ThemeIcon('selection', new vscode.ThemeColor('focusBorder'));
+    getTreeItem(element: DocumentTreeItem): TreeItem | Thenable<TreeItem> {
+        const item = new TreeItem(element.text,
+            element.children.length > 0 ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.None);
+        item.iconPath = new ThemeIcon('selection', new ThemeColor('focusBorder'));
         item.command = {
             command: LemeTextTreeDataProvider.commandNameSelection,
             title: '',
@@ -24,7 +34,7 @@ export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<Documen
         return item;
     }
 
-    getChildren(element?: DocumentTreeItem): vscode.ProviderResult<DocumentTreeItem[]> {
+    getChildren(element?: DocumentTreeItem): ProviderResult<DocumentTreeItem[]> {
         if (!element) {
             // root
             return Promise.resolve(this._treeData);
@@ -36,7 +46,7 @@ export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<Documen
 
     public refresh(document?: parser.Paragraph[]): void {
         this._treeData = [];
-        if(document){
+        if (document) {
             this._document = document;
         }
 
@@ -47,11 +57,11 @@ export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<Documen
 
             this._document.forEach((paragraph, index) => {
                 if (paragraph.outlineLv > 0) {
-                    if (paragraph.outlineLv > 1 && this._treeData.length === 0){
+                    if (paragraph.outlineLv > 1 && this._treeData.length === 0) {
                         // Special if a level is skipped when the stack is empty
                         lastData = this._pushData(index, `<Missing lv1>`, stack);
                         stack.push(lastData);
-                    }else if (paragraph.outlineLv < lastLv) {
+                    } else if (paragraph.outlineLv < lastLv) {
                         // Bring up to current level
                         while (stack.length > 0) {
                             stack.pop();
@@ -81,9 +91,13 @@ export class LemeTextTreeDataProvider implements vscode.TreeDataProvider<Documen
         this._onDidChangeTreeData.fire(undefined);
     }
 
-    public selection(element: DocumentTreeItem):void{
+    public selection(
+        element: DocumentTreeItem,
+        // editor: TextEditor,
+        executeCommand: <T>(command: string, ...rest: any[]) => Thenable<T | undefined>
+    ): void {
         //
-        console.log('select:' + element.text);
+        executeCommand('revealLine', { lineNumber: element.lineNo, at: 'center' });
     }
 
     private _pushData(index: number, text: string, stack: DocumentTreeItem[]): DocumentTreeItem {

@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	const editorController = new EditorController(vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0));
 	const lemeFileEditor = new LemeFileEditorProvider(context.extensionUri);
 	const lemeTextTreeDataProvider = new LemeTextTreeDataProvider();
-	
+
 	context.subscriptions.push(lemeProject.statusBarItem);
 	context.subscriptions.push(editorController.statusBarItem);
 
@@ -100,7 +100,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(() => {
 		editorController.update(vscode.window.activeTextEditor);
 		if (!loading) {
-			lemePreviewer.update(vscode.window.activeTextEditor).then(document =>{
+			lemePreviewer.update(vscode.window.activeTextEditor).then(document => {
 				lemeTextTreeDataProvider.refresh(document);
 			});
 		}
@@ -113,8 +113,12 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	vscode.window.registerTreeDataProvider('lemeTextTree', lemeTextTreeDataProvider);
-	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameRefresh, () => lemeTextTreeDataProvider.refresh());
-	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameSelection, (element) => lemeTextTreeDataProvider.selection(element));
+	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameRefresh,
+		() => lemeTextTreeDataProvider.refresh()
+	);
+	vscode.commands.registerCommand(LemeTextTreeDataProvider.commandNameSelection,
+		(element) => lemeTextTreeDataProvider.selection(element, vscode.commands.executeCommand)
+	);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
