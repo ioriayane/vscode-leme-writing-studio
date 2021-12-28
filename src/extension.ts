@@ -142,23 +142,22 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 	loading = true;
 	lemeProject.updateWorkspace(e.document, vscode.workspace.workspaceFolders).then((lemeFileUri) => {
 		if (!lemeFileUri) {
+			// out of workspace
+			loading = false;
+		} else if (!lemePreviewer.isSupportFileType(e.document.uri)) {
 			loading = false;
 		} else {
-			if (!lemePreviewer.isSupportFileType(e.document.uri)) {
-				loading = false;
-			} else {
-				// loads settings for previewer when acitve editting file is supported file type only.
-				lemeProject.loadLemeFile(
-					lemeFileUri, lemePreviewer.bookInfo, lemePreviewer.bookSpec,
-					lemePreviewer.bookMaking, lemePreviewer.bookTextSetting
-				).then(updated => {
-					lemePreviewer.update(e, updated).then((document) => {
-						loading = false;
-						lemeTextTreeDataProvider.refresh(document);
-						outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
-					});
+			// loads settings for previewer when acitve editting file is supported file type only.
+			lemeProject.loadLemeFile(
+				lemeFileUri, lemePreviewer.bookInfo, lemePreviewer.bookSpec,
+				lemePreviewer.bookMaking, lemePreviewer.bookTextSetting
+			).then(updated => {
+				lemePreviewer.update(e, updated).then((document) => {
+					loading = false;
+					lemeTextTreeDataProvider.refresh(document);
+					outputChannel.appendLine('Updated the workspace from a LeME file : ' + path.basename(lemeFileUri.path));
 				});
-			}
+			});
 		}
 	});
 }
