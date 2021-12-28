@@ -131,6 +131,10 @@ function updateWorkspace(e: vscode.TextEditor | undefined,
 	lemeTextTreeDataProvider: LemeTextTreeDataProvider,
 	outputChannel: vscode.OutputChannel
 ): void {
+
+	// Change editor and LeME Text Outline visibility
+	lemeTextTreeDataProvider.setCurrentEditor(e, vscode.commands.executeCommand);
+	// null check
 	if (!e) {
 		return;
 	}

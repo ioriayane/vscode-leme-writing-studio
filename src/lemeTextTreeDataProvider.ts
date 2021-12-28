@@ -1,7 +1,9 @@
 import {
     Event,
     EventEmitter,
+    Position,
     ProviderResult,
+    Selection,
     TextEditor,
     ThemeColor,
     ThemeIcon,
@@ -15,7 +17,9 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
 
     public static readonly commandNameRefresh = 'leme-writing-studio.outline.refresh';
     public static readonly commandNameSelection = 'leme-writing-studio.outline.selection';
+    public static readonly contextName = 'lemeWritingStudioOutlineEnabled';
 
+    private _editor: TextEditor | undefined = undefined;
     private _paragraphs: parser.Paragraph[] | undefined = undefined;
     private _treeData: DocumentTreeItem[] = [];
 
@@ -44,13 +48,27 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
         }
     }
 
+    public setCurrentEditor(
+        editor: TextEditor | undefined,
+        callback: (commandName: string, contextName: string, enabled: boolean) => void
+    ): void {
+        this._editor = editor;
+        if (!editor) {
+            callback('setContext', LemeTextTreeDataProvider.contextName, false);
+        } else {
+            callback('setContext', LemeTextTreeDataProvider.contextName, (editor.document.languageId === 'lemeText'));
+        }
+    }
+
     public refresh(paragraphs?: parser.Paragraph[]): void {
         this._treeData = [];
         if (paragraphs) {
             this._paragraphs = paragraphs;
         }
 
-        if (this._paragraphs) {
+        if (!this._editor) {
+            //
+        } else if (this._paragraphs) {
             const stack: DocumentTreeItem[] = [];
             let lastLv = 1;
             let lastData: DocumentTreeItem | undefined;
@@ -93,11 +111,13 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
 
     public selection(
         element: DocumentTreeItem,
-        // editor: TextEditor,
-        executeCommand: <T>(command: string, ...rest: any[]) => Thenable<T | undefined>
+        callback: (command: string, obj: { lineNumber: number, at: string }) => void
     ): void {
-        //
-        executeCommand('revealLine', { lineNumber: element.lineNo, at: 'center' });
+        if (this._editor) {
+            const position = new Position(element.lineNo, 0);
+            this._editor.selection = new Selection(position, position);
+        }
+        callback('revealLine', { lineNumber: element.lineNo, at: 'center' });
     }
 
     private _pushData(index: number, text: string, stack: DocumentTreeItem[]): DocumentTreeItem {

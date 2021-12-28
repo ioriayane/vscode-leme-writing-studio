@@ -156,7 +156,8 @@
 			"explorer": [
 				{
 					"id": "lemeTextTree",
-					"name": "LeME Text Outline"
+					"name": "LeME Text Outline",
+					"when": "lemeWritingStudioOutlineEnabled"
 				}
 			]
 		}
