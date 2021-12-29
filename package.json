@@ -67,7 +67,7 @@
 			},
 			{
 				"command": "leme-writing-studio.makeEbook",
-				"title": "LeME: Make a ebook(*.epub)"
+				"title": "LeME: Make an ebook(*.epub)"
 			},
 			{
 				"command": "leme-writing-studio.format.text.ruby",
