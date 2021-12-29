@@ -191,7 +191,7 @@ export function getContentItemWord(bookUri: Uri, fileUri: Uri): ContentItem {
         headingLevel: 0,
         headingText: '',
         imageHandling: 1,
-        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        path: path.posix.relative(path.dirname(bookUri.path), fileUri.path),
         tocHeadingLevel: 1,
         type: ContentType.word
     };
@@ -204,7 +204,7 @@ export function getContentItemText(bookUri: Uri, fileUri: Uri): ContentItem {
         headingLevel: 0,
         headingText: '',
         imageHandling: 1,
-        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        path: path.posix.relative(path.dirname(bookUri.path), fileUri.path),
         tocHeadingLevel: 1,
         type: ContentType.text
     };
@@ -217,7 +217,7 @@ export function getContentItemImage(bookUri: Uri, fileUri: Uri): ContentItem {
         headingLevel: 0,
         headingText: '',
         imageHandling: 0,
-        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        path: path.posix.relative(path.dirname(bookUri.path), fileUri.path),
         tocHeadingLevel: 1,
         type: ContentType.image
     };
@@ -243,7 +243,7 @@ export function getContentItemPdf(bookUri: Uri, fileUri: Uri): ContentItem {
         headingLevel: 0,
         headingText: '',
         imageHandling: 1,
-        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        path: path.posix.relative(path.dirname(bookUri.path), fileUri.path),
         tocHeadingLevel: 1,
         type: ContentType.pdf
     };
@@ -256,7 +256,7 @@ export function getContentItemMarkdown(bookUri: Uri, fileUri: Uri): ContentItem 
         headingLevel: 0,
         headingText: '',
         imageHandling: 1,
-        path: path.relative(path.dirname(bookUri.path), fileUri.path),
+        path: path.posix.relative(path.dirname(bookUri.path), fileUri.path),
         tocHeadingLevel: 1,
         type: ContentType.markdown
     };

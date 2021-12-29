@@ -302,31 +302,42 @@ export class LemeProject {
     public async makeEbook(
         document: vscode.TextDocument | undefined,
         workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined,
-        outputChannel: vscode.OutputChannel
+        outputChannel: vscode.OutputChannel,
+        showmessage: (message: string) => void
     ): Promise<void> {
         if (!document) {
+            showmessage('Failure to make an ebook. Please open a manuscript.');
             return undefined;
         }
         const lemeFileUri = await this._getProjectUri(workspaceFolders, document.uri);
         if (!lemeFileUri) {
-            //
+            showmessage('Not found a LeME file(*.leme).');
             return;
         }
         const config = vscode.workspace.getConfiguration('');
-        const lemePath = config.get<string>('lemeWritingStudio.lemeCliExecutablePath');
-        if (!lemePath) {
+        const lemeCliExecPath = config.get<string>('lemeWritingStudio.lemeCliExecutablePath');
+        if (!lemeCliExecPath) {
+            showmessage('Please specify the path to the LeMEcli executable file in the Extension settings. ');
             return;
         }
-        const folder = path.dirname(lemePath);
-        let command = lemePath;
+        let command = `"${lemeCliExecPath}"`;
+        let options = {};
         if (os.platform() === 'linux') {
             command += ' -platform offscreen';
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            options = { env: { LD_LIBRARY_PATH: path.dirname(lemeCliExecPath) } };
         }
-        command += ' --leme-file ' + lemeFileUri.path;
+        command += ' --leme-file ' + lemeFileUri.fsPath;
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        child_process.exec(command, { env: { LD_LIBRARY_PATH: folder } }, (error, stdout, stderror) => {
+        child_process.exec(command, options, (error, stdout, stderror) => {
             outputChannel.appendLine(stdout);
             outputChannel.appendLine(stderror);
+            if(error){
+                // error
+                showmessage('Failure to make an ebook.');
+            }else{
+                showmessage('Successfully made an ebook.');
+            }
         });
     }
 

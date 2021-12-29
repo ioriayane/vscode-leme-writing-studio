@@ -40,7 +40,12 @@ export function activate(context: vscode.ExtensionContext): void {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand(LemeProject.commandNameMakeEbook, () => {
-		lemeProject.makeEbook(vscode.window.activeTextEditor?.document, vscode.workspace.workspaceFolders, outputChannel);
+		lemeProject.makeEbook(
+			vscode.window.activeTextEditor?.document,
+			vscode.workspace.workspaceFolders,
+			outputChannel,
+			vscode.window.showInformationMessage
+		);
 	}));
 
 	// context.subscriptions.push(vscode.commands.registerCommand(LemeFileEditorProvider.comandNameAddFile, (e) => {
