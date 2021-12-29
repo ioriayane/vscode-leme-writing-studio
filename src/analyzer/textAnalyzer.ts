@@ -157,22 +157,27 @@ export class TextAnalyzer {
         return new Position(retLine, retCharacter);
     }
 
-    public trimKana(text: string): string{
-        if(text.length === 0 || !this._isKanji(text.charAt(0))){
+    public trimKana(text: string): string {
+        if (text.length === 0) {
             return text;
         }
-        for(let i=0; i<text.length; i++){
-            if(!this._isKanji(text.charAt(i))){
-                text = text.substring(0, i);
+        let trimmed = false;
+        for (let i = text.length - 1; i >= 0; i--) {
+            if (this._isKanji(text.charAt(i))) {
+                text = text.substring(0, i + 1);
+                trimmed = true;
                 break;
             }
+        }
+        if (!trimmed) {
+            text = '';
         }
         return text;
     }
 
     public trimOkurigana(text: string, ruby: string): { text: string, ruby: string } {
         let rubyPos = ruby.length - 1;
-        if(text.length === 0 || ruby.length === 0 || !this._isKanji(text.charAt(0))){
+        if (text.length === 0 || ruby.length === 0 || !this._isKanji(text.charAt(0))) {
             return { text: text, ruby: ruby };
         }
         for (let i = text.length - 1; i > 0; i--) {
@@ -183,10 +188,10 @@ export class TextAnalyzer {
                 text = text.substring(0, i);
                 ruby = ruby.substring(0, rubyPos);
                 rubyPos--;
-            }else{
+            } else {
                 break;
             }
-            if(rubyPos < 0){
+            if (rubyPos < 0) {
                 break;
             }
         }

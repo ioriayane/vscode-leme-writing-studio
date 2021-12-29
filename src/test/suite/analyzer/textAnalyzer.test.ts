@@ -152,8 +152,8 @@ suite('TextAnalyzer Test Suite', () => {
         assert.deepStrictEqual(textAnalyzer.trimKana('千早振'), '千早振');
         assert.deepStrictEqual(textAnalyzer.trimKana('君がため'), '君');
 
-        assert.deepStrictEqual(textAnalyzer.trimKana('花の色は'), '花');
-        assert.deepStrictEqual(textAnalyzer.trimKana('ちはやふる'), 'ちはやふる');
+        assert.deepStrictEqual(textAnalyzer.trimKana('花の色は'), '花の色');
+        assert.deepStrictEqual(textAnalyzer.trimKana('ちはやふる'), '');
         assert.deepStrictEqual(textAnalyzer.trimKana(''), '');
     });
 

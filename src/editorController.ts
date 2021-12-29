@@ -1,4 +1,4 @@
-import { StatusBarItem, TextEditor, Selection, InputBoxOptions, CancellationToken } from 'vscode';
+import { StatusBarItem, TextEditor, Selection, InputBoxOptions, CancellationToken, Position } from 'vscode';
 import * as analyzer from './analyzer';
 
 export class EditorController {
@@ -62,6 +62,8 @@ export class EditorController {
         if (!(e.document.uri.path in this._editors)) {
             return;
         }
+        const bkLine = e.selection.start.line;
+        const bkCharactor = e.selection.start.character;
         let selecting = true;
         if (e.selection.start.isEqual(e.selection.end)) {
             // search ruby range
@@ -72,28 +74,37 @@ export class EditorController {
             e.selection = new Selection(positionStart, e.selection.end);
             selecting = false;
         }
+        // target text(full)
         let text = e.document.getText(e.selection);
+        // triming okurigana(only not selecting)
+        let trimmedLength = 0;
+        if (!selecting) {
+            const trimmed = this._editors[e.document.uri.path].trimKana(text);
+            if (trimmed.length === 0) {
+                // Not contains kanji
+                const bkPosition = new Position(bkLine, bkCharactor);
+                e.selection = new Selection(bkPosition, bkPosition);
+                return;
+            }
+            e.selection = new Selection(e.selection.start, e.selection.end.translate(0, -1 * (text.length - trimmed.length)));
+            trimmedLength = text.length - trimmed.length;
+            text = trimmed;
+        }
+        // input ruby
         const ruby = await showInputBox({
             title: 'Please input a ruby of "' + text + '".',
             placeHolder: 'ruby ...'
         });
         if (ruby) {
-            // triming okurigana(only not selecting)
-            let trimLength = 0;
-            if (!selecting) {
-                const trimmed = this._editors[e.document.uri.path].trimKana(text);
-                if (text.length !== trimmed.length) {
-                    e.selection = new Selection(e.selection.start, e.selection.end.translate(0, -1 * (text.length - trimmed.length)));
-                }
-                trimLength = text.length - trimmed.length;
-                text = trimmed;
-            }
             // replace
             const formatted = '|' + text + '《' + ruby + '》';
             await e.edit(builder => builder.replace(e.selection, formatted));
             // move cursor after formatted text
-            const positionAfter = e.selection.start.translate(0, formatted.length + trimLength);
+            const positionAfter = e.selection.start.translate(0, formatted.length + trimmedLength);
             e.selection = new Selection(positionAfter, positionAfter);
+        } else {
+            const bkPosition = new Position(bkLine, bkCharactor);
+            e.selection = new Selection(bkPosition, bkPosition);
         }
     }
 }
