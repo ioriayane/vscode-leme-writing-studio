@@ -17,6 +17,7 @@ import * as path from 'path';
 enum DocumentTreeItemType {
     file,
     heading,
+    image,
     unknown
 }
 
@@ -38,10 +39,13 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
             element.children.length > 0 ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.None);
         switch (element.type) {
             case DocumentTreeItemType.file:
-                item.iconPath = new ThemeIcon('file-text')
+                item.iconPath = new ThemeIcon('file-text');
                 break;
             case DocumentTreeItemType.heading:
                 item.iconPath = new ThemeIcon('library', new ThemeColor('focusBorder'));
+                break;
+            case DocumentTreeItemType.image:
+                item.iconPath = new ThemeIcon('file-media');//, new ThemeColor('focusBorder'));
                 break;
             default:
                 item.iconPath = new ThemeIcon('warning', new ThemeColor('errorForeground'));
@@ -93,6 +97,7 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
 
             this._paragraphs.forEach((paragraph, index) => {
                 if (paragraph.outlineLv > 0) {
+                    // heading
                     if (paragraph.outlineLv < lastLv) {
                         // Bring up to current level
                         while (stack.length > 1) {
@@ -112,6 +117,14 @@ export class LemeTextTreeDataProvider implements TreeDataProvider<DocumentTreeIt
 
                     lastData = this._pushData(DocumentTreeItemType.heading, index, paragraph.text(), stack);
                     lastLv = paragraph.outlineLv;
+                } else {
+                    // other items
+                    paragraph.items.forEach(item => {
+                        if (item.type === parser.ParagraphItemType.image) {
+                            const filename = path.basename((item as parser.ParagraphItemImage).plainPath);
+                            lastData.children.push(new DocumentTreeItem(DocumentTreeItemType.image, index, filename));
+                        }
+                    });
                 }
             });
 
