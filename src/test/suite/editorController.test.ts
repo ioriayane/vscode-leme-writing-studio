@@ -8,13 +8,14 @@ import { EditorController } from '../../editorController';
 let inputText = '';
 let editor: vscode.TextEditor | undefined = undefined;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function dummyShowInputBox(options?: vscode.InputBoxOptions, token?: vscode.CancellationToken): Thenable<string | undefined> {
     return new Promise(function (resolve, reject) {
         resolve(inputText);
     });
 }
 
-async function refleshEditor(editor: vscode.TextEditor, controller: EditorController, text: string, charactorStart: number, charactorEnd: number): Promise<void> {
+async function refleshEditor(editor: vscode.TextEditor, controller: EditorController, text: string, characterStart: number, characterEnd: number): Promise<void> {
     const range = new vscode.Range(
         editor.document.positionAt(0),
         editor.document.positionAt(editor.document.getText().length));
@@ -22,8 +23,8 @@ async function refleshEditor(editor: vscode.TextEditor, controller: EditorContro
 
     controller.update(editor);
 
-    const start = new vscode.Position(0, charactorStart);
-    const end = new vscode.Position(0, charactorEnd);
+    const start = new vscode.Position(0, characterStart);
+    const end = new vscode.Position(0, characterEnd);
     editor.selection = new vscode.Selection(start, end);
 }
 

@@ -63,7 +63,7 @@ export class EditorController {
             return;
         }
         const bkLine = e.selection.start.line;
-        const bkCharactor = e.selection.start.character;
+        const bkCharacter = e.selection.start.character;
         let selecting = true;
         if (e.selection.start.isEqual(e.selection.end)) {
             // search ruby range
@@ -82,7 +82,7 @@ export class EditorController {
             const trimmed = this._editors[e.document.uri.path].trimKana(text);
             if (trimmed.length === 0) {
                 // Not contains kanji
-                const bkPosition = new Position(bkLine, bkCharactor);
+                const bkPosition = new Position(bkLine, bkCharacter);
                 e.selection = new Selection(bkPosition, bkPosition);
                 return;
             }
@@ -103,7 +103,7 @@ export class EditorController {
             const positionAfter = e.selection.start.translate(0, formatted.length + trimmedLength);
             e.selection = new Selection(positionAfter, positionAfter);
         } else {
-            const bkPosition = new Position(bkLine, bkCharactor);
+            const bkPosition = new Position(bkLine, bkCharacter);
             e.selection = new Selection(bkPosition, bkPosition);
         }
     }
