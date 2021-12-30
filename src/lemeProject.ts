@@ -214,7 +214,7 @@ export class LemeProject {
         obj[LemeProject.infoTitleKana] = '';
         obj[LemeProject.makingConvertSpaceToEnspace] = bookMaking.convertSpaceToEnspace;
         obj[LemeProject.makingEnableHyperLink] = bookMaking.enableHyperLink;
-        obj[LemeProject.makingEpubPath] = '.';
+        obj[LemeProject.makingEpubPath] = path.basename(fileName, '.leme') + '.epub';
         obj['making.format.markdown.convertCrlfToBr'] = true;
         obj['making.format.markdown.emMark'] = true;
         obj['making.format.markdown.emMark2'] = true;
