@@ -13,10 +13,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - LeME file editor(Simplified version)
 - Create a new LeME file(*.leme)
 - Make an ebook(*.epub) with LeME
-- in the status bar
-  - Show active LeME file
-  - Show the number of lines
-  - Show the number of charactors
-- in the text editor
-  - Syntax highlight for the LeME format(normal)
-  - Word jump for Japanese text 
+- Display active LeME file in the status bar
+- Display the number of lines and characters in the status bar
+- Syntax highlight for the LeME format(normal)
+- Word jump for Japanese text 
+- Outline view
