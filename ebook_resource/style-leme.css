@@ -1,0 +1,87 @@
+@charset "UTF-8";
+
+/* LeMEで追加するスタイル */
+
+.vrtl body,
+.hltr body {
+  padding: 2em;   /* for Preview */
+  font-family: serif-ja, serif;
+}
+
+.active_p {
+  background-color: var(--vscode-editor-wordHighlightBackground);
+}
+
+.hltr .border-0001{ border-style: none none none solid;     border-width: 1px;  }
+.hltr .border-0010{ border-style: none none solid none;     border-width: 1px;  }
+.hltr .border-0011{ border-style: none none solid solid;    border-width: 1px;  }
+.hltr .border-0100{ border-style: none solid none none;     border-width: 1px;  }
+.hltr .border-0101{ border-style: none solid none solid;    border-width: 1px;  }
+.hltr .border-0110{ border-style: none solid solid none;    border-width: 1px;  }
+.hltr .border-0111{ border-style: none solid solid solid;   border-width: 1px;  }
+.hltr .border-1000{ border-style: solid none none none;     border-width: 1px;  }
+.hltr .border-1001{ border-style: solid none none solid;    border-width: 1px;  }
+.hltr .border-1010{ border-style: solid none solid none;    border-width: 1px;  }
+.hltr .border-1011{ border-style: solid none solid solid;   border-width: 1px;  }
+.hltr .border-1100{ border-style: solid solid none none;    border-width: 1px;  }
+.hltr .border-1101{ border-style: solid solid none solid;   border-width: 1px;  }
+.hltr .border-1110{ border-style: solid solid solid none;   border-width: 1px;  }
+.hltr .border-1111{ border-style: solid solid solid solid;  border-width: 1px;  }
+
+.vrtl .border-0001{ border-style: solid none none none;     border-width: 1px;  }
+.vrtl .border-0010{ border-style: none none none solid;     border-width: 1px;  }
+.vrtl .border-0011{ border-style: solid none none solid;    border-width: 1px;  }
+.vrtl .border-0100{ border-style: none none solid none;     border-width: 1px;  }
+.vrtl .border-0101{ border-style: solid none solid none;    border-width: 1px;  }
+.vrtl .border-0110{ border-style: none none solid solid;    border-width: 1px;  }
+.vrtl .border-0111{ border-style: solid none solid solid;   border-width: 1px;  }
+.vrtl .border-1000{ border-style: none solid none none;     border-width: 1px;  }
+.vrtl .border-1001{ border-style: solid solid none none;    border-width: 1px;  }
+.vrtl .border-1010{ border-style: none solid none solid;    border-width: 1px;  }
+.vrtl .border-1011{ border-style: solid solid none solid;   border-width: 1px;  }
+.vrtl .border-1100{ border-style: none solid solid none;    border-width: 1px;  }
+.vrtl .border-1101{ border-style: solid solid solid none;   border-width: 1px;  }
+.vrtl .border-1110{ border-style: none solid solid solid;   border-width: 1px;  }
+.vrtl .border-1111{ border-style: solid solid solid solid;  border-width: 1px;  }
+
+hr {
+  border-color: var(--vscode-contrastActiveBorder);
+}
+
+a:link,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  color: var(--vscode-textLink-foreground);
+}
+
+svg {
+  margin:    0;
+  padding:   0;
+}
+
+
+.hltr th,
+.hltr td {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.vrtl th,
+.vrtl td {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.hltr blockquote,
+.hltr pre{
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.vrtl blockquote,
+.vrtl pre {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}

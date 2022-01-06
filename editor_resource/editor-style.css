@@ -1,0 +1,89 @@
+div.content-first {
+    padding: 5px;
+    text-align: right;
+}
+div.content {
+    border-top: 1px solid var(--vscode-list-activeSelectionForeground);
+    padding: 5px;
+    text-align: right;
+}
+div.contentControl {
+    padding: 5px;
+    text-align: right;
+}
+
+select {
+    background-color: var(--vscode-dropdown-background);
+    border: 1px solid var(--vscode-dropdown-border);
+    color: var(--vscode-dropdown-foreground);
+    font-family: var(--vscode-font-family);
+    padding: 3px 5px;
+    margin-right: 4px;
+}
+select:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+}
+select.wide {
+    width: 10em;
+}
+select.small {
+    width: 6em;
+}
+
+input[type="button"] {
+    background-color: var(--vscode-button-background);
+    border: 1px solid var(--vscode-button-border);
+    color: var(--vscode-button-foreground);
+    margin-right: 3px;
+}
+input[type="button"].large {
+    padding: 5px 10px 5px 10px;
+}
+input[type="button"]:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+}
+
+input[type="checkbox"] {
+    position: relative;
+    margin: 0 1rem 0 0;
+    cursor: pointer;
+}
+input[type="checkbox"]:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    width: 1rem;
+    height: 1rem;
+}
+input[type="checkbox"]:checked:before {
+    transform: rotate(-45deg);
+    height: 0.5rem;
+    border-bottom: 2px solid var(--vscode-checkbox-foreground);
+    border-left: 2px solid var(--vscode-checkbox-foreground);
+    border-top-style: none;
+    border-right-style: none;
+}
+input[type="checkbox"]:after {
+    content: "";
+    position: absolute;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: var(--vscode-checkbox-background);
+    cursor: pointer;
+}
+label {
+    margin: 0 1rem 0 0;
+}
+
+input[type="text"] {
+    background-color: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    color: var(--vscode-input-foreground);
+    font-family: var(--vscode-font-family);
+    padding: 3px 5px;
+    width: 20em;
+}
+input[type="text"]:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+}
