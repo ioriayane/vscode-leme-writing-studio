@@ -30,7 +30,7 @@
 
 最終的な出来上がりの確認は出版するストアのリーダーアプリにて確認してください。
 
-![preview](images/preview.png)
+![preview](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/preview.png)
 
 ### 表示方法
 
@@ -61,19 +61,19 @@ LeMEファイルを開くと専用のエディタが表示されます。ステ�
 
 LeMEで作成したファイルも編集できます。Extensionで編集できる項目以外は元の状態を維持します。
 
-![edit leme file](images/edit_lemefile.png)
+![edit leme file](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile.png)
 
 LeMEファイル内の`Book Specification`の`Text flow direction`の選択内容に応じてプレビューの縦書きと横書きが切り替わります。
 
 ※ 保存すると反映されます。
 
-![leme file spec](images/edit_lemefile_spec.png)
+![leme file spec](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile_spec.png)
 
 書式（ルビや太字など）の反映も同様です。
 
 ※ 保存すると反映されます。
 
-![leme file formatting](images/edit_lemefile_formatting.png)
+![leme file formatting](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile_formatting.png)
 
 ---
 
@@ -84,7 +84,7 @@ LeMEファイル内の`Book Specification`の`Text flow direction`の選択内�
 1. 設定（Shift+,）で`leme`で検索
 2. `Leme Writing Studio: Leme Cli Executable Path`にLeMEのCLI版のパスを指定
 
-![setting cli](images/setting_cli.png)
+![setting cli](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/setting_cli.png)
 
 設定例：
 
@@ -104,7 +104,7 @@ LeMEファイル内の`Book Specification`の`Text flow direction`の選択内�
 - TL : 合計行数
 - TC : 合計文字数
 
-![status bar](images/statusbar_info.png)
+![status bar](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/statusbar_info.png)
 
 ワークスペース内に複数のLeMEファイルが存在しているときに、LeMEファイル名をクリックすると選択できます。
 
@@ -118,11 +118,11 @@ LeMEファイル内の`Book Specification`の`Text flow direction`の選択内�
 
 ウインドウ右下の`Plain Text`と表示されているところをクリック（Ctrl+K M）して`leme`と入力してでてくる候補を選択します。
 
-![language change](images/language_change.gif)
+![language change](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/language_change.gif)
 
 この設定は開いているファイル単位になるため、設定（Ctrl+,）で`Files: Associations`に登録すると便利です。`associations`で検索するとでてきます。
 
-![setting file associations](images/setting_file_associations.png)
+![setting file associations](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/setting_file_associations.png)
 
 ### シンタックスハイライト
 
@@ -134,7 +134,7 @@ LeMEファイル内の`Book Specification`の`Text flow direction`の選択内�
 
 予め選択している状態でCtrl+Rを入力した場合は選択対象がルビの付加対象になります。
 
-![support ruby](images/support_ruby.gif)
+![support ruby](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/support_ruby.gif)
 
 ### 日本語テキスト向けのワードジャンプ
 
@@ -144,7 +144,7 @@ Visual Studio Codeでは日本語の文中でCtrl+左右カーソルを押すと
 
 言語設定を`LeME Text`にしていると`見出し(#)`と`画像`が表示されます。
 
-![support outline](images/support_outline.png)
+![support outline](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/support_outline.png)
 
 ## Overview
 
@@ -174,7 +174,7 @@ You can preview the result of converting your manuscript into an ebook (epub).
 
 To check the final result, please use the reader application of the publishing store.
 
-![preview](images/preview.png)
+![preview](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/preview.png)
 
 ### Display method
 
@@ -205,19 +205,19 @@ When you open a LeME file, a special editor will appear. You can also click on a
 
 Files created with LeME can also be edited, except for items that can be edited with Extensions, which remain in their original state.
 
-![edit leme file](images/edit_lemefile.png)
+![edit leme file](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile.png)
 
 Depending on the selection of `Text flow direction` in the `Book Specification` of the LeME file, the vertical or horizontal writing mode of the preview will be switched.
 
 This is reflected when you save the file.
 
-![leme file spec](images/edit_lemefile_spec.png)
+![leme file spec](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile_spec.png)
 
 The same is true for formatting (ruby, bold, etc.).
 
 This is reflected when you save the file.
 
-![leme file formatting](images/edit_lemefile_formatting.png)
+![leme file formatting](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/edit_lemefile_formatting.png)
 
 ---
 
@@ -228,7 +228,7 @@ This is reflected when you save the file.
 1. Search for `leme` in Settings (Shift+,)
 1. Specify the path to the CLI version of LeME in `Leme Writing Studio: Leme Cli Executable Path`.
 
-![setting cli](images/setting_cli.png)
+![setting cli](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/setting_cli.png)
 
 Configuration example :
 
@@ -248,7 +248,7 @@ Displays the following information when a text file is being displayed.
 - TL : Total number of lines
 - TC : Total number of characters
 
-![status bar](images/statusbar_info.png)
+![status bar](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/statusbar_info.png)
 
 When there are multiple LeME files in the workspace, click on the LeME file name to select it.
 
@@ -262,11 +262,11 @@ The language setting must be set to `LeME Text` in order to use the support func
 
 Click on `Plain Text` in the lower right corner of the window (Ctrl+K M), type `leme` and select the suggestions that come up.
 
-![language change](images/language_change.gif)
+![language change](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/language_change.gif)
 
 Since this setting is per open file, it is useful to register it in `Files: Associations` in the settings (Ctrl+,). You can find it by searching for `associations`.
 
-![setting file associations](images/setting_file_associations.png)
+![setting file associations](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/setting_file_associations.png)
 
 ### Syntax highlight
 
@@ -278,7 +278,7 @@ If you type Ctrl+R after inputting the kana or particle, you will enter the ruby
 
 If you press Ctrl+R while a kanji is already selected, the selected target will be used as a candidate for adding the ruby.
 
-![support ruby](images/support_ruby.gif)
+![support ruby](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/support_ruby.gif)
 
 ### Word jump for Japanese text
 
@@ -288,4 +288,4 @@ In Visual Studio Code, if you press Ctrl + left/right cursor in a Japanese sente
 
 If the language setting is set to `LeME Text`, `headings` and `images` will be displayed.
 
-![support outline](images/support_outline.png)
+![support outline](https://github.com/ioriayane/vscode-leme-writing-studio/raw/main/images/support_outline.png)
