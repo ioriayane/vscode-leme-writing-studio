@@ -116,12 +116,7 @@ export class LemePreviewer {
             this._extensionUri, 'ebook_resource', 'book-script.js'));
         const nonce = getNonce();
 
-        let lang: string;
-        if (this.bookInfo.language === book.BookLanguage.ja) {
-            lang = 'ja';
-        } else {
-            lang = 'en';
-        }
+        const lang: string = this.bookInfo.language;
         let direction: string;
         if (this.bookSpec.textFlowDirection === book.TextFlowDirection.vertical) {
             direction = 'vrtl';

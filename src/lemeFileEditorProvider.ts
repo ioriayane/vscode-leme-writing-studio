@@ -43,7 +43,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         }
 
         webviewPanel.onDidChangeViewState(e => {
-            if(e.webviewPanel.active){
+            if (e.webviewPanel.active) {
                 this.onActivate(document);
             }
         });
@@ -348,8 +348,7 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push(this._makeTextBox('Creator2', LemeProject.infoCreator2));
         content.push(this._makeTextBox('Creator2 (kana)', LemeProject.infoCreator2Kana));
         content.push(this._makeTextBox('Identifier (ISBN etc)', LemeProject.infoIdentifier));
-        content.push(this._makeSelect('Language', LemeProject.infoLanguage
-            , [['' + book.BookLanguage.ja, 'Japanese'], ['' + book.BookLanguage.en, 'English']]));  // select
+        content.push(this._makeSelect('Language', LemeProject.infoLanguage, this._getLanguageSelectionItems()));  // select
         content.push(this._makeTextBox('Publisher', LemeProject.infoPublisher));
         content.push(this._makeTextBox('Publisher (kana)', LemeProject.infoPublisherKana));
         content.push(this._makeTextBox('Title', LemeProject.infoTitle));
@@ -423,5 +422,94 @@ export class LemeFileEditorProvider implements CustomTextEditorProvider {
         content.push('</select></p></div>');
 
         return content.join('\n');
+    }
+
+    private _getLanguageSelectionItems(): string[][] {
+        return [
+            [book.BookLanguage.afrikaans, 'Afrikaans'],
+            [book.BookLanguage.albanian, 'Albanian'],
+            [book.BookLanguage.arabic, 'Arabic'],
+            [book.BookLanguage.armenian, 'Armenian'],
+            [book.BookLanguage.azerbaijani, 'Azerbaijani'],
+            [book.BookLanguage.basque, 'Basque'],
+            [book.BookLanguage.belarusian, 'Belarusian'],
+            [book.BookLanguage.bengali, 'Bengali'],
+            [book.BookLanguage.breton, 'Breton'],
+            [book.BookLanguage.bulgarian, 'Bulgarian'],
+            [book.BookLanguage.catalan, 'Catalan'],
+            [book.BookLanguage.chinese, 'Chinese'],
+            [book.BookLanguage.cornish, 'Cornish'],
+            [book.BookLanguage.corsican, 'Corsican'],
+            [book.BookLanguage.croatian, 'Croatian'],
+            [book.BookLanguage.czech, 'Czech'],
+            [book.BookLanguage.danish, 'Danish'],
+            [book.BookLanguage.dutch, 'Dutch'],
+            [book.BookLanguage.english, 'English'],
+            [book.BookLanguage.estonian, 'Estonian'],
+            [book.BookLanguage.faroese, 'Faroese'],
+            [book.BookLanguage.finnish, 'Finnish'],
+            [book.BookLanguage.french, 'French'],
+            [book.BookLanguage.galician, 'Galician'],
+            [book.BookLanguage.georgian, 'Georgian'],
+            [book.BookLanguage.german, 'German'],
+            [book.BookLanguage.greek, 'Greek'],
+            [book.BookLanguage.gujarati, 'Gujarati'],
+            [book.BookLanguage.hebrew, 'Hebrew'],
+            [book.BookLanguage.hindi, 'Hindi'],
+            [book.BookLanguage.hungarian, 'Hungarian'],
+            [book.BookLanguage.icelandic, 'Icelandic'],
+            [book.BookLanguage.indonesian, 'Indonesian'],
+            [book.BookLanguage.irish, 'Irish'],
+            [book.BookLanguage.italian, 'Italian'],
+            [book.BookLanguage.japanese, 'Japanese'],
+            [book.BookLanguage.kannada, 'Kannada'],
+            [book.BookLanguage.kazakh, 'Kazakh'],
+            [book.BookLanguage.korean, 'Korean'],
+            [book.BookLanguage.latin, 'Latin'],
+            [book.BookLanguage.latvian, 'Latvian'],
+            [book.BookLanguage.lithuanian, 'Lithuanian'],
+            [book.BookLanguage.luxembourgish, 'Luxembourgish'],
+            [book.BookLanguage.macedonian, 'Macedonian'],
+            [book.BookLanguage.malay, 'Malay'],
+            [book.BookLanguage.malayalam, 'Malayalam'],
+            [book.BookLanguage.maltese, 'Maltese'],
+            [book.BookLanguage.manx, 'Manx'],
+            [book.BookLanguage.marathi, 'Marathi'],
+            [book.BookLanguage.nepali, 'Nepali'],
+            [book.BookLanguage.norwegian, 'Norwegian'],
+            [book.BookLanguage.norwegianBokmal, 'Norwegian Bokmål'],
+            [book.BookLanguage.norwegianNynorsk, 'Norwegian Nynorsk'],
+            [book.BookLanguage.oriya, 'Oriya'],
+            [book.BookLanguage.persian, 'Persian'],
+            [book.BookLanguage.polish, 'Polish'],
+            [book.BookLanguage.portuguese, 'Portuguese'],
+            [book.BookLanguage.punjabi, 'Punjabi'],
+            [book.BookLanguage.romanian, 'Romanian'],
+            [book.BookLanguage.romansh, 'Romansh'],
+            [book.BookLanguage.russian, 'Russian'],
+            [book.BookLanguage.sanskrit, 'Sanskrit'],
+            [book.BookLanguage.scottishGaelic, 'Scottish Gaelic'],
+            [book.BookLanguage.serbian, 'Serbian'],
+            [book.BookLanguage.slovak, 'Slovak'],
+            [book.BookLanguage.slovenian, 'Slovenian'],
+            [book.BookLanguage.spanish, 'Spanish'],
+            [book.BookLanguage.swahili, 'Swahili'],
+            [book.BookLanguage.swedish, 'Swedish'],
+            [book.BookLanguage.tamil, 'Tamil'],
+            [book.BookLanguage.tatar, 'Tatar'],
+            [book.BookLanguage.telugu, 'Telugu'],
+            [book.BookLanguage.thai, 'Thai'],
+            [book.BookLanguage.tsonga, 'Tsonga'],
+            [book.BookLanguage.tswana, 'Tswana'],
+            [book.BookLanguage.turkish, 'Turkish'],
+            [book.BookLanguage.ukrainian, 'Ukrainian'],
+            [book.BookLanguage.urdu, 'Urdu'],
+            [book.BookLanguage.uzbek, 'Uzbek'],
+            [book.BookLanguage.vietnamese, 'Vietnamese'],
+            [book.BookLanguage.welsh, 'Welsh'],
+            [book.BookLanguage.westernFrisian, 'Western Frisian'],
+            [book.BookLanguage.xhosa, 'Xhosa'],
+            [book.BookLanguage.zulu, 'Zulu'],
+        ];
     }
 }

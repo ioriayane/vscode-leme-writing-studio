@@ -277,7 +277,7 @@
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });
     });
     document.getElementById('info.language').addEventListener('change', (event) => {
-        vscode.postMessage({ command: 'update', key: event.target.id, value: parseInt(event.target.value) });   // select
+        vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });   // select
     });
     document.getElementById('info.publisher').addEventListener('input', (event) => {
         vscode.postMessage({ command: 'update', key: event.target.id, value: event.target.value });

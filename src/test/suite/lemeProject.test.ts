@@ -41,7 +41,7 @@ suite('lemeProject Test Suite', () => {
         bookInfo.creator2 = 'c';
         bookInfo.creator2Kana = 'd';
         bookInfo.identifier = 'd';
-        bookInfo.language = book.BookLanguage.en;
+        bookInfo.language = book.BookLanguage.english;
         bookInfo.publisher = 'f';
         bookInfo.publisherKana = 'g';
         bookInfo.title = 'h';
@@ -84,7 +84,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookInfo.creator2, '作者2', 'creator2');
         assert.strictEqual(bookInfo.creator2Kana, 'さくしゃ2', 'creator2Kana');
         assert.strictEqual(bookInfo.identifier, '123456789456123', 'identifier');
-        assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.language, book.BookLanguage.japanese, 'language');
         assert.strictEqual(bookInfo.publisher, '理ろぐ', 'publisher');
         assert.strictEqual(bookInfo.publisherKana, 'リログ', 'publisherKana');
         assert.strictEqual(bookInfo.title, 'タイトル', 'title');
@@ -132,7 +132,7 @@ suite('lemeProject Test Suite', () => {
         bookInfo.creator2 = '作者2';
         bookInfo.creator2Kana = 'さくしゃ2';
         bookInfo.identifier = '123456789456123';
-        bookInfo.language = book.BookLanguage.ja;
+        bookInfo.language = book.BookLanguage.japanese;
         bookInfo.publisher = '理ろぐ';
         bookInfo.publisherKana = 'リログ';
         bookInfo.title = 'タイトル';
@@ -175,7 +175,7 @@ suite('lemeProject Test Suite', () => {
         assert.strictEqual(bookInfo.creator2, '作者2', 'creator2');
         assert.strictEqual(bookInfo.creator2Kana, 'さくしゃ2', 'creator2Kana');
         assert.strictEqual(bookInfo.identifier, '123456789456123', 'identifier');
-        assert.strictEqual(bookInfo.language, book.BookLanguage.ja, 'language');
+        assert.strictEqual(bookInfo.language, book.BookLanguage.japanese, 'language');
         assert.strictEqual(bookInfo.publisher, '理ろぐ', 'publisher');
         assert.strictEqual(bookInfo.publisherKana, 'リログ', 'publisherKana');
         assert.strictEqual(bookInfo.title, 'タイトル', 'title');
