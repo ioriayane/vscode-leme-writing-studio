@@ -6,7 +6,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.0.3]
+
+- Change the language entry in the configuration file
+
 ## [0.0.2]
+
 - Update packages
 
 ## [0.0.1]
@@ -19,5 +24,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Display active LeME file in the status bar
 - Display the number of lines and characters in the status bar
 - Syntax highlight for the LeME format(normal)
-- Word jump for Japanese text 
+- Word jump for Japanese text
 - Outline view

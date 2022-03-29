@@ -2,7 +2,7 @@
 	"name": "leme-writing-studio",
 	"displayName": "LeME Writing Studio",
 	"description": "This is an extension that supports writing your ebook.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "leme-project",
 	"author": {
 		"name": "Takayuki Orito"
